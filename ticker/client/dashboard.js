@@ -22,6 +22,15 @@ Template.stock_list.stocks = function () {
   return Stocks.find({}, {sort: {name: -1}});
 };
 
+Template.stock.delta = function () {
+  return (100 * (this.price - this.open) / this.open).toFixed(2) + "%";
+}
+
+Template.stock.updown = function () {
+  // TODO: somehow, I feel this should be tied with stock.delta
+  return this.price >= this.open ? "up": "down";
+}
+
 
 // Track selected user in user_list
 var UsersRouter = Backbone.Router.extend({

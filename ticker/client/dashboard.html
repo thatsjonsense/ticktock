@@ -35,7 +35,7 @@
 
 <template name="stock_list">
   <div class="stock_list">
-    {{#each stock}}
+    {{#each stocks}}
       {{> stock}}
     {{/each}}
   </div>
@@ -45,6 +45,7 @@
   <div class="stock">
     <span class="symbol">{{symbol}}</span>
     <span class="price">{{price}}</span>
+    <span class="open">{{open}}</span>
     <span class="delta {{updown}}">{{delta}}</span>
   </div>
 </template>
