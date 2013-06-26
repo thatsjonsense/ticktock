@@ -11,6 +11,7 @@ _.extend(User.prototype, {
   stocks: function () {
     var self = this;
     return _.map(self.investments, function(i) {
+      // todo: handle error if stock not found in database
       var stock = Stocks.findOne({symbol: i.symbol})
       stock.shares = i.shares
       stock.cost_basis = i.cost_basis

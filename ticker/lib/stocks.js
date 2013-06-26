@@ -36,7 +36,8 @@ _.extend(Stock.prototype, {
 
 
 if (Meteor.isServer) {
-  // updates all stocks every 15 seconds
+  
+  // Keep stock prices up to date
   Meteor.setInterval(function () {
     stockCursor = Stocks.find({});
     stockCursor.forEach(function (stock) {
