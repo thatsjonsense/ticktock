@@ -9,7 +9,17 @@
 </body>
 
 <template name="dashboard">
-  <div class="dashboard">
+    {{#if mode_users}}
+      {{> user_list}}
+    {{/if}}
+
+    {{#if mode_stocks}}
+      {{> stock_list}}
+    {{/if}}
+</template>
+
+<template name="user_list">
+  <div class="user_list">
     {{#each users}}
       {{> user}}
     {{/each}}
@@ -20,5 +30,21 @@
   <div class="user">
     <span class="name">{{name}}</span>
     <span class="value">{{value}}</span>
+  </div>
+</template>
+
+<template name="stock_list">
+  <div class="stock_list">
+    {{#each stock}}
+      {{> stock}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="stock">
+  <div class="stock">
+    <span class="symbol">{{symbol}}</span>
+    <span class="price">{{price}}</span>
+    <span class="delta {{updown}}">{{delta}}</span>
   </div>
 </template>

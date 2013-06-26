@@ -19,3 +19,5 @@ Meteor.setInterval(function () {
   })
 
 }, 5000)
+
+// Todo: abstract this function to get all of a user's stocks
