@@ -23,8 +23,9 @@ _.extend(Stock.prototype, {
          console.log('Updating stock', _this.symbol, price);
          
          // TODO:  REMOVE when markets are live!
-         //var random = Math.random();
-         //price = parseFloat(price) + (random < 0.5 ? random : random * -1);
+         var random = Math.random();
+         price = parseFloat(price) + (random < 0.5 ? random : random * -1);
+         price = price.toFixed(2);
          
          // TODO: is this the correct way to update yourself?
          Stocks.update({'symbol': _this.symbol}, {$set: {'price': price, 'open': open, 'previousClose': previousClose}});
