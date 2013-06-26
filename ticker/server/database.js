@@ -1,5 +1,4 @@
 Users = new Meteor.Collection("users");
-Stocks = new Meteor.Collection("stocks");
 
 Meteor.startup(function () {
     
@@ -79,8 +78,10 @@ Meteor.startup(function () {
     }
   
     _.each(stocks_mock, function (price, symbol) {
-      console.log('Adding stock',symbol)
-      var stock_id = Stocks.insert({'symbol': symbol, 'price': price})
+      console.log('Adding stock',symbol);
+      var stock_id = Stocks.insert({'symbol': symbol, 'price': 0});
+      // immediately update price
+      Stocks.findOne({'symbol': symbol}).updatePrice();
     })
   }
 
