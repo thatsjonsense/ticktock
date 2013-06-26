@@ -1,0 +1,24 @@
+<head>
+  <title>Ticker</title>
+</head>
+
+<body>
+  <div id="outer">
+    {{> dashboard}}
+  </div>
+</body>
+
+<template name="dashboard">
+  <div class="dashboard">
+    {{#each investors}}
+      {{> investor}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="investor">
+  <div class="investor">
+    <span class="name">{{name}}</span>
+    <span class="value">{{value}}</span>
+  </div>
+</template>
