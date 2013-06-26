@@ -21,9 +21,13 @@ _.extend(Stock.prototype, {
          var open = result.data.query.results.quote.Open;
          var previousClose = result.data.query.results.quote.PreviousClose;
          console.log('Updating stock', _this.symbol, price);
+         
+         // TODO:  REMOVE when markets are live!
+         //var random = Math.random();
+         //price = parseFloat(price) + (random < 0.5 ? random : random * -1);
+         
          // TODO: is this the correct way to update yourself?
          Stocks.update({'symbol': _this.symbol}, {$set: {'price': price, 'open': open, 'previousClose': previousClose}});
-         //console.log('Updated:', _this.symbol, 'price:' , _this.price, 'open:', _this.open, 'previousClose:', _this.previousClose);
        } // TODO: error handling?
     });
   }
