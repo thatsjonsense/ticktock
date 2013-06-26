@@ -56,7 +56,10 @@ Meteor.startup(function () {
         })
       })
 
-      var user_id = Users.insert({name: user.name, investments: investments})
+      var user_id = Users.insert({
+        name: user.name, 
+        investments: investments,
+        value: 0})
 
     })
   }
