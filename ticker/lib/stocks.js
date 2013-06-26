@@ -20,19 +20,22 @@ _.extend(Stock.prototype, {
          var price = result.data.query.results.quote.LastTradePriceOnly;
          var open = result.data.query.results.quote.Open;
          var previousClose = result.data.query.results.quote.PreviousClose;
-         //console.log('Updating stock', _this.symbol, price);
+         console.log('Updating stock', _this.symbol, price);
          // TODO: is this the correct way to update yourself?
          Stocks.update({'symbol': _this.symbol}, {$set: {'price': price, 'open': open, 'previousClose': previousClose}});
-         console.log('Updated:', _this.symbol, 'price:' , _this.price, 'open:', _this.open, 'previousClose:', _this.previousClose);
+         //console.log('Updated:', _this.symbol, 'price:' , _this.price, 'open:', _this.open, 'previousClose:', _this.previousClose);
        } // TODO: error handling?
     });
   }
 });
 
-// updates all stocks every 15 seconds
-Meteor.setInterval(function () {
-  stockCursor = Stocks.find({});
-  stockCursor.forEach(function (stock) {
-    stock.updatePrice();
-  });
-}, 15000);
+
+if (Meteor.isServer) {
+  // updates all stocks every 15 seconds
+  Meteor.setInterval(function () {
+    stockCursor = Stocks.find({});
+    stockCursor.forEach(function (stock) {
+      stock.updatePrice();
+    });
+  }, 3000);
+}

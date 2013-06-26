@@ -1,6 +1,3 @@
-Users = new Meteor.Collection("users");
-Stocks = new Meteor.Collection("stocks");
-
 Session.setDefault('user_id',null);
 
 Template.dashboard.mode_stocks = function () {
