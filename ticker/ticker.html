@@ -10,14 +10,14 @@
 
 <template name="dashboard">
   <div class="dashboard">
-    {{#each investors}}
-      {{> investor}}
+    {{#each users}}
+      {{> user}}
     {{/each}}
   </div>
 </template>
 
-<template name="investor">
-  <div class="investor">
+<template name="user">
+  <div class="user">
     <span class="name">{{name}}</span>
     <span class="value">{{value}}</span>
   </div>

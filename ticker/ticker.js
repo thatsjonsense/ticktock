@@ -1,65 +1,86 @@
-Investors = new Meteor.Collection("investors");
+Users = new Meteor.Collection("users");
 Stocks = new Meteor.Collection("stocks");
 
 if (Meteor.isClient) {
-  Template.dashboard.investors = function () {
-    return Investors.find({}, {sort: {name: 1}});
+  Template.dashboard.users = function () {
+    return Users.find({}, {sort: {name: 1}});
   };
 
-  Template.investor.value = function () {
+  Template.user.value = function () {
     var total = 0;
-    _.each(this.portfolio,function (shares,symbol) {
-      var stock = Stocks.findOne({'symbol': symbol})
-      console.log('Looking up symbol',symbol,'found',stock)
-      var price = stock.price
-      total += (shares * price);
+    _.each(this.investments,function (i) {
+      var stock = Stocks.findOne({'symbol': i.symbol})
+      if (stock) {
+        console.log('Looking up symbol',i.symbol,'found',stock)
+        var price = stock.price
+        total += (i.shares * price);
+      }
     })
 
     return total.toFixed(2);
   }
 
-  /*Template.hello.events({
-    'click input' : function () {
-      // template data, if any, is available in 'this'
-      if (typeof console !== 'undefined')
-        console.log("You pressed the button");
-    }
-  });*/
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
     
     // User accounts
-    if (Investors.find().count() === 0) {
-      var portfolios = {
-        "Jon": {
-          "GOOG": 3,
-          "AMZN": 10,
-          "NFLX": 10,
-          "LNKD": 20
-        },
-        "Yuhki": {
-          "FB": 40,
-          "TSLA": 10,
-        },
-        "Asa": {
-          "MSFT": 50
-        },
-        "Lee": {
-          "FRCOY": 30,
-          "WSM": 20,
-          "LNKD": 10
-        },
-        "Richard": {
+    if (Users.find().count() === 0) {
 
+      var users = [
+        {
+          name: "Jon",
+          portfolio: [
+            // [symbol, shares, cost basis, date]
+            ['GOOG',3,880.19],
+            ['AMZN',10,265.30],
+            ['CMG',3,375.86],
+            ['LNKD',20,175.89]
+          ]
+        },
+        {
+          name: "Yuhki",
+          portfolio: [
+            ['FB',40,25.19],
+            ['TSLA',10,57.2]
+          ]
+        },
+        {
+          name: "Lee",
+          portfolio: [
+            ['FRCOY',30,25.6],
+            ['WSM',20,49.1],
+            ['LNKD',10,161.7]
+          ]
+        },
+        {
+          name: "Asa",
+          portfolio: [
+            ['MSFT',50,27.5]
+          ]
+        },
+        {
+          name: "Richard",
+          portfolio: []
         }
-      }
+      ]
 
-      _.each(portfolios,function (portfolio, name) {
-        console.log('Adding user',name)
-        var user_id = Investors.insert({'name': name,'portfolio': portfolio});
-      });
+      _.each(users,function(user) {
+        console.log('Adding user',user.name);
+
+        var investments = []
+        _.each(user.portfolio, function(investment) {
+          investments.push({
+            symbol: investment[0],
+            shares: investment[1],
+            cost_basis: investment[2]
+          })
+        })
+
+        var user_id = Users.insert({name: user.name, investments: investments})
+
+      })
     }
 
     // Stock values
@@ -67,7 +88,7 @@ if (Meteor.isServer) {
       var stocks_mock = {
         "GOOG": 866.20,
         "AMZN": 272.09,
-        "NFLX": 212.90,
+        "CMG": 358.96,
         "LNKD": 176.87,
         "FB": 24.25,
         "TSLA": 102.40,

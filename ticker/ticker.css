@@ -17,18 +17,18 @@ body {
     margin: 0 auto;    
 }
 
-.investor {
+.user {
     cursor: pointer;
     padding: 5px;
 }
 
-.investor .name {
+.user .name {
     display: inline-block;
     width: 300px;
     font-size: 1.75em;
 }
 
-.investor .value {
+.user .value {
     display: inline-block;
     width: 100px;
     text-align: right;
