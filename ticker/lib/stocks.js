@@ -12,7 +12,6 @@ _.extend(Stock.prototype, {
     // pulls latest price and start price from Yahoo API
     var _this = this;
     
-    
     Meteor.http.call("GET", "http://query.yahooapis.com/v1/public/yql?q=select%20LastTradePriceOnly%2COpen%2CPreviousClose%20from%20yahoo.finance.quotes%20where%20symbol%20%3D%22" + this.symbol + "%22%0A%09%09&format=json&env=http%3A%2F%2Fdatatables.org%2Falltables.env",
      {params: {}},
      function (error, result) {
@@ -25,7 +24,8 @@ _.extend(Stock.prototype, {
          // TODO:  REMOVE when markets are live!
          var random = Math.random();
          price = parseFloat(price) + (random < 0.5 ? random : random * -1);
-         price = price.toFixed(2);
+         price = price.toFixed(2); 
+         // END REMOVE
          
          // TODO: is this the correct way to update yourself?
          Stocks.update({'symbol': _this.symbol}, {$set: {'price': price, 'open': open, 'previousClose': previousClose}});
