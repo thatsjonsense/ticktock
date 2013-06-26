@@ -17,9 +17,19 @@ Template.user.value = function () {
   return this.value.toFixed(2)
 }
 
+Template.user.events({
+  'click': function () {
+    Router.setUser(this._id)
+  }
+})
+
 
 Template.stock_list.stocks = function () {
-  return Stocks.find({}, {sort: {name: -1}});
+  //return Stocks.find({}, {sort: {name: -1}});
+  var current_user = Users.findOne(Session.get('user_id'))
+  if (current_user) {
+    return current_user.stocks()  
+  }
 };
 
 Template.stock.delta = function () {
@@ -35,17 +45,17 @@ Template.stock.updown = function () {
 // Track selected user in user_list
 var UsersRouter = Backbone.Router.extend({
   routes: {
-    "user/:user_id": "selectUser"
+    "user/:user_id": "selectUser",
+    "": "allUsers"
   },
   selectUser: function (user_id) {
-    var oldUser = Session.get("user_id");
-    console.log('Routing to user',user_id)
-    if (oldUser !== user_id) {
-      Session.set("user_id", user_id);
-    }
+    Session.set("user_id", user_id);
+  },
+  allUsers: function () {
+    Session.set("user_id",null)
   },
   setUser: function (user_id) {
-    this.navigate('user/' + user_id, true);
+    this.navigate('user/' + user_id, {trigger: true, replace: false});
   }
 });
 
