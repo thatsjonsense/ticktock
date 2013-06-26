@@ -9,11 +9,13 @@ if (Meteor.isClient) {
   Template.investor.value = function () {
     var total = 0;
     _.each(this.portfolio,function (shares,symbol) {
-      var price = Stocks.findOne({'symbol': symbol}).price
+      var stock = Stocks.findOne({'symbol': symbol})
+      console.log('Looking up symbol',symbol,'found',stock)
+      var price = stock.price
       total += (shares * price);
     })
 
-    return total;
+    return total.toFixed(2);
   }
 
   /*Template.hello.events({
@@ -85,11 +87,12 @@ if (Meteor.isServer) {
 
   });
 
-
+  /*
   Meteor.setInterval(function () {
     Stocks.update({'symbol': 'GOOG'},{$inc: {price: 5}})
     console.log('Updated price of GOOG to',Stocks.findOne({'symbol':'GOOG'}).price)
   },1000)
+  */
 
 
 
