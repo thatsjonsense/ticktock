@@ -63,7 +63,7 @@ Meteor.startup(function () {
     })
   }
 
-  // Stock values
+  // Stock values. TODO: clean up this temp data
   if (Stocks.find().count() === 0) {
     var stocks_mock = {
       "GOOG": 866.20,
