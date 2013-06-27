@@ -10,6 +10,12 @@ Template.user_list.users = function () {
 };
 
 
+
+Template.user.preserve({
+  'tr': function (node) { return node.id; }
+});
+
+
 Template.user.updown = function () {
   return this.deltaAbsolute() >= 0 ? "up": "down";
 }

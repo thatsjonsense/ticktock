@@ -8,7 +8,7 @@
 </template>
 
 <template name="user">
-  <tr class="dashboard clickable">
+  <tr id="{{name}}" class="dashboard clickable">
     <td><span class="symbol">{{name}}</span></td>
     <td class="numerical"><span class="price">{{toDollars currentValue}}</span></td>
     <td class="numerical"><span class="delta {{updown}} secondary">{{toGain deltaAbsolute}}</span></td>

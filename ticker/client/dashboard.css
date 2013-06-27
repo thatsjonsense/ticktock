@@ -131,6 +131,20 @@ input[type="button"]:active {
     width: 100px;
 }
 
+#newsfeed {
+    margin-top: 20px;
+    padding-left: 5px;
+}
+
+#newsfeed .time {
+    font-size: 0.8em;
+    color: #A9A9A9;
+    margin-top: 2px;
+} 
+
+#newsfeed .entry {
+    margin-bottom: 10px;
+}
 
 
 
