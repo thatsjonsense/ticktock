@@ -27,6 +27,17 @@ Template.stock_control.events({
   'click #add_stock': function (evt) {
     $('#new_stock').show();
     $('#add_stock').hide();
+    $('#new_stock .symbol').val('').focus();
+  },
+  
+  'blur #new_stock input': function (evt) {
+    // if all of the fields are blank, clear
+    if ($('#new_stock .symbol').val() == "" &&
+        $('#new_stock .shares').val() == "" &&
+        $('#new_stock .cost_basis').val() == "") {
+        $('#new_stock').hide();
+        $('#add_stock').show();
+        }
   },
     
   'click .submit': function (evt) {
