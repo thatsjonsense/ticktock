@@ -30,7 +30,7 @@
 <template name="user">
   <div class="user">
     <span class="name">{{name}}</span>
-    <span class="value">{{value}}</span>
+    <span class="value">{{totalValue}}</span>
   </div>
 </template>
 
@@ -48,9 +48,9 @@
 <template name="stock">
   <tr class="stock">
     <td><span class="symbol">{{symbol}}</span></td>
-    <td class="numerical"><span class="price">{{price}}</span></td>
-    <td class="numerical"><span class="delta {{updown}} numerical secondary">{{delta}}</span></td>
-    <td class="numerical"><span class="deltaPercent {{updown}} numerical secondary">({{deltaPercent}})</span></td>
+    <td class="numerical"><span class="price">{{toDollars price}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} numerical secondary">{{toGain deltaAbsolute}}</span></td>
+    <td class="numerical"><span class="deltaPercent {{updown}} numerical secondary">({{toPercent deltaRelative}})</span></td>
   </div>
 </template>
 

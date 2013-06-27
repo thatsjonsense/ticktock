@@ -5,7 +5,7 @@ Template.stock_list.stocks = function () {
   if (current_user) {
     var stocks = current_user.stocks()
     return _.sortBy(stocks,function(stock) {
-      return -stock.delta()
+      return -stock.deltaRelative()
     })
   }
 };
@@ -17,16 +17,8 @@ Template.stock_list.title = function () {
   }
 }
 
-Template.stock.delta = function () {
-  return this.delta().toGain();
-}
-
-Template.stock.deltaPercent = function () {
-  return this.delta().toPercent();
-}
-
 Template.stock.updown = function () {
-  return this.delta() > 0 ? "up": "down";
+  return this.deltaAbsolute() > 0 ? "up": "down";
 }
 
 

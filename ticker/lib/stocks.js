@@ -24,7 +24,6 @@ _.extend(Stock.prototype, {
          // TODO:  REMOVE when markets are live!
          var random = Math.random();
          price = parseFloat(price) + (random < 0.5 ? random : random * -1);
-         price = price.toFixed(2); 
          // END REMOVE
          
          // TODO: is this the correct way to update yourself?
@@ -33,9 +32,14 @@ _.extend(Stock.prototype, {
     });
   },
 
-  delta: function () {
+  deltaAbsolute: function () {
     var self = this;
-    return (this.price - this.open) / this.open
+    return (self.price - self.open)
+  },
+
+  deltaRelative: function () {
+    var self = this;
+    return self.deltaAbsolute() / self.open
   }
 
 
