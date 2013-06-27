@@ -37,37 +37,53 @@ body {
     color: #777;
 }
 
-.stock {
+table { 
+  border-collapse:collapse 
+}
+
+.dashboard {
     font-size: 1.75em;
 }
 
-.stock td {
+.dashboard td {
     min-width: 100px;
-    padding-bottom: 10px;
+    padding: 5px;
 }
 
-.stock .symbol {
+.dashboard.clickable {
+    cursor: pointer;
+}
+
+.dashboard.clickable:hover {
+    background-color: #efefef;
+}
+
+.dashboard .symbol {
     font-weight: 400;
 }
 
-.stock .numerical {
+.dashboard .numerical {
     text-align: right;
 }
 
-.stock .up {
+.dashboard .up {
     color: green;
 }
 
-.stock .delta {
+.dashboard .delta {
     font-weight: 400;
 }
 
-.stock .down {
+.dashboard .down {
     color: red;
 }
 
-.stock .secondary {
+.dashboard .secondary {
     font-size: 0.8em;
+}
+
+.stock_list {
+    margin-bottom: 15px;
 }
 
 input:focus::-webkit-input-placeholder {
