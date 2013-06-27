@@ -1,3 +1,23 @@
+
+
+<template name='newsfeed'>
+  <div id="newsfeed">
+    {{#each entries}}
+      {{>newsfeed_entry}}
+    {{/each}}
+  </div>
+</template>
+
+<template name='newsfeed_entry'>
+  <div class="entry">
+    <span class='time'>{{timestamp}}</span>
+    <span class='about'>{{about}}</span>
+    <span class='type'>{{type}}</span>
+  </div>
+</template>
+
+
+
 <template name='alert_big_gain'>
 Whoa! {{symbol}} is up {{toPercent gainRelative}} today.
 </template>
