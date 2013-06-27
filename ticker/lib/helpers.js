@@ -22,12 +22,15 @@ if(Meteor.isClient) {
 	
 	templateHelpers = {
 		toPercent: function(num) {
+			if (num == null || num == NaN) {return 'n/a'}
 			return (num * 100).toFixed(1) + '%'
 		},
 		toGain: function(num) {
+			if (num == null || num == NaN) {return 'n/a'}
 			return (num > 0 ? '+' : '') + num.toFixed(2)
 		},
 		toDollars: function(num) {
+			if (num == null) {return 'n/a'}
 			return '$' + num.toFixed(2)
 		}
 

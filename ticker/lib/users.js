@@ -10,12 +10,19 @@ function User (doc) {
 _.extend(User.prototype, {
   stocks: function () {
     var self = this;
-    return _.map(self.investments, function(i) {
-      var stock = Stocks.findOne({symbol: i.symbol}) || {}
-      stock.shares = i.shares
-      stock.cost_basis = i.cost_basis
-      return stock
+    var stocks = [];
+
+
+    _.each(self.investments, function(i) {
+      var stock = Stocks.findOne({symbol: i.symbol})
+      if (stock) {
+        stock.shares = i.shares
+        stock.cost_basis = i.cost_basis
+        stocks.push(stock)
+      }
     })
+
+    return stocks;
   },
 
   currentValue: function () {
