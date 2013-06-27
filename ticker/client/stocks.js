@@ -3,12 +3,18 @@ Session.setDefault('adding_stock',false)
 Template.stock_list.stocks = function () {
   var current_user = Users.findOne(Session.get('user_id'))
   if (current_user) {
-    return current_user.stocks()  
+    var stocks = current_user.stocks()
+    return _.sortBy(stocks,function(stock) {
+      return -stock.delta()
+    })
   }
 };
 
 Template.stock_list.title = function () {
-  return Users.findOne(Session.get('user_id')).name + "'s portfolio";
+  var current_user = Users.findOne(Session.get('user_id'))
+  if (current_user) {
+    return current_user.name + "'s portfolio";
+  }
 }
 
 Template.stock.delta = function () {

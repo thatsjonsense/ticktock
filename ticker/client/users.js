@@ -1,3 +1,6 @@
+Session.setDefault('user_id',null);
+
+
 Template.user_list.users = function () {
   return Users.find({}, {sort: {value: -1}});
 };
