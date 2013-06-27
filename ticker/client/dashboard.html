@@ -51,18 +51,18 @@
     <td class="numerical"><span class="price">{{price}}</span></td>
     <td class="numerical"><span class="delta {{updown}} numerical secondary">{{delta}}</span></td>
     <td class="numerical"><span class="deltaPercent {{updown}} numerical secondary">({{deltaPercent}})</span></td>
-  </div>
+  </tr>
 </template>
 
 <template name="stock_control">
-  {{#if adding_stock}}
-  <div class="new_stock">
-    <input type="text" class="symbol" value="POOP" />
-    <input type="text" class="shares" value="1" />
-    <input type="text" class="cost_basis" value="0.0" />
-    <input type="button" class="submit" value="Submit" />
+  
+  <div id="new_stock" style="display:none;">
+    <input type="text" class="symbol" placeholder="Symbol (e.g., MSFT)" autofocus />
+    <input type="text" class="shares" placeholder="# shares" />
+    <input type="text" class="cost_basis" placeholder="cost basis" />
+    <input type="button" class="submit" value="Buy!" />
   </div>
-  {{else}}
-    <input type="button" class="add_stock" value="Add Stock" />
-  {{/if}}
+
+  <input type="button" id="add_stock" value="Add Stock" />
+
 </template>
