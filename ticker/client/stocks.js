@@ -35,6 +35,7 @@ Template.stock_control.events({
       {$push: {investments: {
         symbol: $('#new_stock .symbol').val(),
         shares: $('#new_stock .shares').val(),
+        price: null,
         cost_basis: $('#new_stock .cost_basis').val()
       }}});
     // clear values out of control and bring back focus
