@@ -72,22 +72,25 @@ _.extend(User.prototype, {
 
 
 if (Meteor.isServer) {
+  Meteor.startup(function () {
 
-  var stockObserver = Stocks.find({}).observe({
-    changed: function (stock, oldStock) {
-      var owners = Users.find({investments: {$elemMatch: {symbol: stock.symbol}}}).fetch()
-      _.each(owners,function(user) {
-        user.set({
-          currentValue: user.getCurrentValue(),
-          prevValue: user.getPrevValue()
+
+
+    var stockObserver = Stocks.find({}).observe({
+      changed: function (stock, oldStock) {
+        var owners = Users.find({investments: {$elemMatch: {symbol: stock.symbol}}}).fetch()
+        _.each(owners,function(user) {
+          user.set({
+            currentValue: user.getCurrentValue(),
+            prevValue: user.getPrevValue()
+          })
         })
-      })
-    }
+      }
 
-    
+      
+    })
+
   })
-
-
 }
 
 
