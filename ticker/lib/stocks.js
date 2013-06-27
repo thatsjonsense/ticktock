@@ -2,7 +2,11 @@ Stocks = new Meteor.Collection("stocks", {
   transform: function (doc) { return new Stock(doc); }
 });
 
-INTERVAL = 3000
+RANDOM_MODE = true
+RANDOM_SWING = 0.001 // what % it will sway at a time
+INTERVAL = RANDOM_MODE ? 1000 : 5000
+
+
 
 // stock class
 function Stock (doc) {
@@ -24,8 +28,15 @@ _.extend(Stock.prototype, {
          //console.log('Updating stock', _this.symbol, price);
          
          // TODO:  REMOVE when markets are live!
-         var random = Math.random();
-         price = parseFloat(price) + (random < 0.5 ? random : random * -1);
+         if(RANDOM_MODE) {
+          var old_price = self.price || price
+
+          var random = Math.random() * RANDOM_SWING * old_price;
+
+          price = parseFloat(old_price) + (Math.random() < 0.5 ? random : -random);
+         }
+
+         
          // END REMOVE
          
          // TODO: is this the correct way to update yourself?
