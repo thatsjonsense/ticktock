@@ -72,6 +72,8 @@ _.extend(User.prototype, {
 
 
 if (Meteor.isServer) {
+  Meteor.startup(function () {
+
 
   var stockObserver = Stocks.find({}).observe({
     changed: function (stock, oldStock) {
@@ -84,10 +86,10 @@ if (Meteor.isServer) {
       })
     }
 
-    
+      
+    })
+
   })
-
-
 }
 
 
