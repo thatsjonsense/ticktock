@@ -1,0 +1,20 @@
+<head>
+  <title>Ticker</title>
+</head>
+
+<body>
+  <div id="outer">
+    {{> dashboard}}
+  </div>
+</body>
+
+<template name="dashboard">
+    {{#if mode_users}}
+      {{> user_list}}
+    {{/if}}
+
+    {{#if mode_stocks}}
+      {{> stock_list}}
+      {{> stock_control}}
+    {{/if}}
+</template>
