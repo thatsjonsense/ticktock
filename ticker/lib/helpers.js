@@ -35,11 +35,11 @@ if(Meteor.isClient) {
 		},
 		toGain: function(num) {
 			if (num == null || num == NaN) {return 'n/a'}
-			return (num > 0 ? '+' : '') + num.toFixed(2)
+			return (num > 0 ? '+' : '') + numberWithCommas(num.toFixed(2));
 		},
 		toDollars: function(num) {
 			if (num == null) {return 'n/a'}
-			return '$' + num.toFixed(2)
+			return '$' + numberWithCommas(num.toFixed(2));
 		}
 	};
 
