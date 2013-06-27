@@ -55,7 +55,8 @@
     <td class="numerical"><span class="price">{{toDollars price}}</span></td>
     <td class="numerical"><span class="delta {{updown}} secondary">{{toGain deltaAbsolute}}</span></td>
     <td class="numerical"><span class="{{updown}} secondary">({{toPercent deltaRelative}})</span></td>
-  </div>
+    <td><span class="owners tertiary">{{ownersString}}</span></td>
+  </tr>
 </template>
 
 <template name="stock_control">

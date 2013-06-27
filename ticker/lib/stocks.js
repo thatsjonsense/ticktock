@@ -53,8 +53,12 @@ _.extend(Stock.prototype, {
   deltaRelative: function () {
     var self = this;
     return self.open ? self.deltaAbsolute() / self.open : 0
+  },
+  
+  owners: function () {
+    var self = this;
+    return Users.find({investments: {$elemMatch: {symbol: self.symbol}}}).fetch();
   }
-
 
 });
 

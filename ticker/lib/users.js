@@ -45,7 +45,7 @@ _.extend(User.prototype, {
 
   deltaAbsolute: function () {
     var self = this;
-    return self.currentValue - self.prevValue
+    return self.prevValue ? self.currentValue - self.prevValue : 0;
   },
 
   deltaRelative: function () {
@@ -75,7 +75,7 @@ if (Meteor.isServer) {
 
   var stockObserver = Stocks.find({}).observe({
     changed: function (stock, oldStock) {
-      var owners = Users.find({investments: {$elemMatch: {symbol: stock.symbol}}}).fetch()
+      var owners = stock.owners();
       _.each(owners,function(user) {
         user.set({
           currentValue: user.getCurrentValue(),
