@@ -1,4 +1,5 @@
-// random helper functions
+TIMER_INTERVAL = 15 * 1000
+
 
 _.extend(Meteor.Collection.prototype, {
 	getOrCreate: function(selector) {
@@ -24,6 +25,12 @@ function numberWithCommas(num) {
 
 if(Meteor.isClient) {
 	
+	Session.setDefault('time_now',new Date())
+	Meteor.setInterval(function(){
+		Session.set('time_now',new Date())
+	},TIMER_INTERVAL)
+
+
 	templateHelpers = {
 		toPercent: function(num) {
 			if (num == null || num == NaN) {return 'n/a'}
@@ -34,8 +41,14 @@ if(Meteor.isClient) {
 			return (num > 0 ? '+' : '') + numberWithCommas(num.toFixed(2));
 		},
 		toDollars: function(num) {
-			if (num == null) {return 'n/a'}
+			num = num || 0
 			return '$' + numberWithCommas(num.toFixed(2));
+		},
+
+		toMinAgo: function(timestamp) {
+			var now = Session.get('time_now')
+			return $.timeago(timestamp)
+
 		}
 	};
 

@@ -58,7 +58,7 @@ if (Meteor.isServer) {
                 data: s
               }
               var a = Alerts.insert(record)
-              console.log(Alerts.findOne(a))
+              //console.log(Alerts.findOne(a))
             }
 
 
