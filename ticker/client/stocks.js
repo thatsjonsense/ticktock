@@ -12,20 +12,16 @@ Template.stock_list.title = function () {
 }
 
 Template.stock.delta = function () {
-  var ret = (this.price - this.open).toFixed(2);
-  return (ret >= 0 ? "+" : "") + ret;
+  return this.delta().toGain();
 }
 
 Template.stock.deltaPercent = function () {
-  return (100 * (this.price - this.open) / this.open).toFixed(2) + "%";
+  return this.delta().toPercent();
 }
 
 Template.stock.updown = function () {
-  // TODO: somehow, I feel this should be tied with stock.delta
-  return this.price >= this.open ? "up": "down";
+  return this.delta() > 0 ? "up": "down";
 }
-
-
 
 
 // Adding a new stock to portfolio

@@ -17,3 +17,16 @@ _.extend(Meteor.Collection.prototype, {
 
 
 })
+
+_.extend(Number.prototype, {
+	toPercent: function() {
+		return (this * 100).toFixed(2) + '%'
+	},
+	toDollars: function() {
+		return '$' + this.toFixed(2)
+	},
+	toGain: function() {
+		return (this > 0 ? '+' : '') + this.toFixed(2)
+	}
+
+})

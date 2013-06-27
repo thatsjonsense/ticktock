@@ -10,9 +10,9 @@ function Stock (doc) {
 _.extend(Stock.prototype, {
   updatePrice: function () {
     // pulls latest price and start price from Yahoo API
-    var _this = this;
+    var self = this;
     
-    Meteor.http.call("GET", "http://query.yahooapis.com/v1/public/yql?q=select%20LastTradePriceOnly%2COpen%2CPreviousClose%20from%20yahoo.finance.quotes%20where%20symbol%20%3D%22" + this.symbol + "%22%0A%09%09&format=json&env=http%3A%2F%2Fdatatables.org%2Falltables.env",
+    Meteor.http.call("GET", "http://query.yahooapis.com/v1/public/yql?q=select%20LastTradePriceOnly%2COpen%2CPreviousClose%20from%20yahoo.finance.quotes%20where%20symbol%20%3D%22" + self.symbol + "%22%0A%09%09&format=json&env=http%3A%2F%2Fdatatables.org%2Falltables.env",
      {params: {}},
      function (error, result) {
        if (result.statusCode === 200) {
@@ -28,10 +28,17 @@ _.extend(Stock.prototype, {
          // END REMOVE
          
          // TODO: is this the correct way to update yourself?
-         Stocks.update({'symbol': _this.symbol}, {$set: {'price': price, 'open': open, 'previousClose': previousClose}});
+         Stocks.update({'symbol': self.symbol}, {$set: {'price': price, 'open': open, 'previousClose': previousClose}});
        } // TODO: error handling?
     });
+  },
+
+  delta: function () {
+    var self = this;
+    return (this.price - this.open) / this.open
   }
+
+
 });
 
 
