@@ -25,11 +25,11 @@ Template.stock.updown = function () {
 
 
 // Adding a new stock to portfolio
-Template.stock_list.adding_stock = function () {
+Template.stock_control.adding_stock = function () {
   return Session.get('adding_stock')
 }
 
-Template.stock_list.events({
+Template.stock_control.events({
 	'click .add_stock': function (evt) {
 		Session.set('adding_stock',true)
 	},

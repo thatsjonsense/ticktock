@@ -11,8 +11,7 @@ _.extend(User.prototype, {
   stocks: function () {
     var self = this;
     return _.map(self.investments, function(i) {
-      // todo: handle error if stock not found in database. get_or_create function?
-      var stock = Stocks.findOne({symbol: i.symbol})
+      var stock = Stocks.findOne({symbol: i.symbol}) || {}
       stock.shares = i.shares
       stock.cost_basis = i.cost_basis
       return stock
@@ -24,7 +23,7 @@ _.extend(User.prototype, {
     var value = _.reduce(self.stocks(), function(sum,stock) {
       return sum + (stock.shares * stock.price)
     }, 0.0)
-    console.log('Calculated value',value)
+    //console.log('Calculated value',value)
     return value
   }
 

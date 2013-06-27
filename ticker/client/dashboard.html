@@ -15,6 +15,7 @@
 
     {{#if mode_stocks}}
       {{> stock_list}}
+      {{> stock_control}}
     {{/if}}
 </template>
 
@@ -40,16 +41,6 @@
       {{> stock}}
     {{/each}}
     </table>
-    {{#if adding_stock}}
-    <div class="new_stock">
-      <input type="text" class="symbol" value="POOP" />
-      <input type="text" class="shares" value="1" />
-      <input type="text" class="cost_basis" value="0.0" />
-      <input type="button" class="submit" value="Submit" />
-    </div>
-    {{else}}
-      <input type="button" class="add_stock" value="Add Stock" />
-    {{/if}}
   </div>
 </template>
 
@@ -60,4 +51,17 @@
     <td class="numerical"><span class="delta {{updown}} numerical secondary">{{delta}}</span></td>
     <td class="numerical"><span class="deltaPercent {{updown}} numerical secondary">({{deltaPercent}})</span></td>
   </div>
+</template>
+
+<template name="stock_control">
+  {{#if adding_stock}}
+  <div class="new_stock">
+    <input type="text" class="symbol" value="POOP" />
+    <input type="text" class="shares" value="1" />
+    <input type="text" class="cost_basis" value="0.0" />
+    <input type="button" class="submit" value="Submit" />
+  </div>
+  {{else}}
+    <input type="button" class="add_stock" value="Add Stock" />
+  {{/if}}
 </template>

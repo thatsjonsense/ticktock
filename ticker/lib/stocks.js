@@ -19,7 +19,7 @@ _.extend(Stock.prototype, {
          var price = result.data.query.results.quote.LastTradePriceOnly;
          var open = result.data.query.results.quote.Open;
          var previousClose = result.data.query.results.quote.PreviousClose;
-         console.log('Updating stock', _this.symbol, price);
+         //console.log('Updating stock', _this.symbol, price);
          
          // TODO:  REMOVE when markets are live!
          var random = Math.random();
@@ -36,12 +36,31 @@ _.extend(Stock.prototype, {
 
 
 if (Meteor.isServer) {
-  
-  // Keep stock prices up to date
-  Meteor.setInterval(function () {
-    stockCursor = Stocks.find({});
-    stockCursor.forEach(function (stock) {
-      stock.updatePrice();
-    });
-  }, 3000);
-}
+  Meteor.startup(function(){
+
+    // Keep stock prices up to date
+    Meteor.setInterval(function () {
+      stockCursor = Stocks.find({});
+      stockCursor.forEach(function (stock) {
+        stock.updatePrice();
+      });
+    }, 3000);
+
+    // Add stocks whenever we see a portfolio change
+    var userObserver = Users.find({}).observeChanges({
+      changed: function (id,fields) {
+        if (fields.investments) {
+          console.log(id,'changed investments',fields.investments)
+          _.each(fields.investments,function(i) {
+            Stocks.getOrCreate({symbol: i.symbol});
+          })
+        }        
+      }
+    }) // oberver
+
+    // TODO: remove stocks
+
+
+  }) // startup
+
+} // isServer
