@@ -25,15 +25,15 @@ if (Meteor.isServer) {
 
         s.symbol = stock.symbol
 
-        s.open = stock.open
+        s.prevPrice = stock.previousClose
         s.oldPrice = old.price
         s.newPrice = stock.price
 
         s.jump = s.newPrice - s.oldPrice
         s.jumpRelative = s.jump / s.oldPrice
 
-        s.gain = s.newPrice - s.open
-        s.gainRelative = s.gain / s.open
+        s.gain = s.newPrice - s.prevPrice
+        s.gainRelative = s.gain / s.prevPrice
 
 
         _.each(rules,function(condition,name){

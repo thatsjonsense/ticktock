@@ -37,7 +37,7 @@ _.extend(User.prototype, {
   getPrevValue: function () {
     var self = this
     var value = _.reduce(self.stocks(), function(sum,stock) {
-      return sum + (stock.shares * stock.open)
+      return sum + (stock.shares * stock.previousClose)
     }, 0.0)
     //console.log('Calculated value',value)
     return value

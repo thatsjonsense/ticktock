@@ -36,7 +36,6 @@ _.extend(Stock.prototype, {
           price = parseFloat(old_price) + (Math.random() < 0.5 ? random : -random);
          }
 
-         
          // END REMOVE
          
          // TODO: is this the correct way to update yourself?
@@ -47,12 +46,12 @@ _.extend(Stock.prototype, {
 
   deltaAbsolute: function () {
     var self = this;
-    return (self.price - self.open)
+    return (self.price - self.previousClose)
   },
 
   deltaRelative: function () {
     var self = this;
-    return self.open ? self.deltaAbsolute() / self.open : 0
+    return self.previousClose ? self.deltaAbsolute() / self.previousClose : 0
   },
   
   owners: function () {
