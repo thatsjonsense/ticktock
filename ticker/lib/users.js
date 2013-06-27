@@ -2,7 +2,7 @@ Users = new Meteor.Collection("users", {
   transform: function (doc) { return new User(doc); }
 });
 
-// stock class
+// user class
 function User (doc) {
   _.extend(this, doc);
 };

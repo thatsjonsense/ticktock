@@ -1,14 +1,20 @@
-
 Template.user_list.users = function () {
   return Users.find({}, {sort: {value: -1}});
 };
 
 Template.user.value = function () {
-  return this.value.toFixed(2)
-}
+  return this.value.toFixed(2);
+};
 
 Template.user.events({
   'click': function () {
-    Router.setUser(this._id)
+    Router.setUser(this._id);
   }
-})
+});
+
+
+// TODO: maybe move these to more generic file
+Template.dashboard.title = function () {
+  // get user in focus if applicable
+  
+};

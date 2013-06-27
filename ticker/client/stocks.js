@@ -7,6 +7,10 @@ Template.stock_list.stocks = function () {
   }
 };
 
+Template.stock_list.title = function () {
+  return Users.findOne(Session.get('user_id')).name + "'s portfolio";
+}
+
 Template.stock.delta = function () {
   var ret = (this.price - this.open).toFixed(2);
   return (ret >= 0 ? "+" : "") + ret;
