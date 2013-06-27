@@ -18,24 +18,33 @@ _.extend(Meteor.Collection.prototype, {
 
 })
 
+// TODO: Where the heck can I put this?
+function numberWithCommas(num) {
+  var parts = num.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
+}
+
+
 if(Meteor.isClient) {
 	
 	templateHelpers = {
 		toPercent: function(num) {
-			return (num * 100).toFixed(1) + '%'
+			return (num * 100).toFixed(2) + '%'
 		},
 		toGain: function(num) {
 			return (num > 0 ? '+' : '') + num.toFixed(2)
 		},
 		toDollars: function(num) {
-			return '$' + num.toFixed(2)
+			return '$' + numberWithCommas(num.toFixed(2));
 		}
-
-	}
+	};
 
 	_.each(templateHelpers, function(helper,name) {
 		Handlebars.registerHelper(name,helper)
-	})
+	});
+	
+
 
 
 }
