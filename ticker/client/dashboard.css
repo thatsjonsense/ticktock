@@ -37,10 +37,37 @@ body {
     color: #777;
 }
 
+.stock {
+    font-size: 1.75em;
+}
+
+.stock td {
+    min-width: 100px;
+    padding-bottom: 10px;
+}
+
+.stock .symbol {
+    font-weight: 400;
+}
+
+.stock .numerical {
+    text-align: right;
+}
+
 .stock .up {
     color: green;
+}
+
+.stock .delta {
+    font-weight: 400;
 }
 
 .stock .down {
     color: red;
 }
+
+.stock .secondary {
+    font-size: 0.8em;
+}
+
+

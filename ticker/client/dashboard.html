@@ -35,9 +35,11 @@
 
 <template name="stock_list">
   <div class="stock_list">
+    <table id="portfolio">
     {{#each stocks}}
       {{> stock}}
     {{/each}}
+    </table>
     {{#if adding_stock}}
     <div class="new_stock">
       <input type="text" class="symbol" value="POOP" />
@@ -52,10 +54,10 @@
 </template>
 
 <template name="stock">
-  <div class="stock">
-    <span class="symbol">{{symbol}}</span>
-    <span class="price">{{price}}</span>
-    <span class="open">{{open}}</span>
-    <span class="delta {{updown}}">{{delta}}</span>
+  <tr class="stock">
+    <td><span class="symbol">{{symbol}}</span></td>
+    <td class="numerical"><span class="price">{{price}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} numerical secondary">{{delta}}</span></td>
+    <td class="numerical"><span class="deltaPercent {{updown}} numerical secondary">({{deltaPercent}})</span></td>
   </div>
 </template>

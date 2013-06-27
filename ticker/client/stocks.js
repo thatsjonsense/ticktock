@@ -1,7 +1,6 @@
 Session.setDefault('adding_stock',false)
 
 Template.stock_list.stocks = function () {
-  //return Stocks.find({}, {sort: {name: -1}});
   var current_user = Users.findOne(Session.get('user_id'))
   if (current_user) {
     return current_user.stocks()  
@@ -9,6 +8,11 @@ Template.stock_list.stocks = function () {
 };
 
 Template.stock.delta = function () {
+  var ret = (this.price - this.open).toFixed(2);
+  return (ret >= 0 ? "+" : "") + ret;
+}
+
+Template.stock.deltaPercent = function () {
   return (100 * (this.price - this.open) / this.open).toFixed(2) + "%";
 }
 
