@@ -1,5 +1,4 @@
-/* CSS declarations go here */
-
+/* Generic elements */
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: 200;
@@ -10,6 +9,31 @@ body {
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+}
+
+input:focus::-webkit-input-placeholder {
+    color: transparent;
+}
+
+table { 
+  border-collapse:collapse 
+}
+
+input[type="button"] {
+  background-color: #ddd;
+  padding: 5px 10px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  border: none;
+  font-size: 16px !important; 
+}
+
+input[type="button"]:hover {
+  background-color: #bbb;
+}
+
+input[type="button"]:active {
+  background-color: #444;
+  color: white;
 }
 
 #outer {
@@ -35,10 +59,6 @@ body {
     font-size: 2em;
     font-weight: bold;
     color: #777;
-}
-
-table { 
-  border-collapse:collapse 
 }
 
 .dashboard {
@@ -86,10 +106,6 @@ table {
     margin-bottom: 15px;
 }
 
-input:focus::-webkit-input-placeholder {
-    color: transparent;
-}
-
 #new_stock input {
     font-size: 1.2em;
 }
@@ -101,5 +117,7 @@ input:focus::-webkit-input-placeholder {
 #new_stock input.shares, input.cost_basis {
     width: 100px;
 }
+
+
 
 
