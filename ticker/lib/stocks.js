@@ -2,6 +2,8 @@ Stocks = new Meteor.Collection("stocks", {
   transform: function (doc) { return new Stock(doc); }
 });
 
+INTERVAL = 3000
+
 // stock class
 function Stock (doc) {
   _.extend(this, doc);
@@ -55,7 +57,7 @@ if (Meteor.isServer) {
       stockCursor.forEach(function (stock) {
         stock.updatePrice();
       });
-    }, 3000);
+    }, INTERVAL);
 
     // Add stocks whenever we see a portfolio change
     var userObserver = Users.find({}).observeChanges({

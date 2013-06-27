@@ -1,11 +1,13 @@
 Session.setDefault('adding_stock',false)
 
+SORT_TYPE = 'price'
+
 Template.stock_list.stocks = function () {
   var current_user = Users.findOne(Session.get('user_id'))
   if (current_user) {
     var stocks = current_user.stocks()
     return _.sortBy(stocks,function(stock) {
-      return -stock.deltaRelative()
+      return SORT_TYPE == 'delta' ? -stock.deltaRelative() : -stock.price
     })
   }
 };

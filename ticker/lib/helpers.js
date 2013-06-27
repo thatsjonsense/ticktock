@@ -12,11 +12,8 @@ _.extend(Meteor.Collection.prototype, {
 			return this.insert(selector)
 		}
 	}
-
-
-
-
 })
+
 
 // TODO: Where the heck can I put this?
 function numberWithCommas(num) {
@@ -24,7 +21,6 @@ function numberWithCommas(num) {
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return parts.join(".");
 }
-
 
 if(Meteor.isClient) {
 	

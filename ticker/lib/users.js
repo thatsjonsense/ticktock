@@ -25,7 +25,7 @@ _.extend(User.prototype, {
     return stocks;
   },
 
-  currentValue: function () {
+  getCurrentValue: function () {
     var self = this
     var value = _.reduce(self.stocks(), function(sum,stock) {
       return sum + (stock.shares * stock.price)
@@ -34,7 +34,7 @@ _.extend(User.prototype, {
     return value
   },
 
-  prevValue: function () {
+  getPrevValue: function () {
     var self = this
     var value = _.reduce(self.stocks(), function(sum,stock) {
       return sum + (stock.shares * stock.open)
@@ -45,22 +45,47 @@ _.extend(User.prototype, {
 
   deltaAbsolute: function () {
     var self = this;
-    return (self.currentValue() - self.prevValue())
+    return self.currentValue - self.prevValue
   },
 
   deltaRelative: function () {
     var self = this;
-    var prev = self.prevValue()
-    return prev ? self.deltaAbsolute() / prev : 0
+    return self.prevValue ? self.deltaAbsolute() / self.prevValue : 0
+  },
+
+
+
+
+  // Database helper functions
+  update: function (modifier) {
+    var self = this;
+    return Users.update(self._id, modifier)
+  },
+
+  set: function (keyval) {
+    var self = this;
+    return self.update({$set: keyval})
   }
-
-
 
 });
 
 
 
 if (Meteor.isServer) {
+
+  var stockObserver = Stocks.find({}).observe({
+    changed: function (stock, oldStock) {
+      var owners = Users.find({investments: {$elemMatch: {symbol: stock.symbol}}}).fetch()
+      _.each(owners,function(user) {
+        user.set({
+          currentValue: user.getCurrentValue(),
+          prevValue: user.getPrevValue()
+        })
+      })
+    }
+
+    
+  })
 
 
 }
