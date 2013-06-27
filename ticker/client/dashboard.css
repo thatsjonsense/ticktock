@@ -11,6 +11,15 @@ body {
     user-select: none;
 }
 
+a, a:visited {
+    color: #08c;
+    text-decoration: none;
+}
+
+a:hover {
+    opacity: 0.7;
+}
+
 input:focus::-webkit-input-placeholder {
     color: transparent;
 }

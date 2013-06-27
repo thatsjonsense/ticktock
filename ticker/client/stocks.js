@@ -30,9 +30,10 @@ Template.stock.ownersString = function () {
   var owners = self.owners();
   
   var names = [];
+  // TODO: consider moving this into template code
   owners.forEach(function (owner) {
     if (owner._id != Session.get('user_id')) {
-      names.push(owner.name);
+      names.push("<a href='/user/" + owner._id + "'>" + owner.name + "</a>");
     }
   });
   
