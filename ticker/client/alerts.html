@@ -11,17 +11,16 @@
 <template name='newsfeed_entry'>
   <div class="entry">
     <span class='time'>{{timestamp}}</span>
-    <span class='about'>{{about}}</span>
-    <span class='type'>{{type}}</span>
+    <span class='message'>{{{message}}}</span>
   </div>
 </template>
 
 
 
 <template name='alert_big_gain'>
-Whoa! {{symbol}} is up {{toPercent gainRelative}} today.
+Hory shet! {{symbol}} is up {{toPercent gainRelative}} today.
 </template>
 
 <template name='alert_big_loss'>
-Fuck! {{symbol}} is down {{toPercent gainRelative}} today.
+Noooooooo! {{symbol}} is down {{toPercent gainRelative}} today.
 </template>
