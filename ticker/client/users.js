@@ -2,12 +2,18 @@ Session.setDefault('user_id',null);
 
 
 Template.user_list.users = function () {
-  return Users.find({}, {sort: {value: -1}});
+	var users = Users.find({}).fetch()
+	var sorted = _.sortBy(users,function(user) {
+   return -user.deltaRelative()
+	})
+  return sorted
 };
 
-Template.user.value = function () {
-  return this.value.toFixed(2);
-};
+
+Template.user.updown = function () {
+  return this.deltaAbsolute() >= 0 ? "up": "down";
+}
+
 
 Template.user.events({
   'click': function () {

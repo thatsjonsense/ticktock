@@ -39,7 +39,7 @@ _.extend(Stock.prototype, {
 
   deltaRelative: function () {
     var self = this;
-    return self.deltaAbsolute() / self.open
+    return self.open ? self.deltaAbsolute() / self.open : 0
   }
 
 

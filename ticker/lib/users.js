@@ -18,31 +18,42 @@ _.extend(User.prototype, {
     })
   },
 
-  totalValue: function () {
+  currentValue: function () {
     var self = this
     var value = _.reduce(self.stocks(), function(sum,stock) {
       return sum + (stock.shares * stock.price)
     }, 0.0)
     //console.log('Calculated value',value)
     return value
+  },
+
+  prevValue: function () {
+    var self = this
+    var value = _.reduce(self.stocks(), function(sum,stock) {
+      return sum + (stock.shares * stock.open)
+    }, 0.0)
+    //console.log('Calculated value',value)
+    return value
+  },
+
+  deltaAbsolute: function () {
+    var self = this;
+    return (self.currentValue() - self.prevValue())
+  },
+
+  deltaRelative: function () {
+    var self = this;
+    var prev = self.prevValue()
+    return prev ? self.deltaAbsolute() / prev : 0
   }
+
+
 
 });
 
 
 
 if (Meteor.isServer) {
-
-  // Keep portfolio values up to date
-  Meteor.setInterval(function () {
-    userCursor = Users.find({});
-    userCursor.forEach(function (user) {
-      total = user.totalValue()
-      Users.update(user._id, {$set: {value: total}})
-    });
-  }, 5000)
-
-
 
 
 }
@@ -58,7 +69,7 @@ USER_SCHEMA = {
       shares: 10,
       cost_basis: 100
     },
-    value: 100
+    
     ...
   ]
 }

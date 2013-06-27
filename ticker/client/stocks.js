@@ -18,7 +18,7 @@ Template.stock_list.title = function () {
 }
 
 Template.stock.updown = function () {
-  return this.deltaAbsolute() > 0 ? "up": "down";
+  return this.deltaAbsolute() >= 0 ? "up": "down";
 }
 
 
