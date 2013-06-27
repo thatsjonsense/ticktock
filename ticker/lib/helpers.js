@@ -17,3 +17,25 @@ _.extend(Meteor.Collection.prototype, {
 
 
 })
+
+if(Meteor.isClient) {
+	
+	templateHelpers = {
+		toPercent: function(num) {
+			return (num * 100).toFixed(1) + '%'
+		},
+		toGain: function(num) {
+			return (num > 0 ? '+' : '') + num.toFixed(2)
+		},
+		toDollars: function(num) {
+			return '$' + num.toFixed(2)
+		}
+
+	}
+
+	_.each(templateHelpers, function(helper,name) {
+		Handlebars.registerHelper(name,helper)
+	})
+
+
+}

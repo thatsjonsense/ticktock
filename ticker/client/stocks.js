@@ -1,31 +1,25 @@
 Session.setDefault('adding_stock',false)
 
 Template.stock_list.stocks = function () {
-	var current_user = Users.findOne(Session.get('user_id'))
-	if (current_user) {
-		return current_user.stocks()	
-	}
+  var current_user = Users.findOne(Session.get('user_id'))
+  if (current_user) {
+    var stocks = current_user.stocks()
+    return _.sortBy(stocks,function(stock) {
+      return -stock.deltaRelative()
+    })
+  }
 };
 
 Template.stock_list.title = function () {
-	return Users.findOne(Session.get('user_id')).name + "'s portfolio";
-}
-
-Template.stock.delta = function () {
-	var ret = (this.price - this.open).toFixed(2);
-	return (ret >= 0 ? "+" : "") + ret;
-}
-
-Template.stock.deltaPercent = function () {
-	return (100 * (this.price - this.open) / this.open).toFixed(2) + "%";
+  var current_user = Users.findOne(Session.get('user_id'))
+  if (current_user) {
+    return current_user.name + "'s portfolio";
+  }
 }
 
 Template.stock.updown = function () {
-  // TODO: somehow, I feel this should be tied with stock.delta
-  return this.price >= this.open ? "up": "down";
+  return this.deltaAbsolute() >= 0 ? "up": "down";
 }
-
-
 
 
 // Adding a new stock to portfolio

@@ -1,4 +1,3 @@
-Session.setDefault('user_id',null);
 
 Template.dashboard.mode_stocks = function () {
   return Session.get('user_id') ? true : false;
