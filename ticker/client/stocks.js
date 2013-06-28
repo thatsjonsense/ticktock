@@ -86,4 +86,11 @@ Template.stock_control.events({
     $('#new_stock .cost_basis').val('');
     
   }
-})
+});
+
+
+Template.stock_control.rendered = function () {
+  $('#new_symbol').typeahead ({
+    source: function () { return _.pluck(Stocks.find().fetch(), "symbol")}
+  });
+};

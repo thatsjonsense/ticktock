@@ -121,6 +121,7 @@ input[type="button"]:active {
 
 #new_stock input {
     font-size: 1.2em;
+    vertical-align: top;
 }
 
 #new_stock input.symbol::-webkit-input-placeholder {
