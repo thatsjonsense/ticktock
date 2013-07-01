@@ -3,17 +3,17 @@ Session.setDefault('adding_stock',false)
 SORT_TYPE = 'price'
 
 Template.stock_list.stocks = function () {
-  var current_user = Users.findOne(Session.get('user_id'))
+  var current_user = Users.findOne(Session.get('user_id'));
   if (current_user) {
-    var stocks = current_user.stocks()
+    var stocks = current_user.stocks();
     return _.sortBy(stocks,function(stock) {
-      return SORT_TYPE == 'delta' ? -stock.deltaRelative() : -stock.price
-    })
+      return SORT_TYPE == 'delta' ? -stock.deltaRelative() : -stock.price;
+    });
   }
 };
 
 Template.stock_list.title = function () {
-  var current_user = Users.findOne(Session.get('user_id'))
+  var current_user = Users.findOne(Session.get('user_id'));
   if (current_user) {
     return current_user.name + "'s portfolio";
   }
@@ -90,7 +90,28 @@ Template.stock_control.events({
 
 
 Template.stock_control.rendered = function () {
+  // implements typehead for stock symbol (match against name and symbol)
+  // currently using a terrible hack and string splitting; Twitter's typeahead.js
+  // is another option but doesn't support setting the source to a function.
+  var delimiter = "####";
+  
   $('#new_symbol').typeahead ({
-    source: function () { return _.pluck(Stocks.find().fetch(), "symbol")}
+    source: function (query, process) {
+      var results = _.map(Stocks.find().fetch(), function (stock) { return stock.symbol + delimiter + stock.name; });
+      process(results);
+    },
+    highlighter: function (item) {
+      var symbol = item.split(delimiter)[0];
+      var stock = Stocks.findOne({symbol: symbol});
+      // TODO: return HTML instead
+      return stock.name + " (" + stock.symbol + ")";
+    },
+    updater: function (item) {
+      var symbol = item.split(delimiter)[0];
+      return symbol;
+    }
   });
+  
+  
+  
 };

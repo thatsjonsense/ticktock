@@ -1,4 +1,3 @@
-
 Meteor.startup(function () {
     
   // User accounts
@@ -40,51 +39,23 @@ Meteor.startup(function () {
         name: "Richard",
         portfolio: []
       }
-    ]
+    ];
 
-    _.each(users,function(user) {
-      console.log('Adding user',user.name);
-
-      var investments = []
-      _.each(user.portfolio, function(investment) {
+    _.each(users, function (user) {
+      var investments = [];
+      _.each(user.portfolio, function (investment) {
         investments.push({
           symbol: investment[0],
           shares: investment[1],
           cost_basis: investment[2]
-        })
-      })
+        });
+      });
 
       var user_id = Users.insert({
         name: user.name, 
         investments: investments,
-        value: 0})
+        value: 0});
 
-    })
+    });
   }
-
-  // Stock values. TODO: clean up this temp data
-  if (Stocks.find().count() === 0) {
-    var stocks_mock = {
-      "GOOG": 866.20,
-      "AMZN": 272.09,
-      "CMG": 358.96,
-      "LNKD": 176.87,
-      "FB": 24.25,
-      "TSLA": 102.40,
-      "MSFT": 33.50,
-      "FRCOY": 31.71,
-      "WSM": 54.13
-    }
-  
-    _.each(stocks_mock, function (price, symbol) {
-      console.log('Adding stock',symbol);
-      var stock_id = Stocks.insert({'symbol': symbol, 'price': 0});
-      // immediately update price
-      Stocks.findOne({'symbol': symbol}).updatePrice();
-    })
-  }
-
-
-
-  
 });

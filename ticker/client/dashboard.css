@@ -1,27 +1,27 @@
 /* Generic elements */
 body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 200;
-    margin: 50px 0;
-    padding: 0;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 200;
+  margin: 50px 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 a, a:visited {
-    color: #08c;
-    text-decoration: none;
+  color: #08c;
+  text-decoration: none;
 }
 
 a:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 input:focus::-webkit-input-placeholder {
-    color: transparent;
+  color: transparent;
 }
 
 table { 
@@ -46,105 +46,105 @@ input[type="button"]:active {
 }
 
 #outer {
-    width: 800px;
-    margin: 0 auto;    
+  width: 800px;
+  margin: 0 auto;    
 }
 
 .user {
-    cursor: pointer;
-    padding: 5px;
+  cursor: pointer;
+  padding: 5px;
 }
 
 .user .name {
-    display: inline-block;
-    width: 300px;
-    font-size: 1.75em;
+  display: inline-block;
+  width: 300px;
+  font-size: 1.75em;
 }
 
 .user .value {
-    display: inline-block;
-    width: 100px;
-    text-align: right;
-    font-size: 2em;
-    font-weight: bold;
-    color: #777;
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+  font-size: 2em;
+  font-weight: bold;
+  color: #777;
 }
 
 .dashboard {
-    font-size: 1.75em;
+  font-size: 1.75em;
 }
 
 .dashboard td {
-    min-width: 100px;
-    padding: 5px;
+  min-width: 100px;
+  padding: 5px;
 }
 
 .dashboard.clickable {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .dashboard.clickable:hover {
-    background-color: #efefef;
+  background-color: #efefef;
 }
 
 .dashboard .symbol {
-    font-weight: 400;
+  font-weight: 400;
 }
 
 .dashboard .numerical {
-    text-align: right;
+  text-align: right;
 }
 
 .dashboard .up {
-    color: green;
+  color: green;
 }
 
 .dashboard .delta {
-    font-weight: 400;
+  font-weight: 400;
 }
 
 .dashboard .down {
-    color: red;
+  color: red;
 }
 
 .dashboard .secondary {
-    font-size: 0.8em;
+  font-size: 0.8em;
 }
 
 .dashboard .tertiary {
-    font-size: 0.5em;
+  font-size: 0.5em;
 }
 
 .stock_list {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 #new_stock input {
-    font-size: 1.2em;
-    vertical-align: top;
+  font-size: 1.2em;
+  vertical-align: top;
 }
 
 #new_stock input.symbol::-webkit-input-placeholder {
-    color: #A9A9A9;
+  color: #A9A9A9;
 }
 
 #new_stock input.shares, input.cost_basis {
-    width: 100px;
+  width: 100px;
 }
 
 #newsfeed {
-    margin-top: 20px;
-    padding-left: 5px;
+  margin-top: 20px;
+  padding-left: 5px;
 }
 
 #newsfeed .time {
-    font-size: 0.8em;
-    color: #A9A9A9;
-    margin-top: 2px;
+  font-size: 0.8em;
+  color: #A9A9A9;
+  margin-top: 2px;
 } 
 
 #newsfeed .entry {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 

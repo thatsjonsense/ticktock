@@ -12,8 +12,8 @@ alert = {
 FREQUENCY = 1 * 60 * 1000 // Time, in milliseconds * seconds * minutes, to wait before redoing a notification about the same thing
 
 rules = {
-  'big_gain': function(s) {return s.gainRelative > .05},
-  'big_loss': function(s) {return s.gainRelative < -.05}
+  'big_gain': function(s) {return s.gainRelative > .03},
+  'big_loss': function(s) {return s.gainRelative < -.03}
 }
 
 if (Meteor.isServer) {

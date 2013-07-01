@@ -14,33 +14,31 @@ _.extend(User.prototype, {
 
 
     _.each(self.investments, function(i) {
-      var stock = Stocks.findOne({symbol: i.symbol})
+      var stock = Stocks.findOne({symbol: i.symbol});
       if (stock) {
-        stock.shares = i.shares
-        stock.cost_basis = i.cost_basis
-        stocks.push(stock)
+        stock.shares = i.shares;
+        stock.cost_basis = i.cost_basis;
+        stocks.push(stock);
       }
-    })
+    });
 
     return stocks;
   },
 
   getCurrentValue: function () {
-    var self = this
-    var value = _.reduce(self.stocks(), function(sum,stock) {
-      return sum + (stock.shares * stock.price)
-    }, 0.0)
-    //console.log('Calculated value',value)
-    return value
+    var self = this;
+    var value = _.reduce(self.stocks(), function (sum,stock) {
+      return sum + (stock.shares * stock.price);
+    }, 0.0);
+    return value;
   },
 
   getPrevValue: function () {
     var self = this
-    var value = _.reduce(self.stocks(), function(sum,stock) {
-      return sum + (stock.shares * stock.previousClose)
-    }, 0.0)
-    //console.log('Calculated value',value)
-    return value
+    var value = _.reduce(self.stocks(), function (sum,stock) {
+      return sum + (stock.shares * stock.previousClose);
+    }, 0.0);
+    return value;
   },
 
   deltaAbsolute: function () {
@@ -50,7 +48,7 @@ _.extend(User.prototype, {
 
   deltaRelative: function () {
     var self = this;
-    return self.prevValue ? self.deltaAbsolute() / self.prevValue : 0
+    return self.prevValue ? self.deltaAbsolute() / self.prevValue : 0;
   },
 
 
@@ -59,12 +57,12 @@ _.extend(User.prototype, {
   // Database helper functions
   update: function (modifier) {
     var self = this;
-    return Users.update(self._id, modifier)
+    return Users.update(self._id, modifier);
   },
 
   set: function (keyval) {
     var self = this;
-    return self.update({$set: keyval})
+    return self.update({$set: keyval});
   }
 
 });
@@ -74,24 +72,20 @@ _.extend(User.prototype, {
 if (Meteor.isServer) {
   Meteor.startup(function () {
 
+    var stockObserver = Stocks.find({}).observe({
+      changed: function (stock, oldStock) {
+        var owners = stock.owners();
+        _.each(owners,function(user) {
+          user.set({
+            currentValue: user.getCurrentValue(),
+            prevValue: user.getPrevValue()
+          });
+        }); // changed
+      }
+    }); // observe
 
-  var stockObserver = Stocks.find({}).observe({
-    changed: function (stock, oldStock) {
-      var owners = stock.owners();
-      _.each(owners,function(user) {
-        user.set({
-          currentValue: user.getCurrentValue(),
-          prevValue: user.getPrevValue()
-        })
-      })
-    }
-
-      
-    })
-
-  })
+  }); // startup
 }
-
 
 
 /*
