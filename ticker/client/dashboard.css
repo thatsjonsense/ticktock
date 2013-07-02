@@ -147,5 +147,17 @@ input[type="button"]:active {
   margin-bottom: 10px;
 }
 
+span.typeahead_stock > span:nth-child(1) {
+  font-weight: bold;
+  padding-right: 10px;
+  display: block;
+  width: 70px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  float: left;
+}
 
-
+.dropdown-menu > li > a {
+  padding: 3px 8px;
+}

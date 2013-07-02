@@ -7,7 +7,7 @@ alert = {
   timestamp: 834920489032
 }
 */
-
+/*
 //todo: implement per-alert frequency (eg no more than X times in the last Y hours)
 FREQUENCY = 1 * 60 * 1000 // Time, in milliseconds * seconds * minutes, to wait before redoing a notification about the same thing
 
@@ -69,4 +69,4 @@ if (Meteor.isServer) {
 
 
   })
-}
+}*/

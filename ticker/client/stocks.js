@@ -92,19 +92,40 @@ Template.stock_control.events({
 Template.stock_control.rendered = function () {
   // implements typehead for stock symbol (match against name and symbol)
   // currently using a terrible hack and string splitting; Twitter's typeahead.js
-  // is another option but doesn't support setting the source to a function.
+  // is another option but doesn't support loading JS files in this way (I think).
   var delimiter = "####";
   
   $('#new_symbol').typeahead ({
     source: function (query, process) {
-      var results = _.map(Stocks.find().fetch(), function (stock) { return stock.symbol + delimiter + stock.name; });
-      process(results);
+      // fake back Yahoo's callback; call doesn't work otherwise
+      var YAHOO = window.YAHOO = {Finance: {SymbolSuggest: {}}};
+        
+      YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
+        var mapped = $.map(data.ResultSet.Result, function (e, i) { 
+          return e.symbol + delimiter + e.name;
+        });
+        process(mapped);
+      };
+        
+      var url = [
+        "http://d.yimg.com/autoc.finance.yahoo.com/autoc?",
+        "query=" + query,
+        "&callback=YAHOO.Finance.SymbolSuggest.ssCallback"];
+
+      $.getScript(url.join(""));
     },
     highlighter: function (item) {
-      var symbol = item.split(delimiter)[0];
-      var stock = Stocks.findOne({symbol: symbol});
+      var info = item.split(delimiter);
+      var symbol = info[0];
+      var name = info[1];
+      
+      //var symbol = item.split(delimiter)[0];
+      
+      // TODO: this additional lookup is likely unnecessary
+      //var stock = Stocks.findOne({symbol: symbol});
       // TODO: return HTML instead
-      return stock.name + " (" + stock.symbol + ")";
+      return "<span class='typeahead_stock'><span>" + symbol + "</span><span>" + name + "</span></span>";
+      //return name + " (" + symbol + ")";
     },
     updater: function (item) {
       var symbol = item.split(delimiter)[0];
