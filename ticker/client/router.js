@@ -1,4 +1,19 @@
+Meteor.Router.add({
+  
+  '/user/:user_id': function(id) {
+    Session.set('user_id',id)
+    return 'dashboardStocks'
+  },
+  '': 'dashboardUsers'
+});
 
+
+Meteor.Router.beforeRouting = function() {
+  Session.set('user_id',null)
+}
+
+
+/*
 Template.dashboard.mode_stocks = function () {
   return Session.get('user_id') ? true : false;
 }
@@ -29,3 +44,4 @@ Router = new DashboardRouter;
 Meteor.startup(function () {
   Backbone.history.start({pushState: true});
 });
+*/

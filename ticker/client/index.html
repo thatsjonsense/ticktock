@@ -4,19 +4,16 @@
 
 <body>
   <div id="outer">
-    {{> dashboard}}
+    {{#isolate}} {{renderPage}} {{/isolate}}
   </div>
 </body>
 
-<template name="dashboard">
-    {{#if mode_users}}
-      {{> user_list}}
-    {{/if}}
 
-    {{#if mode_stocks}}
-      {{> stock_list}}
-      {{> stock_control}}
-    {{/if}}
+<template name="dashboardUsers">
+  {{> user_list}}
+</template>
 
-    
+<template name="dashboardStocks">
+  {{> stock_list}}
+  {{> stock_control}}
 </template>

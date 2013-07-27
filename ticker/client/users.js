@@ -22,6 +22,6 @@ Template.user.updown = function () {
 
 Template.user.events({
   'click': function () {
-    Router.setUser(this._id);
+    Meteor.Router.to('/user/' + this._id);
   }
 });
