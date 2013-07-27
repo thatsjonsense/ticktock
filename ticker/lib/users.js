@@ -1,5 +1,10 @@
 Users = new Meteor.Collection("users", {
-  transform: function (doc) { return new User(doc); }
+  transform: function (doc) {
+    var u = new User(doc);
+    u.currentValue = u.currentValue || 0.0; // default values
+    u.prevValue = u.prevValue || 0.0; 
+    return u;
+  }
 });
 
 // user class
@@ -30,7 +35,7 @@ _.extend(User.prototype, {
     var value = _.reduce(self.stocks(), function (sum,stock) {
       return sum + (stock.shares * stock.price);
     }, 0.0);
-    return value;
+    return value || 0.0;
   },
 
   getPrevValue: function () {
