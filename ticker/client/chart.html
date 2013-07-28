@@ -1,4 +1,14 @@
 <template name="chart">
-  <svg width="1000" height="500" class="chart">
-	</svg>
+  
+  <div class="chart">
+    {{> chart_bar}}
+  </div>
+
+</template>
+
+<template name="chart_bar">
+  <svg width="1000" height="500" class="barchart">
+    <g class="bars"></g>
+    <g class="labels"></g>
+  </svg>
 </template>
