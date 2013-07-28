@@ -1,6 +1,37 @@
 // Let's start with a bar chart of portfolio values
 
 
+Template.chart_divs.rendered = function() {
+  var self = this;
+
+  if (!self.autorunning) {
+    self.autorunning = Deps.autorun(function() {
+      
+      // Dependencies
+      var users = Users.find({},{sort: {currentValue: -1}}).fetch();
+      
+
+      // Make the chart
+      var bars = d3.select(self.find('.chartDivs'))
+        .selectAll('div')
+        .data(users);
+
+      var updateBars = function(selection) {
+        selection
+          .style("width",function(user) {return user.deltaRelative()* 10000 + 'px'})
+          .attr("class","bar")
+          .text(function(user) {return user.name})
+      }
+
+      updateBars(bars.enter().append('div'));
+      updateBars(bars.transition().duration(250).ease('cubic-out'));
+      bars.exit().transition().duration(250).attr('width',0).remove();
+        
+    });
+  } 
+
+}
+
 Template.chart_bar.rendered = function () {
   var self = this;
 

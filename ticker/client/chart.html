@@ -1,14 +1,19 @@
 <template name="chart">
   
   <div class="chart">
-    {{> chart_bar}}
+    {{> chart_divs}}
   </div>
 
 </template>
 
 <template name="chart_bar">
-  <svg width="1000" height="500" class="barchart">
+  <svg width="1000" height="500" class="chartBar">
     <g class="bars"></g>
     <g class="labels"></g>
   </svg>
+</template>
+
+<template name="chart_divs">
+  <div width="1000" height="500" class="chartDivs">
+  </div>
 </template>
