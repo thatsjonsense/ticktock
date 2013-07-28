@@ -80,7 +80,6 @@ if (Meteor.isServer) {
     var userObserver = Users.find({}).observeChanges({
       added: function (id, fields) {
         if (fields.investments) {
-          console.log(fields.name, "just got added");
           _.each(fields.investments,function (i) {
             Stocks.getOrCreate({symbol: i.symbol});
           });

@@ -1,7 +1,7 @@
 <template name="chart">
   
   <div class="chart">
-    {{> chart_divs}}
+    {{> chart_circles}}
   </div>
 
 </template>
@@ -16,4 +16,31 @@
 <template name="chart_divs">
   <div width="1000" height="500" class="chartDivs">
   </div>
+</template>
+
+<template name="chart_circles">
+
+  <div class="chartCircles">
+    {{#each users}}
+      {{> chart_circles_row}}
+    {{/each}}
+  </div>
+
+</template>
+
+<template name="chart_circles_row">
+
+  <div class="chartRow">
+    <div class="canvas">
+      <div class="line"></div>
+      <div class="origin"></div>
+      <div class="bar"></div>
+      <div class="cap">
+        <div class="head" style="background-image:url('{{picture}}')"></div>
+        <div class="name">{{name}}</div>
+        <div class="gain {{updown}}">{{toPercent deltaRelative}}</div>
+      </div>
+    </div>
+  </div>
+
 </template>

@@ -66,6 +66,14 @@ Template.chart_bar.rendered = function () {
   } 
 }
 
+Template.chart_circles.users = function () {
+  return Users.find({}).fetch();
+}
+
+Template.chart_circles_row.updown = function () {
+  return this.deltaAbsolute() >= 0 ? "up" : "down";
+}
+
 /*
 
 TODO:
