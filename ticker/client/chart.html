@@ -1,7 +1,7 @@
 <template name="chart">
   
   <div class="chart">
-    {{> chart_circles}}
+    {{> chart_circles_d3}}
   </div>
 
 </template>
@@ -24,6 +24,13 @@
     {{#each users}}
       {{> chart_circles_row}}
     {{/each}}
+  </div>
+
+</template>
+
+<template name="chart_circles_d3">
+
+  <div class="chartCircles">
   </div>
 
 </template>

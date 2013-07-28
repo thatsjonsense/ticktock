@@ -89,9 +89,15 @@
 	.cap {
 		position: absolute;
 		top: 0;
-		left: 600px;
+		
 		width: 300px;
 		height: 200px;
+		margin-left: -40px;
+
+		// mock data
+		left: 600px;
+		
+
 
 		.name {
 			font-size: @name_size;
@@ -99,13 +105,14 @@
 			position: absolute;
 			top: -@name_size/2;
 			left: 100px;
+			margin-top: -10px;
 		}
 
 		.gain {
 			position: absolute;
 			margin-left: 100px;
 			font-size: @base_font_size * 2;
-			top: @name_size/2 + 10px;
+			top: @name_size/2 + 0px;
 
 			&.up {
 				color: @green;

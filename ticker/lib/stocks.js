@@ -4,7 +4,7 @@ Stocks = new Meteor.Collection("stocks", {
 
 RANDOM_MODE = true
 RANDOM_SWING = 0.001 // what % it will sway at a time
-INTERVAL = 5000
+INTERVAL = 1000
 
 
 

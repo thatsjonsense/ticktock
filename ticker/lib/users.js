@@ -56,6 +56,11 @@ _.extend(User.prototype, {
     return self.prevValue ? self.deltaAbsolute() / self.prevValue : 0;
   },
 
+  isGaining: function () {
+    var self = this;
+    return self.currentValue >= self.prevValue;
+  },
+
 
 
 

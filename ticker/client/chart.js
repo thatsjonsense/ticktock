@@ -59,13 +59,90 @@ Template.chart_bar.rendered = function () {
       }
 
       updateBars(bars.enter().append('rect'));
-      updateBars(bars.transition().duration(250).ease('cubic-out'));
+      //updateBars(bars.transition().duration(250).ease('cubic-out'));
       bars.exit().transition().duration(250).attr('width',0).remove();
         
     });
   } 
 }
 
+Template.chart_circles_d3.rendered = function () {
+
+  var self = this;
+
+  if (!self.autorunning) {
+    self.autorunning = Deps.autorun(function() {
+      
+      // Dependencies
+      var users = Users.find({},{sort: {currentValue: -1}}).fetch();
+      
+      // Make the chart
+      var bars = d3.select(self.find('div'))
+        .selectAll('.canvas')
+        .data(users);
+
+      var scale = d3.scale.linear()
+        .domain([-0.1,0.1])
+        .range([-500,500])
+
+      var origin_x = 400;
+
+
+
+      var addBars = function(selection) {
+
+        selection.html(function (user) {
+          return Template.chart_circles_row(user)
+        });
+        updateBars(selection);
+      
+      }
+
+      var updateBars = function(selection) {
+        //var origin_x = selection.select('.canvas').attr('x') 
+
+        // Position that all these bars are trying to hit
+        function y(user) {
+          //console.log(user.deltaRelative(),scale(user.deltaRelative()))
+          return scale(user.deltaRelative())
+
+        }
+
+
+
+
+        selection.select('.bar')
+          .style('width',function(user) {return Math.abs(y(user)) + 'px'})
+          .style('left', function(user) {
+            if (user.isGaining()) {
+              return origin_x + 'px';
+            } else {
+              return origin_x + y(user) + 'px';
+            }
+          })
+
+        selection.select('.cap')
+          .style('left',function (user) {return origin_x + y(user) + 'px'})
+
+        selection.select('.gain')
+          .style('color',function (user) {return user.isGaining() ? '#248d00' : '#cd0000'})
+          //.classed('up', function (user) {return user.isGaining()})
+          //.classed('down', function (user) {return !user.isGaining()})
+          .text(function (user) {return templateHelpers.toPercent(user.deltaRelative())})
+      }
+
+      addBars(bars.enter().append('div'));
+      updateBars(bars.transition().duration(500).ease('cubic-out'));
+      bars.exit().remove();
+        
+    });
+  } 
+
+}
+
+// non-D3 mode
+
+/*
 Template.chart_circles.users = function () {
   return Users.find({}).fetch();
 }
@@ -73,6 +150,11 @@ Template.chart_circles.users = function () {
 Template.chart_circles_row.updown = function () {
   return this.deltaAbsolute() >= 0 ? "up" : "down";
 }
+*/
+
+// d3 mode
+
+
 
 /*
 
