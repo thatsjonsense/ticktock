@@ -15,15 +15,17 @@ function Stock (doc) {
 
 _.extend(Stock.prototype, {
   updatePrice: function () {
-    this.updatePriceLive();
+    this.updatePriceRandom();
   },
 
   updatePriceRandom: function () {
-    var old_price = this.price;
+    var old_price = parseFloat(this.price);
     var delta = randomBetween(-1, 1) * RANDOM_SWING * old_price;
+    var new_price = delta + old_price;
     this.set({
-      price: delta + old_price
+      price: new_price
     });
+    
   },
 
   updatePriceLive: function () {
