@@ -1,21 +1,18 @@
 PricesIntraday = new Meteor.Collection("prices_intraday"); // symbol, date, price
-
 PricesDay = new Meteor.Collection("prices_day"); // symbol, date, open, close
 
+// Combined DB of all historical prices. Maybe we don't need to separate at all
+Prices = new Meteor.Collection("prices")
 
 // Store past stock data
 
-Meteor.Router.add('/historical/:symbol/:days', function(symbol,days) {
-  /*
-  var date = {
-  	year: parseInt(this.params.yyyy),
-  	month: parseInt(this.params.mm),
-  	day: parseInt(this.params.dd)
+Meteor.Router.add({
+  '/historical/:symbol/:days': function(symbol,days) {
+    return getGoogleData(symbol,days);
+  },
+  '/historical/dump': function () {
+    // todo: output all historical data to a .json file which we can save
   }
-  var datetime = new Date(date.year, date.month-1, date.day)
-  */
-  
-  return getGoogleData(symbol,days);
 });
 
 
@@ -46,7 +43,8 @@ function getGoogleData(symbol,days,frequency) {
 	var lines = lines.slice(7); // get rid of the header and last line
 
   // State for the loop
-	var open_datetime;
+	var open_datetime, close_datetime;
+  var tick_open_datetime, tick_close_datetime;
 	var open, close;
 
   // Iterate through the CSV
@@ -57,23 +55,23 @@ function getGoogleData(symbol,days,frequency) {
 		// Opening tick or end of file
 		if (cols[0][0] == 'a' || cols[0] == '') {
 
+      
       // End of a day
       if (open_datetime) {
+
 
         // Save open/close data, if it's not already there
         var daily_data = {
           symbol: symbol,
-          date: new Date(
-            open_datetime.getYear(),
-            open_datetime.getMonth(),
-            open_datetime.getDate()
-          ),
+          open_date: open_datetime,
+          close_date: tick_close_datetime, // close of the last tick
           open: open,
-          close: close
+          close: close // close of the last tick
         };
-        PricesDay.findOne({symbol: daily_data.symbol, date: daily_data.date}) || PricesDay.insert(daily_data);
+        Prices.findOne({symbol: daily_data.symbol, open_date: daily_data.open_date, close_date: daily_data.close_date}) || Prices.insert(daily_data);
       
       }
+
 
       // End of file, get out of here!
       if (cols[0] == '') {
@@ -89,25 +87,28 @@ function getGoogleData(symbol,days,frequency) {
 		// Intraday ticks
 		} else {
       var n = cols[0];
-			close = cols[1]; // will update with every tick. last one is the closing price
-		
     }
 
-    var current_datetime = new Date(open_datetime.getTime() + (n * frequency * 1000));
-    console.log(n,current_datetime,cols[1])
+    close = cols[1]; // will update with every tick. last one is the closing price
+    
+    tick_open_datetime = new Date(open_datetime.getTime() + ((n-1) * frequency * 1000));
+    tick_close_datetime = new Date(open_datetime.getTime() + (n * frequency * 1000));
 
     // Save intraday data, if it's not already there
 		var intraday_data = {
 			symbol: symbol,
-			date: current_datetime,
-			price: parseFloat(cols[1])
+			open_date: tick_open_datetime,
+      close_date: tick_close_datetime,
+      open: parseFloat(cols[4]),
+			close: parseFloat(cols[1])
 		}
-    PricesIntraday.findOne({symbol: intraday_data.symbol, date: intraday_data.date}) || PricesIntraday.insert(intraday_data);
+    Prices.findOne({symbol: intraday_data.symbol, open_date: intraday_data.open_date, close_date: intraday_data.close_date}) || Prices.insert(intraday_data);
 
 	})
 
   return JSON.stringify({
     intraday: PricesIntraday.find({symbol: symbol}).fetch(),
-    day: PricesDay.find({symbol: symbol}).fetch()
+    day: PricesDay.find({symbol: symbol}).fetch(),
+    combined: Prices.find({symbol: symbol}).fetch()
   },null,2);
 }
