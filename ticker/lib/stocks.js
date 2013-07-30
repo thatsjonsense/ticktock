@@ -15,7 +15,7 @@ function Stock (doc) {
 
 _.extend(Stock.prototype, {
   updatePrice: function () {
-    this.updatePriceRandom();
+    this.updatePriceLive();
   },
 
   updatePriceRandom: function () {

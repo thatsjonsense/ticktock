@@ -50,7 +50,6 @@ function getGoogleData(symbol,days,frequency) {
 		// Opening tick
 		if (cols[0][0] == 'a') {
 
-      // Start a new day
 			var timestamp = cols[0].slice(1);
 			open_datetime = new Date(parseInt(timestamp) * 1000); // todo: timezone?
       var n = 0;
