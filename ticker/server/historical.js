@@ -1,7 +1,3 @@
-PricesIntraday = new Meteor.Collection("prices_intraday"); // symbol, date, price
-PricesDay = new Meteor.Collection("prices_day"); // symbol, date, open, close
-
-// Combined DB of all historical prices. Maybe we don't need to separate at all
 Prices = new Meteor.Collection("prices")
 
 // Store past stock data
@@ -24,8 +20,7 @@ function getNetfondsData(symbol,date,frequency) {
 
 /*
 Gets historical data about SYMBOL from the last DAYS days of trading
-Returns intraday data for every FREQUENCY seconds, and daily data
-Todo: storing in meteor
+Returns intraday data for every FREQUENCY seconds
 */
 function getGoogleData(symbol,days,frequency) {
 	
@@ -52,45 +47,19 @@ function getGoogleData(symbol,days,frequency) {
 
 		var cols = line.split(',');
 
-		// Opening tick or end of file
-		if (cols[0][0] == 'a' || cols[0] == '') {
-
-      
-      // End of a day
-      if (open_datetime) {
-
-
-        // Save open/close data, if it's not already there
-        var daily_data = {
-          symbol: symbol,
-          open_date: open_datetime,
-          close_date: tick_close_datetime, // close of the last tick
-          open: open,
-          close: close // close of the last tick
-        };
-        Prices.findOne({symbol: daily_data.symbol, open_date: daily_data.open_date, close_date: daily_data.close_date}) || Prices.insert(daily_data);
-      
-      }
-
-
-      // End of file, get out of here!
-      if (cols[0] == '') {
-        return;
-      }
+		// Opening tick
+		if (cols[0][0] == 'a') {
 
       // Start a new day
 			var timestamp = cols[0].slice(1);
 			open_datetime = new Date(parseInt(timestamp) * 1000); // todo: timezone?
       var n = 0;
-			open = cols[2]; // only set for first tick
 			
 		// Intraday ticks
 		} else {
       var n = cols[0];
     }
 
-    close = cols[1]; // will update with every tick. last one is the closing price
-    
     tick_open_datetime = new Date(open_datetime.getTime() + ((n-1) * frequency * 1000));
     tick_close_datetime = new Date(open_datetime.getTime() + (n * frequency * 1000));
 
@@ -107,8 +76,6 @@ function getGoogleData(symbol,days,frequency) {
 	})
 
   return JSON.stringify({
-    intraday: PricesIntraday.find({symbol: symbol}).fetch(),
-    day: PricesDay.find({symbol: symbol}).fetch(),
-    combined: Prices.find({symbol: symbol}).fetch()
+    prices: Prices.find({symbol: symbol}).fetch()
   },null,2);
 }
