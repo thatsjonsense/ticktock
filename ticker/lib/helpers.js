@@ -34,7 +34,7 @@ if(Meteor.isClient) {
   templateHelpers = {
     toPercent: function (num) {
       if (num == null || num == NaN) { return 'n/a'; }
-      return (num * 100).toFixed(1) + '%';
+      return (num * 100).toFixed(2) + '%';
     },
     toGain: function (num) {
       if (num == null || num == NaN) { return 'n/a'; }
