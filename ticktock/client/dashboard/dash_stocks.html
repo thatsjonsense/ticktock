@@ -1,0 +1,24 @@
+
+<template name="dashboard_stocks">
+  <div class="stockList">
+    <a href="/">Home</a>
+    <h1>Stocks</h1>
+    <table>
+    {{#each stocks}}
+      {{>stock_row}}
+    {{/each}}
+    </table>
+    {{#isolate}}{{quotes}}{{/isolate}}
+  </div>
+</template>
+
+<template name="stock_row">
+  <tr class="stockRow">
+    <td><span class="symbol">{{symbol}}</span></td>
+    <td class="numerical"><span class="price">{{toDollars priceNow}}</span></td>
+  </tr>
+
+</template>
+
+
+
