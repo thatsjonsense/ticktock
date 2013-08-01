@@ -13,13 +13,13 @@ loadLiveQuoteYahoo = (symbol) ->
     # ruh roh
     return null
   else
-    quote = response.data.query.results.quote
-    data =
+    y_quote = response.data.query.results.quote
+    quote =
       symbol: symbol
       time: query_time
-      price: quote.LastTradePriceOnly
-    Prices.findOrInsert(data)
-    return data
+      price: y_quote.LastTradePriceOnly
+    Quotes.findOrInsert(quote)
+    return quote
 
     # todo: parse the time from quote.LastTradeDate and LastTradeTime. But what's the time zone? could assume EST for now
 
