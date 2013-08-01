@@ -8,7 +8,7 @@
 
 @minutesAfter = (t,m) -> secondsAfter(t, m * 60)
 @minutesBefore = (t,m) -> secondsBefore(t, m * 60)
-@minuteAgo = (m) -> minutesBefore(now(),m)
+@minutesAgo = (m) -> minutesBefore(now(),m)
 
 @hoursAfter = (t,h) -> minutesAfter(t, h * 60)
 @hoursBefore = (t,h) -> minutesBefore(t, h * 60)
