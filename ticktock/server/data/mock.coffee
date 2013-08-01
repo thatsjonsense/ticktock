@@ -58,5 +58,5 @@ investors = [
 Meteor.startup ->
   if Investors.find().count() == 0
     for investor in investors
-      debug('Added #{investor.name} to database')
+      debug("Added #{investor.name} to database")
       Investors.insert(investor)
