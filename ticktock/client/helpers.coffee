@@ -22,6 +22,7 @@
   toPercent: (num) -> if num? then formatPercent(num) else 'n/a'
   toDollars: (num) -> if num? then formatDollars(num) else 'n/a' 
   toMinAgo: (time) -> formatMinAgo(time)
+  toJSON: (obj) -> prettify obj
 
 for name, helper of templateHelpers
   Handlebars.registerHelper(name,helper)

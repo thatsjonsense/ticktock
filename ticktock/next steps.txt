@@ -1,0 +1,15 @@
+nextsteps
+
+- Investor.portfolioValue
+
+
+- open and close prices for stocks
+
+- rebuild dashboards
+
+
+- rebuild circle chart
+
+
+
+- add time slider on bottom
