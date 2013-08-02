@@ -2,7 +2,7 @@
 
 class @QuoteSourceGoogle
 
-  @getQuotesPast = (stock,days = 1,interval = 60) ->
+  @getQuotesPast = (stock,days = 1,interval = 60*15) ->
 
     googleUrl = "http://www.google.com/finance/getprices?i=#{interval}&p=#{days}d&f=d,o,h,l,c,v&df=cpct&q=#{stock.symbol}"
 
@@ -30,7 +30,13 @@ class @QuoteSourceGoogle
 
 Meteor.Router.add
   '/historical/:symbol/:days': (symbol,days) -> 
-    QuoteSourceGoogle.getQuotesPast(Stock.lookup(symbol),days)
-    prettify Quotes.find({symbol: symbol}).fetch()
+    if symbol == 'all'
+      q = []
+      for stock in active_stocks
+        console.log("hitting google for #{stock.symbol}")
+        q.push QuoteSourceGoogle.getQuotesPast(stock,days)
+      prettify q
+    else
+      prettify QuoteSourceGoogle.getQuotesPast(Stock.lookup(symbol),days)
   '/historical/dump': -> # todo: output all historical data to a .json file which we can save
 

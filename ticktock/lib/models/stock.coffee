@@ -65,7 +65,7 @@ class @Stock
     else
       time = now()
       q = @quoteNow()
-    if q? and q.time >= minutesBefore(time,1000) then parseFloat(q.price) else NaN
+    if q? then parseFloat(q.price) else NaN
 
   pricePrevClose: (time) ->
     @priceAt Stock.tradingClose(daysBefore(time,1))

@@ -1,4 +1,4 @@
-
+@active_stocks = []
 
 
 Meteor.startup ->
@@ -9,7 +9,7 @@ Meteor.startup ->
   for investor in Investors.find({}).fetch()
     symbols = _.union(symbols, investor.symbolsOwnedEver())
 
-  active_stocks = (Stocks.findOrInsert({symbol: s}) for s in symbols)
+  @active_stocks = (Stocks.findOrInsert({symbol: s}) for s in symbols)
 
   # Ensure we have a constant stream of quotes
 

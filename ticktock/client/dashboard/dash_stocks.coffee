@@ -11,5 +11,10 @@ Template.stock_row.updown = ->
   if @todayGain() >= 0 then "up" else "down"
 
 Template.stock_row.currentPrice = ->
-  t = minutesAgo(Session.get('timeLagMinutes'))
-  @priceAt t
+  @priceAt virtualTime()
+
+Template.stock_row.currentGain = ->
+  @dayGain virtualTime()
+
+Template.stock_row.currentGainRelative = ->
+  @dayGainRelative virtualTime()
