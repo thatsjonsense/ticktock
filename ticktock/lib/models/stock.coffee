@@ -37,23 +37,3 @@ class Stock
       q = @quoteNow()
     if q? and q.time >= minutesBefore(time,1000) then parseFloat(q.price) else null
 
-
-  # warning: this guy won't react well, because end date gets stored and updates after aren't reactive
-  getPriceHistory: (start,end) ->
-    q = Quotes.find
-      symbol: @symbol,
-      time: {$lte: end, $gte: start}
-
-
-  getPriceAtTime: (time) ->
-    
-    q = Quotes.findOne
-      symbol: @symbol
-      time: {$lte: time}
-    ,
-      {sort: {time: -1}}
-    
-    if q? and q.time >= minutesBefore(time,1000) #freshness needed
-      return parseFloat(q.price)
-    else
-      return null # No fresh quote. In the future, we could live call for it

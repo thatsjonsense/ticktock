@@ -1,11 +1,11 @@
 
 Template.dashboard_stocks.stocks = ->
-  stocks = Stocks.findOrInsert({symbol: symbol}) for symbol in ['GOOG','MSFT','LNKD']
+  stocks = Stocks.find({})
  
   # Todo: get a list of all the active stocks we're tracking
 
 Template.dashboard_stocks.quotes = ->
-  prettify(Quotes.find({},{limit: 10}).fetch())
+  prettify(Quotes.find({},{limit: 10, sort: {time: -1}}).fetch())
 
 
 Template.stock_row.symbol = -> @symbol
