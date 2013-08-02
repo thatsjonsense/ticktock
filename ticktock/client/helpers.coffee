@@ -18,12 +18,14 @@
 
 # Add as Handlebars helpers
 
+isNum = (num) -> num? and not isNaN(num)
+
 @templateHelpers =
-  toPercent: (num) -> if num? then formatPercent(num) else 'n/a'
-  toDollars: (num) -> if num? then formatDollars(num) else 'n/a' 
+  toPercent: (num) -> if isNum(num) then formatPercent(num) else 'n/a'
+  toDollars: (num) -> if isNum(num) then formatDollars(num) else 'n/a' 
+  toDelta: (num) -> if isNum(num) then (if num > 0 then '+' else '') + formatCommas(num.toFixed(2)) else 'n/a'
   toMinAgo: (time) -> formatMinAgo(time)
   toJSON: (obj) -> prettify obj
 
 for name, helper of templateHelpers
   Handlebars.registerHelper(name,helper)
-

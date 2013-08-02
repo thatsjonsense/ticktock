@@ -3,12 +3,11 @@
   <div class="stockList">
     <a href="/">Home</a>
     <h1>Stocks</h1>
-    <table>
+    <table class="dashboard">
     {{#each stocks}}
       {{>stock_row}}
     {{/each}}
     </table>
-    {{#isolate}}{{quotes}}{{/isolate}}
   </div>
 </template>
 
@@ -16,7 +15,8 @@
   <tr class="stockRow">
     <td><span class="symbol">{{symbol}}</span></td>
     <td class="numerical"><span class="price">{{toDollars priceNow}}</span></td>
-    <td class="numerical"><span class="asOf">{{toDollars priceLastClose}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} secondary">{{toDelta todayGain}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} secondary">{{toPercent todayGainRelative}}</span></td>
   </tr>
 
 </template>

@@ -31,6 +31,7 @@ class @Stock
     return trading_day
 
 
+  # Quotes
 
   quotesSince: (time) ->
     Quotes.find
@@ -51,6 +52,7 @@ class @Stock
   quoteLastClose: ->
     @quotePrevClose now()
 
+  # Prices
 
   # LIVE, will stay up to date as time ticks
   priceNow: -> 
@@ -63,7 +65,7 @@ class @Stock
     else
       time = now()
       q = @quoteNow()
-    if q? and q.time >= minutesBefore(time,1000) then parseFloat(q.price) else null
+    if q? and q.time >= minutesBefore(time,1000) then parseFloat(q.price) else NaN
 
   pricePrevClose: (time) ->
     @priceAt Stock.tradingClose(daysBefore(time,1))
@@ -72,6 +74,18 @@ class @Stock
     @pricePrevClose now()
 
 
+  # Stats
 
+  todayGain: ->
+    @priceNow() - @priceLastClose()
+
+  dayGain: (time) ->
+    @priceAt(time) - @pricePrevClose(time)
+
+  todayGainRelative: ->
+    @todayGain() / @priceLastClose()
+
+  dayGainRelative: (time) ->
+    @dayGain(time) / @pricePrevClose(time)
 
 
