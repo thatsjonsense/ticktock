@@ -1,21 +1,23 @@
 
 
 
-Meteor.startup ->
 
-  
-  Meteor.setInterval(->
+if false #disabled
+  Meteor.startup ->
 
-
-    # Dumb implementation: only keep the last 500 quotes. This sucks!
-  
-    MAX_QUOTES = 500
-
-    to_purge = Quotes.find({}).fetch()[...-500]
+    
+    Meteor.setInterval(->
 
 
-    #if to_purge then console.log('Purging',to_purge.length,'quotes')
-    for quote in to_purge
-      Quotes.remove(quote)
+      # Dumb implementation: only keep the last 500 quotes. This sucks!
+    
+      MAX_QUOTES = 500
 
-  , 60*1000)
+      to_purge = Quotes.find({}).fetch()[...-500]
+
+
+      #if to_purge then console.log('Purging',to_purge.length,'quotes')
+      for quote in to_purge
+        Quotes.remove(quote)
+
+    , 60*1000)

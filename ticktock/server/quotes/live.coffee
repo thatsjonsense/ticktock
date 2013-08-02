@@ -17,12 +17,18 @@ class @QuoteSourceYahoo
       y_quote = response.data.query.results.quote
       quote =
         symbol: stock.symbol
-        time: query_time
+        time: @parseDateTime(y_quote.LastTradeDate, y_quote.LastTradeTime)
         price: y_quote.LastTradePriceOnly
       Quotes.findOrInsert(quote)
       return quote
 
       # todo: parse the time from quote.LastTradeDate and LastTradeTime. But what's the time zone? could assume EST for now
+
+
+  @parseDateTime = (date, time) ->
+    d = Date.create(date + ' ' + time)
+    pst = hoursBefore(d,3)
+    return d
 
 
   @getStockInfo = (symbol) ->
