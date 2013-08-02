@@ -9,7 +9,7 @@
 class Investor
   constructor: (doc) -> _.extend(@,doc)
 
-  stocksOwned: (time) ->
+  symbolsOwnedAt: (time) ->
     "Return a dictionary SYMBOL -> SHARES_OWNED for any given TIME"
     p = {}
     trades_so_far = (t for t in @trades when t.date <= time)
@@ -21,6 +21,9 @@ class Investor
       if p[symbol] == 0 then delete p[symbol]
 
     return p
+
+  symbolsOwnedEver: -> (t.symbol for t in @trades)
+
 
 
 Meteor.Router.add(

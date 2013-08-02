@@ -1,5 +1,6 @@
 # General info about stocks
 
+@Quotes = new Meteor.Collection('quotes')
 @Stocks = new Meteor.Collection('stocks',
   transform: (doc) ->
     s = new Stock(doc)
@@ -9,8 +10,10 @@ checkFresh = (quote,time) ->
   if quote? and quote.time >= minutesBefore(time,1000)
     return parseFloat(q.price)
 
-class Stock
+class @Stock
   constructor: (doc) -> _.extend(@,doc)
+
+  @lookup: (symbol) -> Stocks.findOrInsert({symbol: symbol})
 
   quotesSince: (time) ->
     Quotes.find
