@@ -23,7 +23,7 @@ class @TickSourceGoogle
       tick =
         symbol: stock.symbol
         time: secondsAfter(current_day, interval * n) 
-        price: cols[1] # closing price
+        price: parseFloat(cols[1]) # closing price
 
       Ticks.findOrInsert(tick)
 

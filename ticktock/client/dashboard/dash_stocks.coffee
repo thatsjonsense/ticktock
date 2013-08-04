@@ -9,7 +9,7 @@ Template.dashboard_stocks.quotes = ->
 
   
 Template.stock_row.updown = ->
-  if @todayGain() >= 0 then "up" else "down"
+  if @latestQuote()?.gain >= 0 then "up" else "down"
 
 
 Template.stock_row.currentPrice = ->

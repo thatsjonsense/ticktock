@@ -8,8 +8,8 @@ Meteor.startup ->
 
     NUM_BEFORE = 10
     NUM_AFTER = 10
-    INTERVAL = 1 # time between user-facing ticks
-    SERVER_INTERVAL = 5 # how often we send new info to client
+    INTERVAL = 1 # seconds between user-facing updates
+    SERVER_INTERVAL = 1 # seconds between client/server handshake
 
     pubQuotes = (symbol,delay) ->
 
@@ -49,7 +49,7 @@ Meteor.startup ->
             stock = Stock.lookup(tick.symbol)
             time = tick.time
             price = tick.price
-            last_price = stock.pricePrevClose(time)
+            last_price = stock.prevCloseTick(time)?.price
 
             quote =
               _id: id
@@ -71,8 +71,8 @@ Meteor.startup ->
   if Meteor.isClient
     
     Deps.autorun ->
-      #for stock in Stocks.find().fetch()
-      for stock in Stocks.find({symbol: 'MSFT'}).fetch()
+      for stock in Stocks.find().fetch()
+      #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
         print 'Subscribing to ' + stock.symbol + ' with delay ' + Session.get('timeLag')
         Meteor.subscribe('Stock.quotes',stock.symbol,Session.get('timeLag'))
 

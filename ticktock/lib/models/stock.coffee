@@ -32,77 +32,31 @@ class @Stock
     return trading_day
 
   # Quotes
-  latestQuote: ->
+  latestQuote: (time) ->
     if Meteor.isClient
+      time ?= virtualTime()
+
       q = Quotes.findOne
         symbol: @symbol
-        time: {$lte: virtualTime()}
+        time: {$lte: time}
       ,
         sort: {time: -1}
 
-
   # Ticks
+  latestTick: (time) ->
+    if Meteor.isServer
+      time ?= now()
 
-  tickNow: ->
-    Ticks.findOne
-      symbol: @symbol
-    ,
-      sort: {time: -1}
+      t = Ticks.findOne
+        symbol: @symbol
+        time: {$lte: time}
+      ,
+        sort: {time: -1}
 
-  tickAt: (time) ->
-    Ticks.findOne
-      symbol: @symbol
-      time: {$lte: time}
-    ,
-      sort: {time: -1}
-
-  tickPrevClose: (time) ->
-    @tickAt Stock.tradingClose(daysBefore(time,1))
-
-  tickLastClose: ->
-    @tickPrevClose now()
-
-  # Prices
-
-  # LIVE, will stay up to date as time ticks
-  priceNow: -> 
-    @priceAt()
-
-  # NOT LIVE, fixed moment in time
-  priceAt: (time) ->
-    if time?
-      t = @tickAt(time)
-    else
-      time = now()
-      t = @tickNow()
-    if t? then parseFloat(t.price) else null
-
-  pricePrevClose: (time) ->
-    @priceAt Stock.tradingClose(daysBefore(time,1))
-
-  priceLastClose: ->
-    @pricePrevClose now()
-
-
-  # Stats
-
-  todayGain: ->
-    @priceNow() - @priceLastClose()
-
-  dayGain: (time) ->
-    @priceAt(time) - @pricePrevClose(time)
-
-  todayGainRelative: ->
-    @todayGain() / @priceLastClose()
-
-  dayGainRelative: (time) ->
-    @dayGain(time) / @pricePrevClose(time)
-
-
-
-# Pubsub
-# -------
-
+  prevCloseTick: (time) ->
+    yesterday = if time? then daysBefore(time,1) else daysAgo(1)
+    close_time = Stock.tradingClose(yesterday)
+    @latestTick(close_time)
 
 
 if Meteor.isServer
@@ -110,16 +64,5 @@ if Meteor.isServer
 
 if Meteor.isClient
   Meteor.subscribe('Stocks.active')
-
-  ###
-  Remaining issue: when the user changes timeLag, subscription gets rerun. That's fine except it deletes all the old documents. How do I preserve them until the new set comes in?
-
-  Option A: when data comes in from subscription, store it in some other client-side data structure. That way updates don't clobber it
-
-  Option B: don't use deps.autorun?
-
-  Option C: two separate stat sets. One for "live data right now" that's specific to time lag. Another "low resolution" that's used for scrubbing
-
-  ###
 
   

@@ -16,7 +16,7 @@ if speed is 'slow'
 
 
 Session.setDefault('virtualTime',null)
-Session.setDefault('timeLag',15)
+Session.setDefault('timeLag',10)
 
 
 @virtualTime = ->
