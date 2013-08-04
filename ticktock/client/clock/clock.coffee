@@ -7,13 +7,12 @@
 speed = 'fast'
 
 if speed is 'fast'
-  lag = secondsAgo
+  interval = 1
   max = 60
 
 if speed is 'slow'
-  lag = minutesAgo
-  max = 1440
-
+  interval = 60
+  max = 60*24
 
 Session.setDefault('virtualTime',null)
 Session.setDefault('timeLag',10)
@@ -36,7 +35,7 @@ Template.clock.timeNow = -> @virtualTime()
 Template.clock.events =
   'change .slider': (evt) ->
     value = parseInt($('.slider').val())
-    Session.set('timeLag',-value)
+    Session.set('timeLag',-value * interval)
 
     ###
     if value == 0
