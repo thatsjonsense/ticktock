@@ -1,9 +1,9 @@
 
 
 
-class @QuoteSourceYahoo
+class @TickSourceYahoo
 
-  @getQuote: (stock) ->
+  @getTick: (stock) ->
 
     yahooUrl = "http://query.yahooapis.com/v1/public/yql?q=select%20symbol%2C%20LastTradeTime%2C%20LastTradeDate%2C%20LastTradePriceOnly%20from%20yahoo.finance.quotes%20where%20symbol%20%3D%20'#{stock.symbol}'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback="
 
@@ -15,12 +15,12 @@ class @QuoteSourceYahoo
       return null
     else
       y_quote = response.data.query.results.quote
-      quote =
+      tick =
         symbol: stock.symbol
         time: @parseDateTime(y_quote.LastTradeDate, y_quote.LastTradeTime)
         price: y_quote.LastTradePriceOnly
-      Quotes.findOrInsert(quote)
-      return quote
+      Quotes.findOrInsert(tick)
+      return tick
 
       # todo: parse the time from quote.LastTradeDate and LastTradeTime. But what's the time zone? could assume EST for now
 
@@ -37,7 +37,7 @@ class @QuoteSourceYahoo
 
 Meteor.Router.add
   '/live/:symbol': (symbol) -> 
-    prettify QuoteSourceYahoo.getQuote(Stock.lookup(symbol))
+    prettify TickSourceYahoo.getTick(Stock.lookup(symbol))
 
 
  # http://developer.yahoo.com/yql/console/?q=show%20tables&env=store://datatables.org/alltableswithkeys#h=select%20symbol%2C%20LastTradeTime%2C%20LastTradeDate%2C%20LastTradePriceOnly%20from%20yahoo.finance.quotes%20where%20symbol%20%3D%20%27GOOG%27

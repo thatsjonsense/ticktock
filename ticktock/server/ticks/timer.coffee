@@ -16,9 +16,9 @@ Meteor.startup ->
   Meteor.setInterval(->
     for stock in active_stocks
       # Live data
-      #QuoteSourceYahoo.getQuote(stock)
+      #TickSourceYahoo.getTick(stock)
 
       # Random data
-      QuoteSourceRandom.getQuote(stock)
+      TickSourceRandom.getTick(stock)
 
   , 1000)

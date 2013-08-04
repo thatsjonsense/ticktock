@@ -4,22 +4,12 @@ Template.dashboard_stocks.stocks = ->
  
   # Todo: get a list of all the active stocks we're tracking
 
-Template.dashboard_stocks.stats = ->
-  Stats.find({symbol: 'MSFT'},{sort: {time: -1}}, limit: 18)
-
 Template.dashboard_stocks.quotes = ->
-  prettify(Quotes.find({},{limit: 10, sort: {time: -1}}).fetch())
+  Quotes.find({symbol: 'MSFT'},{sort: {time: -1}}, limit: 18)
+
   
 Template.stock_row.updown = ->
   if @todayGain() >= 0 then "up" else "down"
-
-
-latestStat = (symbol) ->
-  stat = Stats.findOne
-    symbol: symbol
-    time: {$lte: virtualTime()}
-  ,
-    sort: {time: -1}
 
 
 Template.stock_row.currentPrice = ->
@@ -29,8 +19,8 @@ Template.stock_row.currentPrice = ->
   #stat = latestStat(@symbol)
   #print stat?.price
   #stat?.price
-  latestStat(@symbol)?.price
+  @latestQuote()?.price
 
-Template.stock_row.currentGain = -> latestStat(@symbol)?.gain
+Template.stock_row.currentGain = -> @latestQuote()?.gain
 
-Template.stock_row.currentGainRelative = -> latestStat(@symbol)?.gainRelative
+Template.stock_row.currentGainRelative = -> @latestQuote()?.gainRelative
