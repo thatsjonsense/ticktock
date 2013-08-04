@@ -1,4 +1,7 @@
 
+@print = (stuff...) ->
+  console.log(stuff...)
+
 @debug = (stuff) ->
 	console.log(prettify(stuff))
 

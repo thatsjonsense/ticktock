@@ -3,13 +3,13 @@ nextsteps
 - Investor.portfolioValue
 
 
-- open and close prices for stocks
-
-- rebuild dashboards
-
 
 - rebuild circle chart
 
 
 
-- add time slider on bottom
+
+
+How do you make quotes performant?
+  - Cache all the info on the quote. lastClose, gain, gainRelative
+  - Speed up the search, somehow. OR, put it into some better data structure. What if you had all the quotes on an array, indexed by time? Or some similar hash table.

@@ -1,4 +1,4 @@
 <template name="clock">
-    {{#constant}}<input type="range" class="slider" min="-1440" max="0" value="0" />{{/constant}}
-    <div class="timeNow">{{timeNow}}</div>
+    {{#constant}}<input type="range" class="slider" min="-{{sliderSize}}" max="0" value="-{{delay}}" />{{/constant}}
+    <div class="timeNow">{{timeNow}} ({{delay}})</div>
 </template>
