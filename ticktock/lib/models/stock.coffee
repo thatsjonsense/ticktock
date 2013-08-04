@@ -114,7 +114,8 @@ if Meteor.isServer
 
   NUM_BEFORE = 10
   NUM_AFTER = 10
-  INTERVAL = 1 # between user-facing updates
+  INTERVAL = 1 # time between user-facing ticks
+  SERVER_INTERVAL = 1 # how often we send new info to client
 
   pubStockStats = (symbol,delay) ->
 
@@ -124,18 +125,11 @@ if Meteor.isServer
 
     @onStop ->
       if @timer then Meteor.clearInterval(@timer)
-      if @observer then @observer.stop()
 
-
+    # The set of documents we're sending the user. Keys are IDs
+    @buffer = {}
 
     @timer = Meteor.setInterval(=>
-
-      if symbol == 'MSFT'
-        print ""
-        print('Currently',now())
-        print('Client asked for',secondsAgo(delay))
-        print('So get documents up to',secondsAgo(delay-NUM_AFTER*INTERVAL))
-
 
       query = Quotes.find
         symbol: symbol
@@ -143,20 +137,25 @@ if Meteor.isServer
       ,
         limit: NUM_BEFORE + NUM_AFTER
         sort: {time: -1}
+      
+      quotes = query.fetch()
 
-      # Kill the last query we ran
-      if @observer then @observer.stop()
+      # Find items in @buffer that aren't in @quotes, and remove them
+      # Find items in @quotes that aren't in @buffer, and add them
 
-      #But what do we do about the documents it published?
+      for id, doc of @buffer
 
+        if not _.findWhere(quotes, {_id: id})
+          #print "Removing #{id} because it wasn't in quotes"
+          delete @buffer[id]
+          @removed('stats',id)
 
-      @observer = query.observeChanges
-
-        added: (id,quote) =>
-          
-          if symbol == 'MSFT'
-            print('Adding',id)
-          
+      for quote in quotes
+        id = quote._id
+        if @buffer[id]?
+          #print "Doing nothing with #{id} because it was in both lists"
+        else
+          #print "Adding #{id} because it wasn't in buffer"
 
           stock = Stock.lookup(quote.symbol)
           
@@ -172,69 +171,30 @@ if Meteor.isServer
             gain: if last_price then (price - last_price) else null
             gainRelative: (price - last_price) / last_price
           
+          @buffer[id] = stat
           @added('stats',id,stat)
 
-        removed: (id,fields) =>
-          if symbol == 'MSFT'
-            print('Removing',id,fields.symbol)
-          @removed('stats',id)
-
-    ,5000)
-
+    ,SERVER_INTERVAL * 1000)
 
   Meteor.publish('Stock.stats', pubStockStats)
 
 
 if Meteor.isClient
 
+  ###
+  Remaining issue: when the user changes timeLag, subscription gets rerun. That's fine except it deletes all the old documents. How do I preserve them until the new set comes in?
+
+  Option A: when data comes in from subscription, store it in some other client-side data structure. That way updates don't clobber it
+
+  Option B: don't use deps.autorun?
+
+  ###
 
   onStocksReady = ->
     Deps.autorun ->
-      Stocks.find().forEach (stock) ->
+      for stock in Stocks.find().fetch()
+      #for stock in [Stock.lookup('MSFT')]
         print 'Subscribing to ' + stock.symbol + ' with delay ' + Session.get('timeLag')
         Meteor.subscribe('Stock.stats',stock.symbol,Session.get('timeLag'))
 
   Meteor.subscribe('Stocks.active',onStocksReady)
-
-  
-
-
-
-
-###
-
-
-if Meteor.isServer
-  
-  
-
-  quotesFrom = (symbol, timeLag) ->
-    stock = Stock.lookup(symbol)
-    q = stock.quotesAfter(secondsAgo(timeLag),15)
-
-    q.observeChanges ->
-      added: (id) ->
-        console.log('Adding',id)
-        @added('quotes',id)
-
-
-
-    #@added('quotes','jdsklfksl',{test: 5})
-
-  Meteor.publish('latest-quotes', quotesFrom) 
-
-
-
-if Meteor.isClient
-
-  syncQuotes = ->
-    Deps.autorun ->
-      for stock in Stocks.find().fetch()
-          console.log('subscribing',stock.symbol)
-          Meteor.subscribe('latest-quotes',stock.symbol,Session.get('timeLag'))
-
-
-
-
-  Meteor.subscribe('all-stocks', syncQuotes)
-###
