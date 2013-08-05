@@ -5,8 +5,14 @@ Template.dashboard_stocks.stocks = ->
   # Todo: get a list of all the active stocks we're tracking
 
 Template.dashboard_stocks.quotes = ->
-  Quotes.find({symbol: 'MSFT'},{sort: {time: -1}}, limit: 100)
-  
+  Quotes.find
+    symbol: 'MSFT'
+  ,
+    sort:
+      type: 1
+      time: -1
+    limit: 100
+
 Template.stock_row.updown = ->
   if @latestQuote()?.gain >= 0 then "up" else "down"
 

@@ -21,3 +21,11 @@
 @weeksAfter = (t,w) -> daysAfter(t, w * 7)
 @weeksBefore = (t,w) -> daysBefore(t, w * 7)
 @weeksAgo = (w) -> weeksBefore(now(),w)
+
+
+
+
+Meteor.setIntervalInstant = (f,interval) ->
+  f()
+  handle = Meteor.setInterval(f,interval)
+  return handle
