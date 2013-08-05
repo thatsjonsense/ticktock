@@ -8,9 +8,11 @@
       {{>stock_row}}
     {{/each}}
     </table>
-    {{#each stats}}
-    <br />{{time}} {{price}}
+    <ol>
+    {{#each quotes}}
+    <li>{{toLocalTime time}} {{toDollars price}}</li>
     {{/each}}
+    </ol>
   </div>
 </template>
 

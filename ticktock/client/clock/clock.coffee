@@ -7,12 +7,12 @@
 speed = 'fast'
 
 if speed is 'fast'
-  interval = 1
-  max = 60
+  @interval = 10
+  @max = 120
 
 if speed is 'slow'
-  interval = 60
-  max = 60*24
+  @interval = 60
+  @max = 60*24
 
 Session.setDefault('virtualTime',null)
 Session.setDefault('timeLag',10)

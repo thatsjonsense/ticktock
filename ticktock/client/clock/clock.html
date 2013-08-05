@@ -1,4 +1,4 @@
 <template name="clock">
     {{#constant}}<input type="range" class="slider" min="-{{sliderSize}}" max="0" value="-{{delay}}" />{{/constant}}
-    <div class="timeNow">{{timeNow}} ({{delay}})</div>
+    <div class="timeNow">{{toLocalTime timeNow}} ({{delay}})</div>
 </template>
