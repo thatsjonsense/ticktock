@@ -18,7 +18,6 @@ Template.dashboard_stocks.stocks = ->
 
   stocks
   
- 
   # Todo: get a list of all the active stocks we're tracking
 
 Template.dashboard_stocks.quotes = ->

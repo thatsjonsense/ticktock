@@ -35,9 +35,8 @@ class @Stock
 
 
   # Quotes
-  latestQuote: (time) ->
+  latestQuote: (time = do defaultTime) ->
     if Meteor.isClient
-      time ?= virtualTime()
 
       q = Quotes.findOne
         symbol: @symbol
@@ -46,9 +45,8 @@ class @Stock
         sort: {time: -1}
 
   # Ticks
-  latestTick: (time) ->
+  latestTick: (time = do defaultTime) ->
     if Meteor.isServer
-      time ?= now()
 
       t = Ticks.findOne
         symbol: @symbol
@@ -56,8 +54,8 @@ class @Stock
       ,
         sort: {time: -1}
 
-  prevCloseTick: (time) ->
-    yesterday = if time? then daysBefore(time,1) else daysAgo(1)
+  prevCloseTick: (time = do defaultTime) ->
+    yesterday = daysBefore(time,1)
     close_time = Stock.tradingClose(yesterday)
     @latestTick(close_time)
 

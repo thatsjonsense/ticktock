@@ -24,6 +24,8 @@
 
 
 
+@defaultTime = -> if Meteor.isClient then virtualTime() else now()
+
 
 Meteor.setIntervalInstant = (f,interval) ->
   f()

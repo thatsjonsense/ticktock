@@ -6,10 +6,15 @@
     return i
 )
 
-class Investor
-  constructor: (doc) -> _.extend(@,doc)
+class @Investor
+  constructor: (doc) -> 
+    _.extend(@,doc)
+    @latest_quote = new Deps.injective(null)
 
-  symbolsOwnedAt: (time) ->
+  @lookup: (name) ->
+    Investors.findOne({name: name})
+
+  symbolsOwnedAt: (time = do defaultTime) ->
     "Return a dictionary SYMBOL -> SHARES_OWNED for any given TIME"
     p = {}
     trades_so_far = (t for t in @trades when t.date <= time)
@@ -24,26 +29,40 @@ class Investor
 
   symbolsOwnedEver: -> (t.symbol for t in @trades)
 
-  latestQuote: (time) ->
-    
-    current = 0
-    previous = 0
+  latestQuote: (time = do defaultTime) ->
 
-    for symbol, shares of @symbolsOwnedAt(time)
-      s = Stock.lookup(symbol)
-      q = s.latestQuote(time)
+      current = 0
+      previous = 0
 
-      current += shares * q.price
-      previous += shares * q.last_price
+      for symbol, shares of @symbolsOwnedAt(time)
+        s = Stock.lookup(symbol)
+        q = s.latestQuote(time)
 
-    quote =
-      _id: @_id + time
-      user_id: @_id
-      time: time
-      price: current
-      last_price: previous
-      gain: if previous then (current - previous) else null
-      gainRelative: (current - previous) / previous
+        current += shares * q.price
+        previous += shares * q.last_price
+
+      quote =
+        _id: @_id + time
+        user_id: @_id
+        time: time
+        price: current
+        last_price: previous
+        gain: if previous then (current - previous) else null
+        gainRelative: (current - previous) / previous
+
+
+
+# publish to everyone
+
+if Meteor.isServer
+  Meteor.publish('Investors.all',-> Investors.find())
+
+if Meteor.isClient
+  Meteor.subscribe('Investors.all')
+
+
+
+
 
 Meteor.Router.add(
   '/test/models/investor/:n/:d': (n,d) -> 
