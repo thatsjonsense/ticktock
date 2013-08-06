@@ -38,8 +38,8 @@ class @Investor
         s = Stock.lookup(symbol)
         q = s.latestQuote(time)
 
-        current += shares * q.price
-        previous += shares * q.last_price
+        current += shares * q?.price
+        previous += shares * q?.last_price
 
       quote =
         _id: @_id + time

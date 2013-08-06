@@ -1,13 +1,4 @@
 
-###
-Session.setDefault('latestQuotes',{})
-quotes = Session.get('latestQuotes')
-for stock in Stocks.find({symbol: 'MSFT'}).fetch()
-#for stock in Stocks.find().fetch()
-  quotes[stock.symbol] = stock.latestQuote()
-Session.set('latestQuotes',quotes)
-###
-
 Template.dashboard_stocks.stocks = ->
   stocks = Stocks.find({}).fetch()
   
