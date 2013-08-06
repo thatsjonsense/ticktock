@@ -17,40 +17,31 @@ SERVER_INTERVAL = 5000
 
 if Meteor.isClient
 
-  Session.setDefault('subscriptions',[])
+  @subscriptions = []
+
+
 
   @safeSubscribe = (name,args...) ->
 
       debug "Subscribing to #{name} with args #{args}"
       handle = Meteor.subscribe(name,args...)
+      sub =
+        handle: handle
+        name: name
+        args: args
 
-      #print 'subscriptions', Session.get('subscriptions')
+      subscriptions.push(sub)
 
-      Deps.nonreactive ->
-        sub =
-          handle: handle
-          name: name
-          args: args
 
-        subs = Session.get('subscriptions')
-        subs.push(sub)
-        Session.set('subscriptions',subs)
-
-  # todo: find a place to call this. JS to detect refresh or leaving page?
   @unsubscribeAll = ->
 
-    subs = Session.get('subscriptions') or []
-
-    for sub in subs
+    for sub in subscriptions
       debug "Unsubscribing from #{sub.name} with args #{sub.args}"
-      debug sub.handle
-      if not sub.handle.stop?()
-        debug "Couldn't unsubscribe, handle was #{sub.handle}"
-
-    Session.set('subscriptions',[])
-
-
-
+      sub.handle.stop()
+  
+  # This doesn't seem to work - probably cuz it kills web sockets on unload
+  $(window).unload ->
+   unsubscribeAll()
 
 
 ###
@@ -89,4 +80,6 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
       #debug 'Ending sync',sync_id,now().toISOString()
 
     @timer = Meteor.setIntervalInstant(updateAndSync,SERVER_INTERVAL)
-    @onStop => if @timer? then Meteor.clearInterval(@timer)
+    @onStop => 
+      debug "Unpublishing #{opt}"
+      if @timer? then Meteor.clearInterval(@timer)
