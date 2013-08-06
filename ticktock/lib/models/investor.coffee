@@ -24,7 +24,26 @@ class Investor
 
   symbolsOwnedEver: -> (t.symbol for t in @trades)
 
+  latestQuote: (time) ->
+    
+    current = 0
+    previous = 0
 
+    for symbol, shares of @symbolsOwnedAt(time)
+      s = Stock.lookup(symbol)
+      q = s.latestQuote(time)
+
+      current += shares * q.price
+      previous += shares * q.last_price
+
+    quote =
+      _id: @_id + time
+      user_id: @_id
+      time: time
+      price: current
+      last_price: previous
+      gain: if previous then (current - previous) else null
+      gainRelative: (current - previous) / previous
 
 Meteor.Router.add(
   '/test/models/investor/:n/:d': (n,d) -> 
