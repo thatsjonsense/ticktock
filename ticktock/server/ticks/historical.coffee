@@ -2,7 +2,7 @@
 
 class @TickSourceGoogle
 
-  @getTicksPast = (stock,days = 1,interval = 60*15) ->
+  @getTicksPast = (stock,days = 1,interval = 60) ->
 
     googleUrl = "http://www.google.com/finance/getprices?i=#{interval}&p=#{days}d&f=d,o,h,l,c,v&df=cpct&q=#{stock.symbol}"
 
