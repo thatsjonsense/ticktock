@@ -8,7 +8,9 @@
 @Ticks = new Meteor.Collection('ticks')
 
 class @Stock
-  constructor: (doc) -> _.extend(@,doc)
+  constructor: (doc) ->
+     _.extend(@,doc)
+     @latest_quote = new Deps.injective(null)
 
   @lookup: (symbol) -> Stocks.findOne({symbol: symbol})
 
@@ -30,6 +32,7 @@ class @Stock
     trading_day = @tradingDay(time)
     trading_day.setHours(12+4-3,0,0,0)  
     return trading_day
+
 
   # Quotes
   latestQuote: (time) ->

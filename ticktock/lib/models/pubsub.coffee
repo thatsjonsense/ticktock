@@ -21,7 +21,7 @@ if Meteor.isClient
 
   @safeSubscribe = (name,args...) ->
 
-      print "Subscribing to #{name} with args #{args}"
+      debug "Subscribing to #{name} with args #{args}"
       handle = Meteor.subscribe(name,args...)
 
       #print 'subscriptions', Session.get('subscriptions')
@@ -42,10 +42,10 @@ if Meteor.isClient
     subs = Session.get('subscriptions') or []
 
     for sub in subs
-      print "Unsubscribing from #{sub.name} with args #{sub.args}"
-      print sub.handle
+      debug "Unsubscribing from #{sub.name} with args #{sub.args}"
+      debug sub.handle
       if not sub.handle.stop?()
-        print "Couldn't unsubscribe, handle was #{sub.handle}"
+        debug "Couldn't unsubscribe, handle was #{sub.handle}"
 
     Session.set('subscriptions',[])
 
@@ -61,13 +61,15 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
 
   return (opt...) ->
 
+    debug "Publishing #{opt}"
+
     # both indexed by ID
     @client = {}
     @server = {}
 
     updateAndSync = =>
-      #sync_id = _.uniqueId()
-      #print 'Starting sync',sync_id,now().toISOString(),opt
+      sync_id = _.uniqueId()
+      #debug 'Starting sync',sync_id,now().toISOString(),opt
 
       @server = _.object([doc._id, doc] for doc in updateArray(opt...))
 
@@ -84,7 +86,7 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
         delete @client[id]
         @removed(collection,id)
 
-      #print 'Ending sync',sync_id,now().toISOString()
+      #debug 'Ending sync',sync_id,now().toISOString()
 
     @timer = Meteor.setIntervalInstant(updateAndSync,SERVER_INTERVAL)
     @onStop => if @timer? then Meteor.clearInterval(@timer)

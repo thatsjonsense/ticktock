@@ -1,6 +1,23 @@
 
+###
+Session.setDefault('latestQuotes',{})
+quotes = Session.get('latestQuotes')
+for stock in Stocks.find({symbol: 'MSFT'}).fetch()
+#for stock in Stocks.find().fetch()
+  quotes[stock.symbol] = stock.latestQuote()
+Session.set('latestQuotes',quotes)
+###
+
 Template.dashboard_stocks.stocks = ->
-  stocks = Stocks.find({})
+  stocks = Stocks.find({}).fetch()
+  
+  Deps.autorun ->
+    for stock in stocks
+      q = stock.latestQuote()
+      stock.latest_quote.set q
+
+  stocks
+  
  
   # Todo: get a list of all the active stocks we're tracking
 
@@ -13,19 +30,14 @@ Template.dashboard_stocks.quotes = ->
       time: -1
     limit: 100
 
+
 Template.stock_row.updown = ->
-  if @latestQuote()?.gain >= 0 then "up" else "down"
+  if @latest_quote.get()?.gain >= 0 then "up" else "down"
 
 
 Template.stock_row.currentPrice = ->
-  
-  #print "calculating price for #{@symbol}"
-  #print 'time: ' + virtualTime()
-  #stat = latestStat(@symbol)
-  #print stat?.price
-  #stat?.price
-  @latestQuote()?.price
+  @latest_quote.get()?.price
 
-Template.stock_row.currentGain = -> @latestQuote()?.gain
+Template.stock_row.currentGain = -> @latest_quote.get()?.gain
 
-Template.stock_row.currentGainRelative = -> @latestQuote()?.gainRelative
+Template.stock_row.currentGainRelative = -> @latest_quote.get()?.gainRelative

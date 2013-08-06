@@ -1,9 +1,13 @@
 
+SHOW_DEBUG = false
+
+
 @print = (stuff...) ->
   console.log(stuff...)
 
-@debug = (stuff) ->
-	console.log(prettify(stuff))
+@debug = (stuff...) ->
+	if SHOW_DEBUG
+    print(now(),stuff...)
 
 @prettify = (stuff) ->
 	JSON.stringify(stuff,null,2)
