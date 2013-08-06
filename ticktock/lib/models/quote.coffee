@@ -64,15 +64,16 @@ Meteor.startup ->
   # Subscribing
   if Meteor.isClient
     
+    # Todo: put these handles in a session variable, clear them before routing or on page close
+
     Deps.autorun ->
       for stock in Stocks.find().fetch()
       #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
-        print 'Subscribing to ' + stock.symbol + ' with delay ' + Session.get('timeLag')
-        Meteor.subscribe('Stock.latestQuotes',stock.symbol,Session.get('timeLag'))
+        safeSubscribe('Stock.latestQuotes',stock.symbol,Session.get('timeLag'))
+
 
     Deps.autorun ->
       if max? and interval?
         for stock in Stocks.find().fetch()
         #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
-          print 'Subscribing to ' + stock.symbol + ' for stock.pastQuotes'
-          Meteor.subscribe('Stock.pastQuotes',stock.symbol,-max,0,interval)
+          safeSubscribe('Stock.pastQuotes',stock.symbol,-max,0,interval)
