@@ -40,7 +40,7 @@ class @Stock
 
   @tradingActive: (time = do defaultTime) ->
 
-    time.isBetween(@tradingOpen(time),@tradingClose(time))
+    time.isBetween(@tradingOpen(time),@tradingClose(time)) and time.isWeekday()
 
 
   # Quotes
