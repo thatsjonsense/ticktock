@@ -24,7 +24,11 @@ Meteor.startup ->
   if Meteor.isServer
 
 
-    getPastQuotes = (symbol, start, end, interval) ->
+    # Aim to return 20 quotes over that interval
+    getPastQuotes = (symbol, start, end = 0, max_quotes = 20) -> 
+      range = end - start
+      interval = Math.ceil(range / max_quotes)
+
       quotes = []
       stock = Stock.lookup(symbol)
       for lag in [start...end] by interval
@@ -63,17 +67,24 @@ Meteor.startup ->
   # Subscribing
   if Meteor.isClient
     
-    # Todo: put these handles in a session variable, clear them before routing or on page close
+
+    # Wait for timeLag to stabilize
+
+    current_timelag = null
+    previous_timelag = null
+    stableTimeLag = ->
+      previous_timelag = current_timelag
+      current_timelag = Session.get('timeLag')
+      if previous_timelag == current_timelag
+        Session.set('timeLagStable',current_timelag)
+    Meteor.setIntervalInstant(stableTimeLag,500)
 
     Deps.autorun ->
       for stock in Stocks.find().fetch()
       #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
-        safeSubscribe('Stock.latestQuotes',stock.symbol,Session.get('timeLag'))
+        safeSubscribe('Stock.latestQuotes',stock.symbol,Session.get('timeLagStable'))
 
-    ###
     Deps.autorun ->
-      if max? and interval?
-        for stock in Stocks.find().fetch()
-        #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
-          safeSubscribe('Stock.pastQuotes',stock.symbol,-max,0,interval)
-    ###
+      for stock in Stocks.find().fetch()
+      #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
+        safeSubscribe('Stock.pastQuotes',stock.symbol,-max)

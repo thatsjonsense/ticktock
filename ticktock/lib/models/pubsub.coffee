@@ -48,7 +48,7 @@ if Meteor.isClient
 Consider combining this with the Meteor.publish function. Would let you add a lot more debugging/logging. For example, on every doc you could slap on _source = (the published name), bundling collection in with the updateArray definition, tracking the actual subscription things are part of, etc.
 ###
 
-@pubArray = (updateArray,collection) ->
+@pubArray = (updateArray,collection,live=true) ->
 
   return (opt...) ->
 
@@ -82,7 +82,11 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
       #debug 'Ending sync',sync_id,end_time.toISOString()
       #debug 'Time for sync',sync_id,'was',end_time.getTime() - start_time.getTime()
 
-    @timer = Meteor.setIntervalInstant(updateAndSync,SERVER_INTERVAL)
+    if live
+      @timer = Meteor.setIntervalInstant(updateAndSync,SERVER_INTERVAL)
+    else
+      updateAndSync()
+
     @onStop => 
       debug "Unpublishing #{opt}"
       if @timer? then Meteor.clearInterval(@timer)
