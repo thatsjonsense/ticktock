@@ -24,7 +24,6 @@ Meteor.startup ->
   if Meteor.isServer
 
 
-    # Aim to return 20 quotes over that interval
     getPastQuotes = (symbol, start, end = 0, max_quotes = 20) -> 
       range = end - start
       interval = Math.ceil(range / max_quotes)
@@ -43,6 +42,7 @@ Meteor.startup ->
 
     getLatestQuotes = (symbol, delay, before = 5, after = 20) ->
 
+      ###
       ticks = Ticks.find
         symbol: symbol
         time:
@@ -52,6 +52,29 @@ Meteor.startup ->
         sort:
           time: -1
       .fetch()
+      ###
+
+      ticks_after = Ticks.find
+        symbol: symbol
+        time:
+          $gte: secondsAgo(delay)
+      ,
+        limit: after
+        sort:
+          time: 1
+      .fetch()
+
+      ticks_before = Ticks.find
+        symbol: symbol
+        time:
+          $lt: secondsAgo(delay)
+      ,
+        limit: before
+        sort:
+          time: -1
+      .fetch()
+
+      ticks = _.union(ticks_after,ticks_before)
 
       quotes = []
       for tick in ticks
