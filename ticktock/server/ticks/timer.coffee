@@ -23,13 +23,17 @@ Meteor.startup ->
 
   # Ensure we have a constant stream of quotes
 
-  debug "Generating random data"
+  debug "Generating new data"
   Meteor.setIntervalInstant(->
     for stock in active_stocks
-      # Live data
-      #TickSourceYahoo.getTick(stock)
+      
+      if Stock.tradingActive()
+        # Live data
+        TickSourceYahoo.getTick(stock)
+      else
+        # Random data
+        TickSourceRandom.getTick(stock)
 
-      # Random data
-      TickSourceRandom.getTick(stock)
+      
 
   , 1000)

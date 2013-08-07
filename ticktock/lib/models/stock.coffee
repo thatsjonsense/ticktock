@@ -23,20 +23,24 @@ class @Stock
 
   # Decide which trading day a time corresponds to
   # Todo: timezones. guh.
-  @tradingDay: (time) ->
-    trading_day = time
+  @tradingDay: (time = do defaultTime) ->
+    trading_day = Date.create(time)
     trading_day.setHours(0,0,0,0)
     return trading_day
 
-  @tradingOpen: (time) ->
-    trading_day = @tradingDay(time)
-    trading_day.setHours(9-3,30,0,0)
-    return trading_day
+  @tradingOpen: (time = do defaultTime) ->
+    trading_open = Date.create(@tradingDay(time))
+    trading_open.setHours(9-3,30,0,0)
+    return trading_open
 
-  @tradingClose: (time) ->
-    trading_day = @tradingDay(time)
-    trading_day.setHours(12+4-3,0,0,0)  
-    return trading_day
+  @tradingClose: (time = do defaultTime) ->
+    trading_close = Date.create(@tradingDay(time))
+    trading_close.setHours(12+4-3,0,0,0)  
+    return trading_close
+
+  @tradingActive: (time = do defaultTime) ->
+
+    time.isBetween(@tradingOpen(time),@tradingClose(time))
 
 
   # Quotes
