@@ -17,6 +17,7 @@ quoteFromTick = (tick) ->
     last_price: last_price
     gain: if last_price then (price - last_price) else null
     gainRelative: (price - last_price) / last_price
+    up: price >= last_price
 
 Meteor.startup ->
 

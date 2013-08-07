@@ -49,6 +49,7 @@ class @Investor
         last_price: previous
         gain: if previous then (current - previous) else null
         gainRelative: (current - previous) / previous
+        up: current >= previous
 
 
 

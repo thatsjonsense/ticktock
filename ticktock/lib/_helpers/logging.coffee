@@ -1,5 +1,5 @@
 
-SHOW_DEBUG = true
+SHOW_DEBUG = false
 
 
 @print = (stuff...) ->

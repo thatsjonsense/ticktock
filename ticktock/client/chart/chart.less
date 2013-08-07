@@ -1,0 +1,147 @@
+
+
+.chart {
+	//border: 1px dotted black;
+}
+
+.chartBar rect {
+	background-color: steelblue;
+	padding: 5px;
+}
+
+.chartDivs .bar {
+	margin: 1px;
+	height: 100px;
+	line-height: 100px;
+	background-color: steelblue;
+	text-align: right;
+
+	color: white;
+	padding: 5px;
+	font-size: 24px;
+}
+
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+
+@green: #248d00;
+@red: #cd0000;
+@bar_color: #8fe1ff;
+@origin_width: 2px;
+@origin_color: #999;
+@bar_thickness: 25px;
+@face_size: 80px;
+@base_font_size: 14px;
+@name_size: @base_font_size * 3;
+@gain_size: @base_font_size * 2;
+
+.chartCircles {
+	width: 100%;
+	height: 600px;
+	font-family: 'Montserrat', sans-serif;
+
+	.chartRow {
+		margin-top: 20px;
+		width: 800px;
+		height: 90px;
+	}
+
+	.canvas {
+		margin-top: 40px;
+		position: absolute;
+		width: 800px;
+	}
+
+	.line {
+		height: @bar_thickness;
+		width: 100%;
+		background-color: #eee;
+		position: absolute;
+		top: -@bar_thickness/2;
+	}
+
+	.origin {
+		height: @bar_thickness * 3;
+		background-color: fade(@origin_color,50%);
+		width: @origin_width;
+		position: absolute;
+		top: -@bar_thickness * 3/2;
+		left: 50%;
+		z-index: 100;
+	}
+
+	.bar {
+		width: 200px;
+		height: @bar_thickness;
+		top: -@bar_thickness/2;
+		background-color: @bar_color;
+		left: 50%;
+		position: absolute;
+	}
+
+	.cap {
+		position: absolute;
+		top: 0;
+		
+		width: 300px;
+		height: 200px;
+		margin-left: -40px;
+
+		z-index: 200;
+		
+
+		// mock data
+		left: 600px;
+
+
+
+		.name {
+			font-size: @name_size;
+			line-height: @name_size;
+			position: absolute;
+			top: -@name_size/2;
+			left: 100px;
+			margin-top: -10px;
+		}
+
+		.gain {
+			position: absolute;
+			margin-left: 100px;
+			font-size: @base_font_size * 2;
+			top: @name_size/2 + 0px;
+
+			&.up {
+				color: @green;
+			}
+
+			&.down {
+				color: @red;
+			}
+		}
+	}
+
+	.head {
+		background-size: 100% 100%;
+		background-image: url('https://profile-a-pao.xx.fbcdn.net/hprofile-ash4/c136.22.280.280/s160x160/1002852_10200326613592871_1780888072_n.jpg');
+		height: @face_size;
+		width: @face_size;
+		top: -@face_size/2;
+		position: absolute;
+		.rounded-corners(40px);
+	}
+
+
+}
+
+.chartCircles {
+	.bar {
+		//visibility: hidden;
+	}
+}
