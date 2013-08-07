@@ -9,7 +9,8 @@
 
 if Meteor.isServer
   Stocks._ensureIndex({symbol: 1})
-  Ticks._ensureIndex({symbol: 1, time: -1})
+  Ticks._ensureIndex({time: -1, symbol: 1})
+  Ticks._ensureIndex({time: -1})
 
 class @Stock
   constructor: (doc) ->

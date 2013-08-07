@@ -17,7 +17,7 @@ Meteor.startup ->
   for stock in active_stocks
     if Ticks.find({symbol: stock.symbol}).count() == 0
       debug "Grabbing historical data for #{stock.symbol}"
-      TickSourceGoogle.getTicksPast(stock,2)
+      TickSourceGoogle.getTicksPast(stock,2,60*15)
 
   # Todo: add some logic to decide if we're still in trading day, to get live or random data
 

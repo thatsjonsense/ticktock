@@ -13,7 +13,7 @@ y = {a: 1, c: 3}
 addedItems(x, y) == 3
 ###
 
-SERVER_INTERVAL = 5000
+@SERVER_INTERVAL = 10*1000
 
 if Meteor.isClient
 
@@ -60,7 +60,8 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
 
     updateAndSync = =>
       sync_id = _.uniqueId()
-      #debug 'Starting sync',sync_id,now().toISOString(),opt
+      start_time = now()
+      #debug 'Starting sync',sync_id,start_time.toISOString(),opt
 
       @server = _.object([doc._id, doc] for doc in updateArray(opt...))
 
@@ -77,7 +78,9 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
         delete @client[id]
         @removed(collection,id)
 
-      #debug 'Ending sync',sync_id,now().toISOString()
+      end_time = now()
+      #debug 'Ending sync',sync_id,end_time.toISOString()
+      #debug 'Time for sync',sync_id,'was',end_time.getTime() - start_time.getTime()
 
     @timer = Meteor.setIntervalInstant(updateAndSync,SERVER_INTERVAL)
     @onStop => 

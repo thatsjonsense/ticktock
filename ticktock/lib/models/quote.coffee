@@ -31,14 +31,13 @@ Meteor.startup ->
         tick = stock.latestTick(secondsAgo(-lag))
         quote = quoteFromTick(tick)
         quote.type = 'past'
-        quote._id += 'keep'
         quotes.push(quote)
 
       return quotes
 
     Meteor.publish('Stock.pastQuotes',pubArray(getPastQuotes,'quotes'))
 
-    getLatestQuotes = (symbol, delay, before = 10, after = 10) ->
+    getLatestQuotes = (symbol, delay, before = 5, after = 20) ->
 
       ticks = Ticks.find
         symbol: symbol
@@ -71,9 +70,10 @@ Meteor.startup ->
       #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
         safeSubscribe('Stock.latestQuotes',stock.symbol,Session.get('timeLag'))
 
-
+    ###
     Deps.autorun ->
       if max? and interval?
         for stock in Stocks.find().fetch()
         #for stock in Stocks.find({symbol: 'MSFT'}).fetch()
           safeSubscribe('Stock.pastQuotes',stock.symbol,-max,0,interval)
+    ###

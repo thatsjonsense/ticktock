@@ -26,16 +26,15 @@ Meteor.setInterval(->
   Session.set('virtualTime',secondsAgo(Session.get('timeLag')))
 ,1000)
 
-
-Template.clock.sliderSize = -> max
-
+Template.clock.minDelay = -> -@SERVER_INTERVAL * 2 / 1000
+Template.clock.sliderSize = -> -max
 Template.clock.delay = -> Session.get('timeLag')
 Template.clock.timeNow = -> @virtualTime()
 
 Template.clock.events =
-  'change .slider': (evt) ->
+  'mouseup .slider': (evt) ->
     value = parseInt($('.slider').val())
-    Session.set('timeLag',-value * interval)
+    Session.set('timeLag',-value)
 
     ###
     if value == 0
