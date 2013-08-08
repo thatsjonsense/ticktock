@@ -13,7 +13,7 @@ if speed is 'slow'
   @max = 60*60*24
 
 Session.setDefault('virtualTime',null)
-Session.setDefault('timeLag',10)
+Session.setDefault('timeLag',20)
 
 
 @virtualTime = ->

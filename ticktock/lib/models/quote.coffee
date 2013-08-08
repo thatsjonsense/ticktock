@@ -93,10 +93,10 @@ Meteor.startup ->
     
 
     # Wait for timeLag to stabilize
-
     current_timelag = null
     previous_timelag = null
     stableTimeLag = ->
+      Session.setDefault('timeLagStable',Session.get('timeLag'))
       previous_timelag = current_timelag
       current_timelag = Session.get('timeLag')
       if previous_timelag == current_timelag
