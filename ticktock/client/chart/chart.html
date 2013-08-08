@@ -1,8 +1,16 @@
 <template name="chart">
   
+  {{#constant}}
   <div class="chart">
     {{> chart_circles_d3}}
   </div>
+  {{/constant}}
+
+  <ol>
+    {{#each quotes}}
+    <li>{{toLocalTime time}} {{toDollars price}} {{type}} {{symbol}}</li>
+    {{/each}}
+  </ol>
 
 </template>
 

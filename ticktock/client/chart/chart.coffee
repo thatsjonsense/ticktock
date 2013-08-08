@@ -1,5 +1,14 @@
 
 
+
+Template.chart.quotes = ->
+  Quotes.find({},
+    sort:
+      type: 1
+      time: -1
+    limit: 5
+  )
+
 Template.chart_circles_d3.rendered = ->
 
   Deps.autorun =>
@@ -11,9 +20,9 @@ Template.chart_circles_d3.rendered = ->
       if @timer then Meteor.clearInterval(@timer)
       @timer = Meteor.setIntervalInstant(=>
         for investor in @investors
-          q = investor.latestQuote()
-          investor.latest_quote.set q
-          #debug 'latest quote',q.time
+          if investor? # weirdly, this is undefined sometimes
+            q = investor.latestQuote()
+            investor.latest_quote.set q
       ,1000)
 
     # Make the chart
