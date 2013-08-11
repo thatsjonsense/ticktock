@@ -1,26 +1,30 @@
 
 Template.dashboard_stocks.stocks = ->
-  Stocks.find().fetch()
-  
-  # Todo: get a list of all the active stocks we're tracking
+  viewing_user = Investors.findOne Session.get('viewingUserId')
+  if viewing_user
+    return Stocks.find
+      symbol:
+        $in: _.keys(viewing_user.symbolsOwnedAt())
+    .fetch()
 
-Template.dashboard_stocks.quotes = ->
-  Quotes.find
-    symbol: 'MSFT'
-  ,
-    sort:
-      type: 1
-      time: -1
-    limit: 100
+  else
+    return Stocks.find().fetch()
+    
 
+Template.dashboard_stocks.title = ->
+  viewing_user = Investors.findOne Session.get('viewingUserId')
+  if viewing_user
+    return viewing_user.name + "'s Portfolio"
+  else
+    return "All Stocks"
+
+
+
+Template.stock_row.owners = ->
+  _.reject(@owners,(i) -> i._id == Session.get('viewingUserId'))
+
+
+Template.stock_row.preserve ['a','table','tbody','tr','td']
 
 Template.stock_row.updown = ->
   if @up then "up" else "down"
-
-
-Template.stock_row.currentPrice = ->
-  @price
-
-Template.stock_row.currentGain = -> @gain
-
-Template.stock_row.currentGainRelative = -> @gainRelative

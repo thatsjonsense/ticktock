@@ -28,5 +28,6 @@ isNum = (num) -> num? and not isNaN(num)
   toLocalTime: (time) -> time.format('{DOW} {h}:{mm}:{ss}{tt}')
   toJSON: (obj) -> prettify obj
 
+
 for name, helper of templateHelpers
   Handlebars.registerHelper(name,helper)

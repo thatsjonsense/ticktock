@@ -36,7 +36,7 @@ Meteor.startup ->
           i.last_value = 0
 
           for symbol, shares of i.symbolsOwnedAt(time)
-            s = Stocks.findOne {symbol: symbol}
+            s = _.findWhere @stocks, {symbol: symbol}
 
             q = Quotes.latest(symbol, time)
 
@@ -45,7 +45,9 @@ Meteor.startup ->
             s.gain = s.price - s.last_price
             s.gainRelative = s.gain / s.last_price
             s.up = s.price >= s.last_price
-            @changed('stocks',s._id,s)
+
+            s.owners ?= []
+            s.owners.push(i)
               
             i.value += shares * q.price
             i.last_value += shares * q.last_price
@@ -53,7 +55,15 @@ Meteor.startup ->
           i.gain = i.value - i.last_value
           i.gainRelative = i.gain / i.last_value
           i.up = i.value >= i.last_value
-          @changed('investors',i._id,i)    
+
+        for i in @investors
+          @changed('investors',i._id,i)
+
+        for s in @stocks
+          @changed('stocks',s._id,s)
+
+
+
 
     publishTimer('investorsAndStocks2',InvestorsAndStocks.setup,InvestorsAndStocks.update,1000)
 
