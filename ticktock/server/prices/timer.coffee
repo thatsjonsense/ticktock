@@ -17,7 +17,7 @@ Meteor.startup ->
   for stock in active_stocks
     if Quotes.find({symbol: stock.symbol}).count() == 0
       debug "Grabbing historical data for #{stock.symbol}"
-      GoogleFinance.getQuotesPast(stock,2,60*15)
+      GoogleFinance.getQuotesPast(stock,2)
 
   # Todo: add some logic to decide if we're still in trading day, to get live or random data
 

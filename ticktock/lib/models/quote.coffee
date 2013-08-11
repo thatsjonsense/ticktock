@@ -5,7 +5,7 @@ if Meteor.isServer
 
 
 Quotes.latest = (symbol, time = do defaultTime) ->
-  Quotes.findOne
+  q = Quotes.findOne
     symbol: symbol
     time: {$lte: time}
   ,
@@ -59,8 +59,8 @@ Meteor.startup ->
 
 
   if Meteor.isClient
-    
-    safeSubscribe('investorsAndStocks2',Session.get('timeLagStable'))
+    Deps.autorun ->
+      safeSubscribe('investorsAndStocks2',Session.get('timeLagStable'))
 
 
 
