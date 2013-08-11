@@ -10,6 +10,7 @@ Quotes.latest = (symbol, time = do defaultTime) ->
     time: {$lte: time}
   ,
     sort: {time: -1}
+    limit: 1
 
 
 Meteor.startup ->
