@@ -1,8 +1,8 @@
 
 
-class @TickSourceGoogle
+class @GoogleFinance
 
-  @getTicksPast = (stock,days = 1,interval = 60) ->
+  @getQuotesPast = (stock,days = 1,interval = 60) ->
 
     googleUrl = "http://www.google.com/finance/getprices?i=#{interval}&p=#{days}d&f=d,o,h,l,c,v&df=cpct&q=#{stock.symbol}"
 
@@ -20,23 +20,24 @@ class @TickSourceGoogle
       else
         n = cols[0]
 
-      tick =
+      quote =
         symbol: stock.symbol
         time: secondsAfter(current_day, interval * n) 
         price: parseFloat(cols[1]) # closing price
 
-      Ticks.findOrInsert(tick)
+      Quotes.findOrInsert(quote)
 
 
+###
 Meteor.Router.add
   '/historical/:symbol/:days': (symbol,days) -> 
     if symbol == 'all'
       t = []
       for stock in active_stocks
         print "hitting google for #{stock.symbol}"
-        t.push TickSourceGoogle.getTicksPast(stock,days)
+        t.push GoogleFinance.getQuotesPast(stock,days)
       prettify q
     else
-      prettify TickSourceGoogle.getTicksPast(Stock.lookup(symbol),days)
+      prettify GoogleFinance.getQuotesPast(Stock.lookup(symbol),days)
   '/historical/dump': -> # todo: output all historical data to a .json file which we can save
-
+###

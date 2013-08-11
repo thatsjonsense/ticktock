@@ -19,8 +19,6 @@ if Meteor.isClient
 
   @subscriptions = []
 
-
-
   @safeSubscribe = (name,args...) ->
 
       debug "Subscribing to #{name} with args #{args}"
@@ -31,7 +29,6 @@ if Meteor.isClient
         args: args
 
       subscriptions.push(sub)
-
 
   @unsubscribeAll = ->
 
@@ -44,9 +41,46 @@ if Meteor.isClient
    unsubscribeAll()
 
 
+
+
 ###
 Consider combining this with the Meteor.publish function. Would let you add a lot more debugging/logging. For example, on every doc you could slap on _source = (the published name), bundling collection in with the updateArray definition, tracking the actual subscription things are part of, etc.
 ###
+
+
+@publishTimer = (name,setup,update,interval=1000,live=true) ->
+
+  publisher = (opt...) ->
+    debug "Publishing #{name} with options #{opt}"
+    @setup = _.bind(setup,@)
+    @update = _.bind(update,@)
+
+
+    @setup(opt...)
+
+    doUpdate = =>
+      sync_id = _.uniqueId()
+      start_time = now()
+      #debug 'Starting sync',sync_id,start_time.toISOString(),opt
+      @update(opt...)
+      end_time = now()
+      #debug 'Ending sync',sync_id,end_time.toISOString()
+      debug 'Time for sync',sync_id,'was',end_time.getTime() - start_time.getTime()
+
+    if live
+      @timer = Meteor.setIntervalInstant(doUpdate,interval)
+    else
+      doUpdate()
+
+    @onStop =>
+      debug "Unpublishing #{name} with options #{opt}"
+      if @timer? then Meteor.clearInterval(@timer)
+
+
+  Meteor.publish(name,publisher)
+
+
+
 
 @pubArray = (updateArray,collection,live=true) ->
 

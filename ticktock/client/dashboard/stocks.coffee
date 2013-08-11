@@ -1,13 +1,6 @@
 
 Template.dashboard_stocks.stocks = ->
-  stocks = Stocks.find({}).fetch()
-  
-  Deps.autorun ->
-    for stock in stocks
-      q = stock.latestQuote()
-      stock.latest_quote.set q
-
-  stocks
+  Stocks.find().fetch()
   
   # Todo: get a list of all the active stocks we're tracking
 
@@ -22,12 +15,12 @@ Template.dashboard_stocks.quotes = ->
 
 
 Template.stock_row.updown = ->
-  if @latest_quote.get()?.gain >= 0 then "up" else "down"
+  if @up then "up" else "down"
 
 
 Template.stock_row.currentPrice = ->
-  @latest_quote.get()?.price
+  @price
 
-Template.stock_row.currentGain = -> @latest_quote.get()?.gain
+Template.stock_row.currentGain = -> @gain
 
-Template.stock_row.currentGainRelative = -> @latest_quote.get()?.gainRelative
+Template.stock_row.currentGainRelative = -> @gainRelative
