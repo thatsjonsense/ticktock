@@ -6,6 +6,7 @@ class @RandomWalk
   @SWING: 0.001
 
   @getQuote = (stock) ->
+
     most_recent_price = Quotes.latest(stock.symbol)?.price
     last_price = Quotes.latest(stock.symbol)?.last_price
 

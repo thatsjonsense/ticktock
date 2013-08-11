@@ -11,7 +11,6 @@ if Meteor.isServer
 class @Stock
   constructor: (doc) ->
      _.extend(@,doc)
-     @latest_quote = new Deps.injective(null)
 
   @lookup: (symbol) -> Stocks.findOne({symbol: symbol})
 

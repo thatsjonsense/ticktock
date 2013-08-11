@@ -65,7 +65,7 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
       @update(opt...)
       end_time = now()
       #debug 'Ending sync',sync_id,end_time.toISOString()
-      debug 'Time for sync',sync_id,'was',end_time.getTime() - start_time.getTime()
+      #debug 'Time for sync',sync_id,'was',end_time.getTime() - start_time.getTime()
 
     if live
       @timer = Meteor.setIntervalInstant(doUpdate,interval)
