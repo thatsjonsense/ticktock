@@ -17,69 +17,65 @@ Meteor.startup ->
 
   if Meteor.isServer
 
-    InvestorsAndStocks =
-      setup: ->
+    updatePrices = (delay) ->
+      time = secondsAgo(delay)
 
+      # Initial setup
+      @investors_observer ?= Investors.find().observeChanges
+        added: (id,fields) =>
+          #debug "Added investor #{fields.name}"
+          @added('investors',id,fields)
+        changed: (id,fields) =>
+          #debug "Changed investor #{id} to #{fields}"
+          @changed('investors',id,fields)
 
-      update: (delay) ->
-        time = secondsAgo(delay)
+      @stocks_observer ?= Stocks.find().observeChanges
+        added: (id, fields) =>
+          #debug "Added stock #{fields.symbol}"
+          @added('stocks',id,fields)
 
-        # Initial setup
-        @investors_observer ?= Investors.find().observeChanges
-          added: (id,fields) =>
-            #debug "Added investor #{fields.name}"
-            @added('investors',id,fields)
-          changed: (id,fields) =>
-            #debug "Changed investor #{id} to #{fields}"
-            @changed('investors',id,fields)
+      investors = Investors.find().fetch()
+      stocks = Stocks.find().fetch()
 
-        @stocks_observer ?= Stocks.find().observeChanges
-          added: (id, fields) =>
-            #debug "Added stock #{fields.symbol}"
-            @added('stocks',id,fields)
+      for i in investors
+        i.value = 0
+        i.last_value = 0
 
-        investors = Investors.find().fetch()
-        stocks = Stocks.find().fetch()
+        for symbol, shares of i.symbolsOwnedAt(time)
+          #print "#{i.name} owns #{symbol}"
+          s = _.findWhere stocks, {symbol: symbol}
 
-        for i in investors
-          i.value = 0
-          i.last_value = 0
+          q = Quotes.latest(symbol, time)
 
-          for symbol, shares of i.symbolsOwnedAt(time)
-            #print "#{i.name} owns #{symbol}"
-            s = _.findWhere stocks, {symbol: symbol}
+          s.price = q?.price
+          s.last_price = q?.last_price
+          s.gain = s.price - s.last_price
+          s.gainRelative = s.gain / s.last_price
+          s.up = s.price >= s.last_price
 
-            q = Quotes.latest(symbol, time)
+          s.owners ?= []
+          s.owners.push(i)
+            
+          i.value += shares * s.price
+          i.last_value += shares * s.last_price
+        
+        i.gain = i.value - i.last_value
+        i.gainRelative = i.gain / i.last_value
+        i.up = i.value >= i.last_value
 
-            s.price = q?.price
-            s.last_price = q?.last_price
-            s.gain = s.price - s.last_price
-            s.gainRelative = s.gain / s.last_price
-            s.up = s.price >= s.last_price
+      for i in investors
+        @changed('investors',i._id,i)
 
-            s.owners ?= []
-            s.owners.push(i)
-              
-            i.value += shares * s.price
-            i.last_value += shares * s.last_price
-          
-          i.gain = i.value - i.last_value
-          i.gainRelative = i.gain / i.last_value
-          i.up = i.value >= i.last_value
+      for s in stocks
+        @changed('stocks',s._id,s)
 
-        for i in investors
-          @changed('investors',i._id,i)
-
-        for s in stocks
-          @changed('stocks',s._id,s)
-
-    publishTimer('investorsAndStocks2',InvestorsAndStocks.update,InvestorsAndStocks.setup,1000)
+    publishTimer('prices',updatePrices)
 
 
 
   if Meteor.isClient
     Deps.autorun ->
-      safeSubscribe('investorsAndStocks2',Session.get('timeLagStable'))
+      safeSubscribe('prices',Session.get('timeLagStable'))
 
 
 
