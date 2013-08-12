@@ -1,0 +1,34 @@
+
+<template name="dashboard_investors">
+  <div class="stockList">
+    <a href="/">Home</a>
+    <h1>Users</h1>
+    <table class="dashboard">
+    {{#each investors}}
+      {{>investor_row}}
+    {{/each}}
+    </table>
+    <ol>
+    {{#each quotes}}
+    <li>{{type}} {{toLocalTime time}} {{toDollars price}}</li>
+    {{/each}}
+    </ol>
+  </div>
+</template>
+
+<template name="investor_row">
+  <tr class="stockRow">
+    <td><span class="name"><a href='/portfolio/{{_id}}'>{{name}}</a></span></td>
+
+    {{#isolate}}
+    <td class="numerical"><span class="price">{{toDollars value}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} secondary">{{toDelta gain}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} secondary">{{toPercent gainRelative}}</span></td>
+    {{/isolate}}
+
+  </tr>
+
+</template>
+
+
+

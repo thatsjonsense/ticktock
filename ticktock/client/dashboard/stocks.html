@@ -1,0 +1,49 @@
+
+<template name="dashboard_stocks">
+  <div class="stockList">
+    <a href="/">Home</a>
+    <h1>{{#isolate}}{{title}}{{/isolate}}</h1>
+    <table class="dashboard">
+    {{#isolate}}
+    {{#each stocks}}
+      {{>stock_row}}
+    {{/each}}
+    {{/isolate}}
+    </table>
+  </div>
+  {{> stock_control}}
+</template>
+
+<template name="stock_row">
+  <tr class="stockRow">
+    {{#isolate}}
+    <td><span class="symbol">{{symbol}}</span></td>
+    <td class="numerical"><span class="price">{{toDollars price}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} secondary" alt="{{toDollars last_price}}">{{toDelta gain}}</span></td>
+    <td class="numerical"><span class="delta {{updown}} secondary">{{toPercent gainRelative}}</span></td>
+    {{/isolate}}
+    <td><span class="owners tertiary">{{#if owners}}Owned by {{/if}}{{#each owners}}<span class='owner'><a href='/portfolio/{{_id}}'>{{name}}</a></span>{{/each}}</td>
+
+
+  </tr>
+
+</template>
+
+<template name="stock_control">
+  
+  <div id="new_stock" style="display:none;">
+    <input id="new_symbol" type="text" class="symbol" placeholder="Symbol (e.g., MSFT)" autofocus />
+    <input type="text" class="shares" placeholder="# shares" />
+    <input type="text" class="cost_basis" placeholder="cost basis" />
+    <input type="button" class="submit" value="Buy!" />
+  </div>
+
+  <input type="button" id="add_stock" value="Add Stock" />
+
+</template>
+
+<template name="stock_typeahead">
+
+  <p><strong>{{symbol}}</strong> {{name}}<p>
+
+</template>

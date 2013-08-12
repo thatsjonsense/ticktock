@@ -1,0 +1,4 @@
+<template name="clock">
+    {{#constant}}<input type="range" class="slider" min="{{sliderSize}}" max="{{minDelay}}" value="-{{delay}}" />{{/constant}}
+    <div class="timeNow">{{toLocalTime timeNow}} (-{{delay}} seconds)</div>
+</template>
