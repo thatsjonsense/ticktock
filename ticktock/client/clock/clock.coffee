@@ -13,18 +13,13 @@ if speed is 'slow'
   @max = 60*60*24*3
 
 Session.setDefault('virtualTime',null)
-Session.setDefault('timeLag',20)
+Session.setDefault('timeLag',0)
 
-# Wait for timeLag to stabilize
-current_timelag = null
-previous_timelag = null
-stableTimeLag = ->
-  Session.setDefault('timeLagStable',Session.get('timeLag'))
-  previous_timelag = current_timelag
-  current_timelag = Session.get('timeLag')
-  if previous_timelag == current_timelag
-    Session.set('timeLagStable',current_timelag)
-Meteor.setIntervalInstant(stableTimeLag,500)
+
+timeLagStable = ->
+  Session.set('timeLagStable', Session.get('timeLag'))
+
+Meteor.setIntervalInstant _.throttle(timeLagStable,500), 100
 
 
 @virtualTime = ->

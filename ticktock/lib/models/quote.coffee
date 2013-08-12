@@ -73,7 +73,7 @@ Meteor.startup ->
         for s in stocks
           @changed('stocks',s._id,s)
 
-    publishTimer('investorsAndStocks2',InvestorsAndStocks.setup,InvestorsAndStocks.update,1000)
+    publishTimer('investorsAndStocks2',InvestorsAndStocks.update,InvestorsAndStocks.setup,1000)
 
 
 
