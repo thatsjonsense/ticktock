@@ -1,5 +1,9 @@
 
-SHOW_DEBUG = true
+if Meteor.isServer
+  SHOW_DEBUG = Meteor.settings.debug ? false
+
+if Meteor.isClient
+  SHOW_DEBUG = false
 
 
 @print = (stuff...) ->

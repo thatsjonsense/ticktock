@@ -18,7 +18,8 @@ class @YahooFinance
       quote =
         symbol: stock.symbol
         time: @parseDateTime(y_quote.LastTradeDate, y_quote.LastTradeTime)
-        price: y_quote.LastTradePriceOnly
+        price: parseFloat(y_quote.LastTradePriceOnly)
+        last_price: parseFloat(y_quote.PreviousClose)
         source: 'live'
       Quotes.findOrInsert(quote)
       return quote

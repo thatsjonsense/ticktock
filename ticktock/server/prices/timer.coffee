@@ -18,7 +18,7 @@ updateQuotes = ->
       GoogleFinance.getQuotesPast(stock,2)
     
     # If the market's open, grab live data
-    else if Stock.tradingActive()
+    else if Meteor.settings.quotes == 'live'
       YahooFinance.getQuote(stock)
     
     # Otherwise, generate them randomly (for fun)
