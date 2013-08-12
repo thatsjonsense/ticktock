@@ -9,16 +9,25 @@ Template.chart.quotes = ->
     limit: 5
   )
 
+
+MODE = 'stock'
+
 Template.chart_circles_d3.rendered = ->
 
   Deps.autorun =>
 
-    @investors = Investors.find().fetch()
-    
+    if MODE == 'stock'
+      data = Stocks.find().fetch()
+      template_row = Template.chart_circles_row_stock
+    else
+      data = Investors.find().fetch()
+      template_row = Template.chart_circles_row
+
+
     # Make the chart
     bars = d3.select(@find('div'))
       .selectAll('.canvas')
-      .data(@investors);
+      .data(data);
 
     scale = d3.scale.linear()
       .domain([-0.05,0.05])
@@ -27,7 +36,7 @@ Template.chart_circles_d3.rendered = ->
     origin_x = 400;    
 
     addBars = (selection) ->
-      selection.html (user) -> Template.chart_circles_row(user)
+      selection.html (user) -> template_row(user)
 
     updateBars = (selection) ->
 
