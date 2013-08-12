@@ -31,7 +31,7 @@ Meteor.setInterval(->
 ,1000)
 
 
-Template.clock.minDelay = -> -@SERVER_INTERVAL * 2 / 1000
+Template.clock.minDelay = -> 0
 Template.clock.sliderSize = -> -max
 Template.clock.delay = -> Session.get('timeLag')
 Template.clock.timeNow = -> @virtualTime()

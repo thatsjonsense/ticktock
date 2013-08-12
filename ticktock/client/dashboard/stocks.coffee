@@ -62,3 +62,43 @@ Template.stock_control.events
     $('#new_stock .shares').val('')
     $('#new_stock .cost_basis').val('')
 
+
+Template.stock_control.rendered = ->
+
+  #Typeahead  
+  delimiter = '####'
+  $('#new_symbol').typeahead
+  
+    # Given a query, get matches and then call process() with them when done
+    source: (query, process) ->
+
+      # Search over symbol and name, ie AAPL#Apple Computers
+      parseResults = (data) ->
+        process _.map(data.ResultSet.Result, (e) -> e.symbol + delimiter + e.name)
+
+      # Fake Yahoo's callback
+      YAHOO = window.YAHOO = {Finance: {SymbolSuggest: {}}}
+      YAHOO.Finance.SymbolSuggest.ssCallback = parseResults
+
+      # Call Yahoo's autosuggest, feeting it our callback as the response
+      url = """http://d.yimg.com/autoc.finance.yahoo.com/autoc?query=#{query}&callback=YAHOO.Finance.SymbolSuggest.ssCallback"""
+      $.getScript(url)
+
+    # Function for transforming each item into text
+    highlighter: (item) ->
+      info = item.split(delimiter)
+      symbol = info[0]
+      name = info[1]
+      return Template.stock_typeahead({symbol: info[0], name: info[1]})
+
+    # Value to actually store in the input field
+    updater: (item) ->
+      symbol = item.split(delimiter)[0]
+
+
+
+
+
+
+
+
