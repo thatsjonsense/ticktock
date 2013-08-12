@@ -1,5 +1,8 @@
 <template name="chart">
-  
+  {{#isolate}}
+  <a href="/chart">Home</a>
+  <h1>{{#isolate}}{{title}}{{/isolate}}</h1>
+  {{/isolate}}
   {{#constant}}
   <div class="chart">
     {{> chart_circles_d3}}
@@ -23,26 +26,9 @@
       <div class="origin"></div>
       <div class="bar"></div>
       <div class="cap">
-        <div class="head" style="background-image:url('{{picture}}')"></div>
-        <div class="name">{{name}}</div>
-        <div class="gain {{updown}}">{{toPercent gainRelative}}</div>
-      </div>
-    </div>
-  </div>
-
-</template>
-
-<template name="chart_circles_row_stock">
-
-  <div class="chartRow">
-    <div class="canvas">
-      <div class="line"></div>
-      <div class="origin"></div>
-      <div class="bar"></div>
-      <div class="cap">
-        <div class="head" style="background-image:url('http://www.bing.com/th?q={{symbol}}%20stock%20logo&h=80&w=80')"></div>
-        <div class="name">{{symbol}}</div>
-        <div class="gain {{updown}}">{{toPercent gainRelative}}</div>
+        <div class="head"></div>
+        <div class="name"><a></a></div>
+        <div class="gain"></div>
       </div>
     </div>
   </div>

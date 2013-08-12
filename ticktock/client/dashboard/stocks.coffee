@@ -1,5 +1,7 @@
 
-Template.dashboard_stocks.stocks = ->
+
+
+@currentStocks = ->
   viewing_user = Investors.findOne Session.get('viewingUserId')
   if viewing_user
     return Stocks.find
@@ -9,6 +11,9 @@ Template.dashboard_stocks.stocks = ->
 
   else
     return Stocks.find().fetch()
+
+Template.dashboard_stocks.stocks = ->
+  return currentStocks()
     
 
 Template.dashboard_stocks.title = ->
