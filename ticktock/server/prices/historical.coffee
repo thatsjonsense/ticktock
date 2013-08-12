@@ -29,6 +29,7 @@ class @GoogleFinance
         time: secondsAfter(current_day, interval * n) 
         price: parseFloat(cols[1]) # closing price
         last_price: last_close
+        source: 'historical'
 
       last_quote = quote
       Quotes.findOrInsert(quote)

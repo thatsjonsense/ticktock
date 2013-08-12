@@ -19,6 +19,7 @@ class @YahooFinance
         symbol: stock.symbol
         time: @parseDateTime(y_quote.LastTradeDate, y_quote.LastTradeTime)
         price: y_quote.LastTradePriceOnly
+        source: 'live'
       Quotes.findOrInsert(quote)
       return quote
 

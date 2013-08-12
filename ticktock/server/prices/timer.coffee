@@ -6,26 +6,27 @@
 
 
 
-Meteor.startup ->
 
-  # Check for  historical data. If we don't have any, grab it
+
+updateQuotes = ->
+
   for stock in activeStocks()
-    if Quotes.find({symbol: stock.symbol}).count() == 0
+
+    # Check for  historical data. If we don't have any, grab it
+    if Quotes.find({symbol: stock.symbol, source: 'historical'}).count() == 0
       debug "Grabbing historical data for #{stock.symbol}"
       GoogleFinance.getQuotesPast(stock,2)
+    
+    # If the market's open, grab live data
+    else if Stock.tradingActive()
+      YahooFinance.getQuote(stock)
+    
+    # Otherwise, generate them randomly (for fun)
+    else
+      RandomWalk.getQuote(stock)
 
 
-  # Ensure we have a constant stream of quotes
-  debug "Generating new data"
-  Meteor.setIntervalInstant(->
-    for stock in activeStocks()
-      if Stock.tradingActive()
-        # Live data
-        YahooFinance.getQuote(stock)
-      else
-        # Random data
-        RandomWalk.getQuote(stock)
 
-      
+Meteor.startup ->
 
-  , 1000)
+  Meteor.setIntervalInstant(updateQuotes,1000)

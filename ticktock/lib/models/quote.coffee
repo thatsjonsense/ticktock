@@ -45,19 +45,21 @@ Meteor.startup ->
           #print "#{i.name} owns #{symbol}"
           s = _.findWhere stocks, {symbol: symbol}
 
-          q = Quotes.latest(symbol, time)
+          # If stock can't be found, might be getting added now
+          if s
+            q = Quotes.latest(symbol, time)
 
-          s.price = q?.price
-          s.last_price = q?.last_price
-          s.gain = s.price - s.last_price
-          s.gainRelative = s.gain / s.last_price
-          s.up = s.price >= s.last_price
+            s.price = q?.price
+            s.last_price = q?.last_price
+            s.gain = s.price - s.last_price
+            s.gainRelative = s.gain / s.last_price
+            s.up = s.price >= s.last_price
 
-          s.owners ?= []
-          s.owners.push(i)
-            
-          i.value += shares * s.price
-          i.last_value += shares * s.last_price
+            s.owners ?= []
+            s.owners.push(i)
+              
+            i.value += shares * s.price
+            i.last_value += shares * s.last_price
         
         i.gain = i.value - i.last_value
         i.gainRelative = i.gain / i.last_value
@@ -70,6 +72,10 @@ Meteor.startup ->
         @changed('stocks',s._id,s)
 
     publishTimer('prices',updatePrices)
+
+
+    # Publish past quotes for debugging
+    Meteor.publish(null,-> Quotes.find({},{limit: 50, sort: {time: -1}}))
 
 
 

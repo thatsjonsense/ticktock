@@ -18,4 +18,5 @@ class @RandomWalk
       time: now()
       price: most_recent_price + delta
       last_price: last_price
+      source: 'random'
       
