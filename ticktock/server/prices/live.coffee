@@ -9,12 +9,9 @@ class @YahooFinance
 
     query_time = now()
     response = Meteor.http.get(yahooUrl)
+    y_quote = response.data?.query?.results?.quote
 
-    if response.statusCode != 200
-      # ruh roh
-      return null
-    else
-      y_quote = response.data.query.results.quote
+    if response.statusCode == 200 and y_quote
       quote =
         symbol: stock.symbol
         time: @parseDateTime(y_quote.LastTradeDate, y_quote.LastTradeTime)
@@ -23,8 +20,10 @@ class @YahooFinance
         source: 'live'
       Quotes.findOrInsert(quote)
       return quote
-
-      # todo: parse the time from quote.LastTradeDate and LastTradeTime. But what's the time zone? could assume EST for now
+    else
+      debug 'Problem getting quote from Yahoo'
+      debug response
+      return null
 
 
   @parseDateTime = (date, time) ->
