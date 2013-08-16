@@ -32,7 +32,8 @@ class @GoogleFinance
         source: 'historical'
 
       last_quote = quote
-      Quotes.findOrInsert(quote)
+      if quote.time.isBefore(minutesAgo(15)) # don't jump ahead of live data
+        Quotes.findOrInsert(quote)
 
 
 

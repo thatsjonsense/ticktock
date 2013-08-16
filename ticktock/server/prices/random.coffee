@@ -15,7 +15,7 @@ class @RandomWalk
 
     Quotes.insert
       symbol: stock.symbol
-      time: now()
+      time: minutesAgo(15) # to match live data
       price: most_recent_price + delta
       last_price: last_price
       source: 'random'
