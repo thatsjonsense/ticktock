@@ -17,10 +17,63 @@
 
 
 <template name="dashv2_pane">
-Pane
+{{#with currentUser}}
+
+  <div class='user'>
+    <img class='head' src='{{picture}}' />
+    <div class='name'>{{name}}</div>
+  </div>
+
+{{/with}}
 </template>
 
 
 <template name="dashv2_canvas">
-Canvas
+{{#with currentUser}}
+  <div class='background {{#if up}}up{{else}}down{{/if}}'>
+    <div class='summary'>
+
+      {{#if up}}
+      Woohoo! You made
+      {{else}}
+      Ruh-roh! You lost
+      {{/if}}
+      
+      <div class='big'>{{toDollars gain}}</div>
+
+      today.
+
+      <br /><br /><br /><br />
+      That's a change of
+
+      <div class='medium'>{{toPercent gainRelative}}</div>
+
+      since yesterday.
+
+      <br /><br /><br /><br />
+      
+
+      {{#if up}}
+      Your mighty portfolio is now worth
+      {{else}}
+      Your wealth has collapsed to a pitiful
+      {{/if}}
+
+      <div class='medium'>{{toDollars value}}</div>
+
+      {{#if up}}
+      Good luck tomorrow!
+      {{else}}
+      Better luck tomorrow!
+      {{/if}}
+
+    </div>
+
+
+
+
+
+
+  </div>
+{{/with}}
 </template>

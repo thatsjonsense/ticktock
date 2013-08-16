@@ -3,6 +3,16 @@
 
 @red: #db4437;
 @green: rgb(15, 157, 88);
+@face_size: 80px;
+
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
 
 
 
@@ -12,8 +22,6 @@
   position: fixed;
   top: 0px;
 
-  color: white;
-
 
   #pane {
     position: fixed;
@@ -21,16 +29,84 @@
     right: 0px;
     height: 100%;
 
-    background-color: @green;
+    background-color: white;
+    color: black;
+    
+
   }
 
   #canvas {
     position: fixed;
     left: 0px;
-    right: 300px;
+    right: 0px; // make this 300px to show the right pane
     height: 100%;
 
-    background-color: @red;
+    
+    color: white;
+
+    .background {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+
+      &.up {
+        background-color: @green;
+      }
+
+      &.down {
+        background-color: @red;
+      }
+
+    }
+
+    .summary {
+      width: 500px;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 100px;
+      line-height: normal;
+
+      .big {
+        font-size: 10em;
+        font-family: 'Montserrat','Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+
+      .medium {
+        font-size: 6em;
+        font-family: 'Montserrat','Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+
+
+    }
+
+
+
+  }
+
+
+  #pane {
+
+    .user {
+      margin: 10px;
+
+      .name {
+        margin-left: 10px;
+        display: inline-block;
+        font-size: @face_size/2;
+        font-family: 'Montserrat'
+      }
+
+
+    }
+
+
+
+    .head {
+      height: @face_size;
+      width: @face_size;
+      .rounded-corners(40px);
+    }
 
 
   }
