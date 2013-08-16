@@ -19,6 +19,8 @@ Meteor.Router.add
     Session.set('viewingUserId',id)
     return 'dashboard_stocks'
 
+  '/v2': 'dashv2'
+
 
 
 Meteor.Router.beforeRouting = -> 
