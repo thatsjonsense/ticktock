@@ -7,7 +7,7 @@
 
 
 
-
+###
 updateQuotes = ->
 
   for stock in activeStocks()
@@ -24,9 +24,30 @@ updateQuotes = ->
     # Otherwise, generate them randomly (for fun)
     else
       RandomWalk.getQuote(stock)
+###
+
+
+updateQuotesNoise = ->
+
+  # Check for  historical data, so random quotes are realistic
+    
+  for stock in activeStocks()
+    if Quotes.find({symbol: stock.symbol, source: 'historical'}).count() == 0
+      debug "Grabbing historical data for #{stock.symbol}"
+      GoogleFinance.getQuotesPast(stock,2)
+  
+    RandomWalk.getQuote(stock)
+
+updateQuotesReal = ->
+  for stock in activeStocks()
+    YahooFinance.getQuote(stock)
 
 
 
 Meteor.startup ->
 
-  Meteor.setIntervalInstant(updateQuotes,1000)
+  Meteor.setIntervalInstant(updateQuotesReal,60*1000)
+
+  Meteor.setIntervalInstant(updateQuotesNoise,1*1000)
+
+#todo: better Yahoo rate limiting. Supposed to be <-.2 calls per second.

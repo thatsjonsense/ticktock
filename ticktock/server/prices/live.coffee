@@ -19,17 +19,18 @@ class @YahooFinance
         last_price: parseFloat(y_quote.PreviousClose)
         source: 'live'
       Quotes.findOrInsert(quote)
+      debug quote.symbol, quote.price, 'live', quote.time
       return quote
     else
       debug 'Problem getting quote from Yahoo'
       debug response
       return null
 
-
+  # Issue: Yahoo doesn't return the time in seconds of the last trade :(
   @parseDateTime = (date, time) ->
     d = Date.create(date + ' ' + time)
     pst = hoursBefore(d,3)
-    return d
+    return pst
 
 
   @getStockInfo = (symbol) ->
