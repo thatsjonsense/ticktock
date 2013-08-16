@@ -51,6 +51,7 @@ Meteor.startup ->
 
             s.price = q?.price
             s.last_price = q?.last_price
+            s.time = q?.time
             s.gain = s.price - s.last_price
             s.gainRelative = s.gain / s.last_price
             s.up = s.price >= s.last_price

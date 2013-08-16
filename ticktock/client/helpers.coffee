@@ -25,6 +25,7 @@ isNum = (num) -> num? and not isNaN(num)
   toDollars: (num) -> if isNum(num) then formatDollars(num) else 'n/a' 
   toDelta: (num) -> if isNum(num) then (if num > 0 then '+' else '') + formatCommas(num.toFixed(2)) else 'n/a'
   toMinAgo: (time) -> formatMinAgo(time)
+  toRelativeTime: (time) -> time.relative()
   toLocalTime: (time) -> time.format('{DOW} {h}:{mm}:{ss}{tt}')
   toJSON: (obj) -> prettify obj
 

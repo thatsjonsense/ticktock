@@ -23,6 +23,7 @@
     <td class="numerical"><span class="delta {{updown}} secondary">{{toPercent gainRelative}}</span></td>
     {{/isolate}}
     <td><span class="owners tertiary">{{#if owners}}Owned by {{/if}}{{#each owners}}<span class='owner'><a href='/portfolio/{{_id}}'>{{name}}</a></span>{{/each}}</td>
+    <td class="tertiary">{{toRelativeTime time}}</td>
 
 
   </tr>
