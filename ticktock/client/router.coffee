@@ -19,6 +19,8 @@ Meteor.Router.add
     Session.set('viewingUserId',id)
     return 'dashboard_stocks'
 
+  '/infographic': 'infographic'
+
   '/v2': 'dashv2'
 
 

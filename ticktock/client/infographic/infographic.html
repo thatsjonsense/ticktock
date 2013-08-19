@@ -1,0 +1,45 @@
+
+<template name="infographic">
+  <div id="infographic">
+  {{#with currentUser}}
+      <div class='summary {{#if up}}up{{else}}down{{/if}}'>
+
+        {{#if up}}
+        Woohoo! You made
+        {{else}}
+        Ruh-roh! You lost
+        {{/if}}
+        
+        <div class='big'>{{toDollars gain}}</div>
+
+        today.
+
+        <br /><br /><br /><br />
+        That's a change of
+
+        <div class='medium'>{{toPercent gainRelative}}</div>
+
+        since yesterday.
+
+        <br /><br /><br /><br />
+        
+
+        {{#if up}}
+        Your mighty portfolio is now worth
+        {{else}}
+        Your wealth has collapsed to a pitiful
+        {{/if}}
+
+        <div class='medium'>{{toDollars value}}</div>
+
+        {{#if up}}
+        Good luck tomorrow!
+        {{else}}
+        Better luck tomorrow!
+        {{/if}}
+
+      </div>
+
+  {{/with}}
+  </div>
+</template>
