@@ -21,7 +21,7 @@ Meteor.Router.add
 
   '/infographic': 'infographic'
 
-  '/v2': 'dashv2'
+  '/v2': 'two_pane'
 
 
 

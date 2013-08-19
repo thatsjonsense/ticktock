@@ -1,0 +1,36 @@
+
+
+
+<template name="two_pane">
+
+  <div id="twoPane">
+    <div class="right">
+      {{> social}}
+    </div>
+    <div class="left">
+      {{#constant}}
+      {{> lines}}
+      {{/constant}}
+    </div>
+  </div>
+
+</template>
+
+
+
+<template name="social">
+  <div class='social'>
+  {{#with currentUser}}
+    <div class='user'>
+      <img class='head' src='{{picture}}' />
+      <div class='name'>{{name}}</div>
+    </div>
+  {{/with}}
+  </div>
+</template>
+
+
+<template name="lines">
+  <div class='lines'>
+  </div>
+</template>

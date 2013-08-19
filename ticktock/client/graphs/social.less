@@ -1,0 +1,35 @@
+
+@face_size: 80px;
+
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.social {
+
+  .user {
+    margin: 10px;
+
+    .name {
+      margin-left: 10px;
+      display: inline-block;
+      font-size: @face_size/2;
+      font-weight: bold;
+      color: white;
+    }
+
+    .head {
+      height: @face_size;
+      width: @face_size;
+      .rounded-corners(40px);
+    }
+
+
+  }
+
+}
