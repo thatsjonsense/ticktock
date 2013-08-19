@@ -1,18 +1,21 @@
 
 <template name="dashboard_investors">
-  <div class="stockList">
-    <a href="/">Home</a>
-    <h1>Users</h1>
-    <table class="dashboard">
-    {{#each investors}}
-      {{>investor_row}}
-    {{/each}}
-    </table>
-    <ol>
-    {{#each quotes}}
-    <li>{{type}} {{toLocalTime time}} {{toDollars price}}</li>
-    {{/each}}
-    </ol>
+  {{>clock}}
+  <div id="wrapper">
+    <div class="stockList">
+      <a href="/">Home</a>
+      <h1>Users</h1>
+      <table class="dashboard">
+      {{#each investors}}
+        {{>investor_row}}
+      {{/each}}
+      </table>
+      <ol>
+      {{#each quotes}}
+      <li>{{type}} {{toLocalTime time}} {{toDollars price}}</li>
+      {{/each}}
+      </ol>
+    </div>
   </div>
 </template>
 

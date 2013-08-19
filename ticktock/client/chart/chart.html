@@ -1,14 +1,14 @@
 <template name="chart">
-  {{#isolate}}
-  <a href="/chart">Home</a>
-  <h1>{{#isolate}}{{title}}{{/isolate}}</h1>
-  {{/isolate}}
-  {{#constant}}
-  <div class="chart">
-    {{> chart_circles_d3}}
+  {{>clock}}
+  <div id="wrapper">
+    <a href="/chart">Home</a>
+    <h1>{{#isolate}}{{title}}{{/isolate}}</h1>
+    {{#constant}}
+    <div class="chart">
+      {{> chart_circles_d3}}
+    </div>
+    {{/constant}}
   </div>
-  {{/constant}}
-
 </template>
 
 <template name="chart_circles_d3">

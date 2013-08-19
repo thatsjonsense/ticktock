@@ -1,17 +1,20 @@
 
 <template name="dashboard_stocks">
-  <div class="stockList">
-    <a href="/">Home</a>
-    <h1>{{#isolate}}{{title}}{{/isolate}}</h1>
-    <table class="dashboard">
-    {{#isolate}}
-    {{#each stocks}}
-      {{>stock_row}}
-    {{/each}}
-    {{/isolate}}
-    </table>
+  {{>clock}}
+  <div id="wrapper">
+    <div class="stockList">
+      <a href="/">Home</a>
+      <h1>{{#isolate}}{{title}}{{/isolate}}</h1>
+      <table class="dashboard">
+      {{#isolate}}
+      {{#each stocks}}
+        {{>stock_row}}
+      {{/each}}
+      {{/isolate}}
+      </table>
+    </div>
+    {{> stock_control}}
   </div>
-  {{> stock_control}}
 </template>
 
 <template name="stock_row">

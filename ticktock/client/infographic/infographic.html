@@ -1,7 +1,9 @@
 
 <template name="infographic">
   <div id="infographic">
-  {{#with currentUser}}
+    {{>clock}}
+
+    {{#with currentUser}}
       <div class='summary {{#if up}}up{{else}}down{{/if}}'>
 
         {{#if up}}
@@ -40,6 +42,6 @@
 
       </div>
 
-  {{/with}}
+    {{/with}}
   </div>
 </template>
