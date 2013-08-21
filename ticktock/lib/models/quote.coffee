@@ -4,13 +4,22 @@ if Meteor.isServer
   Quotes._ensureIndex {time: -1}
 
 
-Quotes.latest = (symbol, time = do defaultTime) ->
-  q = Quotes.findOne
-    symbol: symbol
-    time: {$lte: time}
-  ,
-    sort: {time: -1}
-    limit: 1
+Quotes.latest = (symbol, time = do defaultTime, n=1) ->
+  if n == 1
+    q = Quotes.findOne
+      symbol: symbol
+      time: {$lte: time}
+    ,
+      sort: {time: -1}
+      limit: n
+  else
+    q = Quotes.find
+      symbol: symbol
+      time: {$lte: time}
+    ,
+      sort: {time: -1}
+      limit: n
+    .fetch()
 
 
 Meteor.startup ->
@@ -37,6 +46,7 @@ Meteor.startup ->
       investors = Investors.find().fetch()
       stocks = Stocks.find().fetch()
 
+      # Update stock prices and values
       for i in investors
         i.value = 0
         i.last_value = 0
@@ -66,6 +76,20 @@ Meteor.startup ->
         i.gainRelative = i.gain / i.last_value
         i.up = i.value >= i.last_value
 
+
+      # Price history for each stock
+      for s in stocks
+        s.history = {}
+        for q in Quotes.latest(s.symbol, null, 15)
+          s.history[q.time] = q
+
+      ###
+      Plan: pick the times for which we want data on the graph.
+      For each time, grab stock's price and investor's value
+      Factor this out to a separate publish function that's much less frequent
+      ###
+
+      # Send to client
       for i in investors
         @changed('investors',i._id,i)
 

@@ -3,6 +3,8 @@
 @Stocks = new Meteor.Collection('stocks',
   transform: (doc) ->
     s = new Stock(doc)
+    s.history ?= []
+    return s
 )
 
 if Meteor.isServer
