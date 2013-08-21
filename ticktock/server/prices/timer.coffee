@@ -27,20 +27,29 @@ updateQuotes = ->
 ###
 
 
+
+useRandom = false
+useHistorical = true
+useLive = false
+
+
+
 updateQuotesNoise = ->
 
   # Check for  historical data, so random quotes are realistic
-    
-  for stock in activeStocks()
-    if Quotes.find({symbol: stock.symbol, source: 'historical'}).count() == 0
-      debug "Grabbing historical data for #{stock.symbol}"
-      GoogleFinance.getQuotesPast(stock,2)
+  if useHistorical
+    for stock in activeStocks()
+      if Quotes.find({symbol: stock.symbol, source: 'historical'}).count() == 0
+        debug "Grabbing historical data for #{stock.symbol}"
+        GoogleFinance.getQuotesPast(stock,2)
   
+  if useRandom
     RandomWalk.getQuote(stock)
 
 updateQuotesReal = ->
-  for stock in activeStocks()
-    YahooFinance.getQuote(stock)
+  if useLive
+    for stock in activeStocks()
+      YahooFinance.getQuote(stock)
 
 
 
