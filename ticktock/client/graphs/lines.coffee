@@ -31,61 +31,74 @@ Template.lines.rendered = ->
     .attr('width','100%')
     .attr('height','100%')
 
-
-  gainScale = d3.scale.linear()
-    .domain([-.25,.25])
-    .range(['1000','0'])
-
   Deps.autorun =>
     
-    end = secondsBefore(minutesAgo(15),1)
-    start = secondsBefore(end,10)
-
+    # Data
     stocks = Stocks.find().fetch()
 
+    # todo: use min/max here, and get min/max prices as well
+    for s in stocks
+      start = _.last(s.history)?.time
+      end = _.first(s.history)?.time
 
+    if not (start? and end?)
+      return
+
+    # Scales
     timeScale = d3.scale.linear()
       .domain([start,end])
       .range(['0','1000'])
 
     priceScale = d3.scale.linear()
       .domain([28,32])
-      .range(['0','1000'])
+      .range(['1000','0'])
+
+    gainScale = d3.scale.linear()
+      .domain([-.05,.05])
+      .range(['1000','0'])
 
 
+    print timeScale start
+    print timeScale end
 
+
+    # Binding
     paths = svg.selectAll('path').data(stocks)
     labels = svg.selectAll('text').data(stocks)
 
+    # Line generator
     line = d3.svg.line()
-      .x((d) -> 
-        time = new Date(d[0])
-        quote = d[1]
-        timeScale time)      
+      .x((q) -> 
+        timeScale new Date(q.time))      
       
-      .y((d) -> 
-        time = d[0]
-        quote = d[1]
-        price = parseFloat quote.price
-        last_price = parseFloat quote.last_price
+      .y((q) -> 
+        price = parseFloat q.price
+        last_price = parseFloat q.last_price
         gainRelative = (price - last_price) / last_price
         gainScale gainRelative)
 
-      .interpolate('cardinal')
+      .interpolate('basis')
 
-    # for each new stock...
+    # Paths
     paths.enter()
       .append('path')
       .attr('stroke','white')
       .attr('stroke-width',2)
       .attr('fill','none')
       
-    
+    paths
+      .attr('d',(s) -> line(s.history))
+      .attr('alt',(s) -> s.symbol)
+      .attr('transform',null)
+    .transition().duration(1000)
+      .ease('linear')
+      .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
+          
+    # Labels
     labels.enter()
       .append('text')
       .attr('font-size','20px')
       .attr('fill','white')
-      
 
     labels
       .transition().duration(500)
@@ -93,14 +106,7 @@ Template.lines.rendered = ->
       .attr('y',(d) -> gainScale parseFloat d.gainRelative)
       .text((s) -> "#{s.symbol} #{templateHelpers.toPercent s.gainRelative}")
 
-    paths
-      .attr('d',(s) -> line(_.pairs s.history))
-      .attr('transform',null)
-    .transition().duration(1000)
-      .ease('linear')
-      .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
     
-
 
 
 Template.slopes.rendered = ->
