@@ -34,10 +34,37 @@ Template.lines.rendered = ->
     # Data
     stocks = currentStocks()
 
+    ###
     # todo: use min/max here, and get min/max prices as well
     for s in stocks
       start = _.last(s.history)?.time
       end = _.first(s.history)?.time
+      minGain = _.min (q.gainRelative for q in s.history)
+      maxGain = _.max (q.gainRelative for q in s.history)
+    ###
+
+    start = Infinity
+    end = -Infinity
+    minGain = Infinity
+    maxGain = -Infinity
+
+    for s in stocks
+      for q in s.history
+        
+        q.time = new Date(q.time)
+        q.price = parseFloat q.price
+        q.last_price = parseFloat q.last_price
+        q.gainRelative = (q.price - q.last_price) / q.last_price
+
+        start = Math.min(start,q.time)
+        end = Math.max(end,q.time)
+        minGain = Math.min(minGain,q.gainRelative)
+        maxGain = Math.max(maxGain,q.gainRelative)
+
+    start = new Date(start)
+    end = new Date(end)
+    print start, end, minGain, maxGain
+
 
     if not (start? and end?)
       return
@@ -49,11 +76,11 @@ Template.lines.rendered = ->
 
     priceScale = d3.scale.linear()
       .domain([28,32])
-      .range(['1000','0'])
+      .range(['500','0'])
 
     gainScale = d3.scale.linear()
-      .domain([-.05,.05])
-      .range(['1000','0'])
+      .domain([minGain,maxGain])
+      .range(['500','0'])
 
     # Binding
     paths = svg.selectAll('path').data(stocks)
@@ -65,10 +92,7 @@ Template.lines.rendered = ->
         timeScale new Date(q.time))      
       
       .y((q) -> 
-        price = parseFloat q.price
-        last_price = parseFloat q.last_price
-        gainRelative = (price - last_price) / last_price
-        gainScale gainRelative)
+        gainScale q.gainRelative)
 
       .interpolate('basis')
 
@@ -76,7 +100,6 @@ Template.lines.rendered = ->
     paths.enter()
       .append('path')
       .attr('stroke','white')
-      .attr('stroke-width',2)
       .attr('fill','none')
       
     paths
@@ -84,6 +107,7 @@ Template.lines.rendered = ->
       .attr('alt',(s) -> s.symbol)
       .attr('transform',null)
     .transition().duration(1000)
+      .attr('stroke-width', (s,i) -> i+1)
       .ease('linear')
       .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
           
