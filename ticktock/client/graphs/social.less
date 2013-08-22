@@ -19,7 +19,6 @@
       margin-left: 10px;
       display: inline-block;
       font-size: @face_size/2;
-      font-weight: bold;
       color: white;
     }
 
@@ -27,9 +26,16 @@
       height: @face_size;
       width: @face_size;
       .rounded-corners(40px);
+      border: 2px solid white;
     }
 
-
   }
+
+
+  a:hover .head {
+    border: 2px dotted white;
+  }
+
+
 
 }

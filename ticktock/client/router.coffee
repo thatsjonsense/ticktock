@@ -21,7 +21,11 @@ Meteor.Router.add
 
   '/infographic': 'infographic'
 
-  '/v2': 'two_pane'
+  '/lines': 'two_pane'
+
+  '/lines/:id': (id) ->
+    Session.set('viewingUserId',id)
+    return 'two_pane'
 
 
 

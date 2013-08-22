@@ -12,10 +12,8 @@ colorBackground = ->
 
     if current_user?.up
      $('body').css('background-color',green)
-    else if current_user?.down
-      $('body').css('background-color',red)
     else
-      # do nothing
+      $('body').css('background-color',red)
 
 
 
@@ -34,7 +32,7 @@ Template.lines.rendered = ->
   Deps.autorun =>
     
     # Data
-    stocks = Stocks.find().fetch()
+    stocks = currentStocks()
 
     # todo: use min/max here, and get min/max prices as well
     for s in stocks
@@ -56,11 +54,6 @@ Template.lines.rendered = ->
     gainScale = d3.scale.linear()
       .domain([-.05,.05])
       .range(['1000','0'])
-
-
-    print timeScale start
-    print timeScale end
-
 
     # Binding
     paths = svg.selectAll('path').data(stocks)
@@ -94,6 +87,9 @@ Template.lines.rendered = ->
       .ease('linear')
       .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
           
+    paths.exit().remove()
+
+
     # Labels
     labels.enter()
       .append('text')
@@ -106,7 +102,8 @@ Template.lines.rendered = ->
       .attr('y',(d) -> gainScale parseFloat d.gainRelative)
       .text((s) -> "#{s.symbol} #{templateHelpers.toPercent s.gainRelative}")
 
-    
+    labels.exit().remove()
+
 
 
 Template.slopes.rendered = ->

@@ -20,12 +20,14 @@
 
 <template name="social">
   <div class='social'>
-  {{#with currentUser}}
-    <div class='user'>
-      <img class='head' src='{{picture}}' />
-      <div class='name'>{{name}}</div>
-    </div>
-  {{/with}}
+  {{#each investors}}
+    <a href="/lines/{{_id}}">
+      <div class='user'>
+        <img class='head' src='{{picture}}' />
+        <div class='name'>{{name}}</div>
+      </div>
+    </a>
+  {{/each}}
   </div>
 </template>
 

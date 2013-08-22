@@ -13,10 +13,8 @@ Quotes.latest = (symbol, time = do defaultTime) ->
     limit: 1
 
 
-
+# default is every half hour for a trading day of 6.5 hours
 Quotes.range = (symbol, end = do defaultTime, interval = 30*60, n = 13) ->
-  # default is every half hour for a trading day of 6.5 hours
-
   quotes = []
   for i in [0..n]
     time = secondsBefore(end,i * interval)

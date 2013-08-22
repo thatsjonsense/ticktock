@@ -1,2 +1,2 @@
-Template.social.currentUser = ->
-  Investors.findOne({name: 'Jon'})
+Template.social.investors = ->
+  Investors.find()
