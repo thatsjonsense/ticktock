@@ -61,9 +61,10 @@ Template.lines.rendered = ->
         minGain = Math.min(minGain,q.gainRelative)
         maxGain = Math.max(maxGain,q.gainRelative)
 
-    start = new Date(start)
+
+    #start = new Date(start)
     end = new Date(end)
-    print start, end, minGain, maxGain
+    start = hoursBefore(end,6.5)
 
 
     if not (start? and end?)
@@ -103,10 +104,10 @@ Template.lines.rendered = ->
       .attr('fill','none')
       
     paths
-      .attr('d',(s) -> line(s.history))
       .attr('alt',(s) -> s.symbol)
       .attr('transform',null)
-    .transition().duration(1000)
+    .transition().duration(500)
+      .attr('d',(s) -> line(s.history))
       .attr('stroke-width', (s,i) -> i+1)
       .ease('linear')
       .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
