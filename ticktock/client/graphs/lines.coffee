@@ -66,7 +66,7 @@ Template.lines.rendered = ->
 
     #start = new Date(start)
     end = new Date(end)
-    start = hoursBefore(end,6.5)
+    start = hoursBefore(end,6.6)
 
 
     if not (start? and end?)
@@ -102,22 +102,22 @@ Template.lines.rendered = ->
     # Paths
     paths.enter()
       .append('path')
-      .attr('stroke','white')
-      .attr('fill','none')
+      .attr('fill','')
+      .attr('stroke','') # use css
       
     paths
       .attr('alt',(s) -> s.symbol)
       .attr('d',(s) -> line(s.history))
-      .attr('stroke-width', (s,i) -> i+1)
       
     # Live ticking
+    ###
     paths
       .attr('transform',null)
     .transition().duration(1000).ease('linear')
       .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
 
     paths.exit().remove()
-
+    ###
 
     # Labels
     labels.enter()
