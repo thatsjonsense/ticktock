@@ -28,7 +28,7 @@ updateQuotes = ->
 
 
 
-useRandom = true
+useRandom = false
 useHistorical = true
 useLive = false
 

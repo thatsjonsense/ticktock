@@ -35,15 +35,7 @@ Template.lines.rendered = ->
     
     # Data
     stocks = currentStocks()
-
-    ###
-    # todo: use min/max here, and get min/max prices as well
-    for s in stocks
-      start = _.last(s.history)?.time
-      end = _.first(s.history)?.time
-      minGain = _.min (q.gainRelative for q in s.history)
-      maxGain = _.max (q.gainRelative for q in s.history)
-    ###
+    i = Investors.findOne Session.get('viewingUserId')
 
     start = Infinity
     end = -Infinity
@@ -64,9 +56,9 @@ Template.lines.rendered = ->
         maxGain = Math.max(maxGain,q.gainRelative)
 
 
-    #start = new Date(start)
+    start = new Date(start)
     end = new Date(end)
-    start = hoursBefore(end,6.6)
+    #start = hoursBefore(end,6.6)
 
 
     if not (start? and end?)
@@ -77,13 +69,9 @@ Template.lines.rendered = ->
       .domain([start,end])
       .range(['0','1000'])
 
-    priceScale = d3.scale.linear()
-      .domain([28,32])
-      .range(['500','0'])
-
     gainScale = d3.scale.linear()
       .domain([minGain,maxGain])
-      .range(['500','0'])
+      .range(['500','10'])
 
     # Binding
     paths = svg.selectAll('path').data(stocks)
@@ -108,6 +96,13 @@ Template.lines.rendered = ->
     paths
       .attr('alt',(s) -> s.symbol)
       .attr('d',(s) -> line(s.history))
+      .attr('stroke-width',(s) -> 
+        pie = 10
+        if i
+          w = pie * i.portfolio[s.symbol] / i.value
+        else
+          w = pie / stocks.length
+        return Math.max(w,1))
 
     paths.exit().remove()
       

@@ -23,9 +23,8 @@ Quotes.history = (symbol,start,end,interval) ->
   # make sure we get the last quote
   quotes.push Quotes.latest(symbol,end)
 
-
   quotes = _.uniq(quotes,null,(q) -> q?._id)
-  quotes = _.without(quotes,(q) -> q.time < start)
+  quotes = _.reject(quotes,(q) -> q.time < start)
 
   return quotes
 
@@ -58,9 +57,9 @@ Meteor.startup ->
       for i in investors
         i.value = 0
         i.last_value = 0
-        i.portfolio = i.symbolsOwnedAt(time)
+        i.portfolio = {}
 
-        for symbol, shares of i.portfolio
+        for symbol, shares of i.symbolsOwnedAt(time)
           #print "#{i.name} owns #{symbol}"
           s = _.findWhere stocks, {symbol: symbol}
 
@@ -78,6 +77,7 @@ Meteor.startup ->
             s.owners ?= []
             s.owners.push(i)
               
+            i.portfolio[symbol] = shares * s.price
             i.value += shares * s.price
             i.last_value += shares * s.last_price
         
