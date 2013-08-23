@@ -28,7 +28,7 @@ updateQuotes = ->
 
 
 
-useRandom = false
+useRandom = true
 useHistorical = true
 useLive = false
 
@@ -44,7 +44,8 @@ updateQuotesNoise = ->
         GoogleFinance.getQuotesPast(stock,2)
   
   if useRandom
-    RandomWalk.getQuote(stock)
+    for stock in activeStocks()
+      RandomWalk.getQuote(stock)
 
 updateQuotesReal = ->
   if useLive
