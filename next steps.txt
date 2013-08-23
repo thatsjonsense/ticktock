@@ -1,0 +1,9 @@
+next steps
+==========
+
+
+1. Move history into its own separate publish function, on a longer interval
+
+2. Calculate history for the user as a whole, not just individual stocks
+
+3. Let user hover on labels and highlight the associated stock
