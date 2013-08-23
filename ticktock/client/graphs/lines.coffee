@@ -29,6 +29,8 @@ Template.lines.rendered = ->
     .attr('width','100%')
     .attr('height','100%')
 
+  div = d3.select(@find '.lines')
+
   Deps.autorun =>
     
     # Data
@@ -85,7 +87,7 @@ Template.lines.rendered = ->
 
     # Binding
     paths = svg.selectAll('path').data(stocks)
-    labels = svg.selectAll('text').data(stocks)
+    labels = div.selectAll('.lineLabel').data(stocks)
 
     # Line generator
     line = d3.svg.line()
@@ -105,27 +107,29 @@ Template.lines.rendered = ->
       
     paths
       .attr('alt',(s) -> s.symbol)
-      .attr('transform',null)
-    .transition().duration(500)
       .attr('d',(s) -> line(s.history))
       .attr('stroke-width', (s,i) -> i+1)
-      .ease('linear')
+      
+    # Live ticking
+    paths
+      .attr('transform',null)
+    .transition().duration(1000).ease('linear')
       .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
-          
+
     paths.exit().remove()
 
 
     # Labels
     labels.enter()
-      .append('text')
-      .attr('font-size','20px')
-      .attr('fill','white')
+      .append('div')
+      .classed('lineLabel',true)
 
     labels
-      .transition().duration(500)
-      .attr('x','90%')
-      .attr('y',(d) -> gainScale parseFloat d.gainRelative)
-      .text((s) -> "#{s.symbol} #{templateHelpers.toPercent s.gainRelative}")
+      .html((s) -> 
+        """<span class='symbol'>#{s.symbol}</span>
+          <span class='gain'>#{templateHelpers.toDollars s.gain}</span>""")
+      .style('left','90%')
+      .style('top',(s) -> gainScale(s.gainRelative) + 'px')
 
     labels.exit().remove()
 
