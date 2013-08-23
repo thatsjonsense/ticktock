@@ -43,6 +43,7 @@ Template.lines.rendered = ->
     end = -Infinity
     minGain = Infinity
     maxGain = -Infinity
+    loaded = false
 
     for s in stocks
       for q in s.history
@@ -56,11 +57,18 @@ Template.lines.rendered = ->
         end = Math.max(end,q.time)
         minGain = Math.min(minGain,q.gainRelative)
         maxGain = Math.max(maxGain,q.gainRelative)
+        loaded = true
 
 
-    start = new Date(start)
-    end = new Date(end)
-    #start = hoursBefore(end,6.6)
+    if loaded
+      start = new Date(start)
+      end = new Date(end)
+    else
+      start = now()
+      end = now()
+      minGain = -.1
+      maxGain = .1
+
 
     # Scales
     timeScale = d3.scale.linear()
