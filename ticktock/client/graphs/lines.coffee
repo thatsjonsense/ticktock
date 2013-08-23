@@ -127,7 +127,7 @@ Template.lines.rendered = ->
     labels
       .html((s) -> 
         """<span class='symbol'>#{s.symbol}</span>
-          <span class='gain'>#{templateHelpers.toDollars s.gain}</span>""")
+          <span class='gain'>#{templateHelpers.toPercent s.gainRelative}</span>""")
       .style('left','90%')
       .style('top',(s) -> gainScale(s.gainRelative) + 'px')
 
