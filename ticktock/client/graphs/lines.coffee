@@ -108,6 +108,8 @@ Template.lines.rendered = ->
     paths
       .attr('alt',(s) -> s.symbol)
       .attr('d',(s) -> line(s.history))
+
+    paths.exit().remove()
       
     # Live ticking
     ###
@@ -115,8 +117,6 @@ Template.lines.rendered = ->
       .attr('transform',null)
     .transition().duration(1000).ease('linear')
       .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
-
-    paths.exit().remove()
     ###
 
     # Labels
