@@ -41,8 +41,8 @@ Template.lines.rendered = ->
 
     start = Infinity
     end = -Infinity
-    minGain = Infinity
-    maxGain = -Infinity
+    minGain = 0
+    maxGain = 0
     loaded = false
 
     for s in stocks
@@ -66,8 +66,6 @@ Template.lines.rendered = ->
     else
       start = now()
       end = now()
-      minGain = -.1
-      maxGain = .1
 
 
     # Scales
@@ -112,6 +110,7 @@ Template.lines.rendered = ->
       
     paths
       .attr('alt',(s) -> s.symbol)
+    .transition().duration(500).ease('linear')
       .attr('d',(s) -> line(s.history))
       .attr('stroke-width',(s) -> 
         pie = 10
