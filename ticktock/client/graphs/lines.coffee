@@ -31,6 +31,8 @@ Template.lines.rendered = ->
 
   div = d3.select(@find '.lines')
 
+  x_axis = svg.append('line')
+
   Deps.autorun =>
     
     # Data
@@ -60,10 +62,6 @@ Template.lines.rendered = ->
     end = new Date(end)
     #start = hoursBefore(end,6.6)
 
-
-    if not (start? and end?)
-      return
-
     # Scales
     timeScale = d3.scale.linear()
       .domain([start,end])
@@ -72,6 +70,17 @@ Template.lines.rendered = ->
     gainScale = d3.scale.linear()
       .domain([minGain,maxGain])
       .range(['500','10'])
+
+    # Axes
+    x_axis
+      .attr('stroke','white')
+      .attr('y1', gainScale 0)
+      .attr('y2', gainScale 0)
+      .attr('x1', timeScale start)
+      .attr('x2', timeScale end)
+
+
+
 
     # Binding
     paths = svg.selectAll('path').data(stocks)
@@ -99,7 +108,7 @@ Template.lines.rendered = ->
       .attr('stroke-width',(s) -> 
         pie = 10
         if i
-          w = pie * i.portfolio[s.symbol] / i.value
+          w = pie * i.portfolio?[s.symbol] / i.value
         else
           w = pie / stocks.length
         return Math.max(w,1))
