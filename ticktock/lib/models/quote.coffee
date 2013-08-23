@@ -12,16 +12,23 @@ Quotes.latest = (symbol, time = do defaultTime) ->
     sort: {time: -1}
     limit: 1
 
-
-# default is every half hour for a trading day of 6.5 hours
-Quotes.range = (symbol, end = do defaultTime, interval = 30*60, n = 13) ->
+Quotes.history = (symbol,start,end,interval) ->
+  t = start
   quotes = []
-  for i in [0..n]
-    time = secondsBefore(end,i * interval)
-    quotes.push Quotes.latest(symbol,time)
 
-  quotes = _.uniq(quotes,null,(q) -> q._id)
+  while t < end
+    quotes.push Quotes.latest(symbol,t)
+    t = secondsAfter(t,interval)
+
+  # make sure we get the last quote
+  quotes.push Quotes.latest(symbol,end)
+
+
+  quotes = _.uniq(quotes,null,(q) -> q?._id)
+  quotes = _.without(quotes,(q) -> q.time < start)
+
   return quotes
+
 
 Meteor.startup ->
 
@@ -51,8 +58,9 @@ Meteor.startup ->
       for i in investors
         i.value = 0
         i.last_value = 0
+        i.portfolio = i.symbolsOwnedAt(time)
 
-        for symbol, shares of i.symbolsOwnedAt(time)
+        for symbol, shares of i.portfolio
           #print "#{i.name} owns #{symbol}"
           s = _.findWhere stocks, {symbol: symbol}
 
@@ -79,7 +87,9 @@ Meteor.startup ->
 
       # Price history for each stock
       for s in stocks
-        s.history = Quotes.range(s.symbol,s.time)
+        end = s.time # last update of the stock
+        start = hoursBefore(end,6.5) # start of trading day
+        s.history = Quotes.history(s.symbol,start,end,15*60)
 
       # Send to client
       for i in investors
