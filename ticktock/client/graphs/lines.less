@@ -1,4 +1,17 @@
 
+@green: #0f9d58;
+@red: #db4437;
+
+.left {
+  &[data-overall=up] {
+    background-color: @green;
+  }
+
+  &[data-overall=down] {
+    background-color: @red;
+  }
+}
+
 .lines {
   position: absolute;
   top: 50px;
@@ -13,11 +26,11 @@
     
     stroke-linecap: round;
   
-    &.stock {
+    &[data-type=stock] {
       stroke-opacity: 0.2;
     }
 
-    &.investor {
+    &[data-type=investor] {
       stroke-opacity: 1;
     }
 

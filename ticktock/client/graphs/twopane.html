@@ -4,16 +4,16 @@
 <template name="two_pane">
 
   <div id="twoPane">
-    <div class="right">
-      {{> social}}
-    </div>
     <div class="left">
       {{#constant}}
       {{> lines}}
       {{/constant}}
     </div>
-  </div>
 
+    <div class="right">
+      {{> social}}
+    </div>
+  </div>
 </template>
 
 
@@ -35,6 +35,12 @@
 
 <template name="lines">
   <div class='lines'>
+    <svg class='lineChart'>
+      <line class='xAxis'></line>
+    </svg>
+  </div>
+  
+  <div class='movers'>
   </div>
 </template>
 
