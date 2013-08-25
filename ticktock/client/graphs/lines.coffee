@@ -83,7 +83,7 @@ Template.lines.rendered = ->
       .y((q) -> y q.gainRelative)
       .interpolate('basis')
       
-    lines.transition().duration(500).ease('linear')
+    lines#.transition().duration(100).ease('linear')
       .attr('d',(s) -> makeLine s.history())
       .attr('stroke-width', (s) ->  z i?.pie[s.symbol] or 0)
       

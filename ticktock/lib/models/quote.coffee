@@ -12,7 +12,17 @@ Quotes.latest = (symbol, time = do defaultTime) ->
   ,
     sort: {time: -1}
     limit: 1
-  return quoteDetails(q)
+
+  if q and q.price? and q.last_price?
+    'symbol': q.symbol
+    'price': q.price
+    'last_price': q.last_price
+    'time': q.time
+    'gain': q.price - q.last_price
+    'gainRelative': (q.price - q.last_price) / (q.last_price)
+    'up': q.price >= q.last_price
+  else
+    null
 
 Quotes.history = (symbol,start,end,interval) ->
   times = intervalTimes(start,end,interval)
@@ -33,35 +43,46 @@ intervalTimes = (start,end,interval) ->
   times.push end
   times = _.uniq times
 
-quoteDetails = (q) ->
-  if q and q.price? and q.last_price?
-    'price': q.price
-    'last_price': q.last_price
-    'time': q.time
-    'gain': q.price - q.last_price
-    'gainRelative': (q.price - q.last_price) / (q.last_price)
-    'up': q.price >= q.last_price
-  else
-    null
-
 
 Meteor.startup ->
 
   if Meteor.isServer
 
-
-
-    updateHistory = (start,end,interval_minutes = 15) ->
-
+    updateHistory = (start,end,interval_minutes=15) ->
       investors = Investors.find().fetch()
       stocks = Stocks.find().fetch()
+      ticks = intervalTimes(start,end,interval_minutes*60)
 
-      for s in stocks
-        quotes = Quotes.history(s.symbol,start,end,interval_minutes*60)
-        quotes = _.map quotes, quoteDetails
 
-        #debug "Changed stock #{s.symbol}'s history to #{quotes.length} quotes"
-        @added('history',s._id,{'history': quotes})
+      for time in ticks
+        for i in investors
+
+          iq =
+            investor: i._id
+            _id: i._id + time
+            time: time
+            value: 0
+            last_value: 0
+
+          for symbol, shares of i.symbolsOwnedAt end
+            
+            s = _.findWhere stocks, {symbol: symbol}
+            if not s then continue
+
+            sq = Quotes.latest symbol, time
+            if not sq then continue
+
+            sq.time = time
+            sq._id = s._id + time
+            #debug "Adding quote for stock #{s.symbol}"
+            @added('history',sq._id,sq)
+
+            iq.value += shares * sq.price
+            iq.last_value += shares * sq.last_price
+
+          iq.gain = iq.value - iq.last_value
+          iq.gainRelative = iq.gain / iq.last_value
+          @added('history', iq._id,iq)
 
     publishTimer('history',updateHistory,0)
 
@@ -100,7 +121,7 @@ Meteor.startup ->
 
           # Get price data, etc. from latest quote
           q = Quotes.latest(symbol, time)
-          _.extend(s, quoteDetails q)
+          _.extend(s, q)
 
           s.owners ?= []
           s.owners.push(i)
@@ -134,7 +155,7 @@ Meteor.startup ->
     Deps.autorun ->
       safeSubscribe('prices',Session.get('timeLagStable'))
       day = Stock.lastTradingDay()
-      safeSubscribe('history',Stock.tradingOpen(day),Stock.tradingClose(day),1)
+      safeSubscribe('history',Stock.tradingOpen(day),Stock.tradingClose(day),5)
 
 
 

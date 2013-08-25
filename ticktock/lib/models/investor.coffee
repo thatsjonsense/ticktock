@@ -25,3 +25,6 @@ class @Investor
     return p
 
   symbolsOwnedEver: -> (t.symbol for t in @trades)
+
+  history: ->
+    History.find({investor: @_id}).fetch() or []

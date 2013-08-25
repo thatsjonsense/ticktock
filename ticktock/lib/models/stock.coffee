@@ -17,7 +17,7 @@ class @Stock
   @lookup: (symbol) -> Stocks.findOne({symbol: symbol})
 
   history: ->
-    History.findOne(@_id)?.history or []
+    History.find({symbol: @symbol}).fetch() or []
 
 
   @lastTradingDay: (time = do defaultTime) ->
