@@ -35,114 +35,68 @@ Template.lines.rendered = ->
 
   Deps.autorun =>
     
-    # Data
+    # Get data, or wait until it's available
     stocks = currentStocks()
     i = Investors.findOne Session.get('viewingUserId')
+    quotes = _.flatten (s.history for s in stocks)
+    
 
-    start = Infinity
-    end = -Infinity
-    minGain = 0
-    maxGain = 0
-    loaded = false
+    # Cleanup and buildup
+    lines = svg.selectAll('path').data(stocks)
+    lines.enter()
+        .append('path')
+        .attr('fill','')
+        .attr('stroke','') # use css    
+    lines.exit().remove()
 
-    for s in stocks
-      for q in s.history
-        
-        q.time = new Date(q.time)
-        q.price = parseFloat q.price
-        q.last_price = parseFloat q.last_price
-        q.gainRelative = (q.price - q.last_price) / q.last_price
-
-        start = Math.min(start,q.time)
-        end = Math.max(end,q.time)
-        minGain = Math.min(minGain,q.gainRelative)
-        maxGain = Math.max(maxGain,q.gainRelative)
-        loaded = true
-
-
-    if loaded
-      start = new Date(start)
-      end = new Date(end)
-    else
-      start = now()
-      end = now()
-
-
-    # Scales
-    timeScale = d3.scale.linear()
-      .domain([start,end])
-      .range(['0','1000'])
-
-    gainScale = d3.scale.linear()
-      .domain([minGain,maxGain])
-      .range(['500','10'])
-
-    # Axes
-    x_axis
-      .attr('stroke','white')
-      .attr('y1', gainScale 0)
-      .attr('y2', gainScale 0)
-      .attr('x1', timeScale start)
-      .attr('x2', timeScale end)
-
-
-
-
-    # Binding
-    paths = svg.selectAll('path').data(stocks)
     labels = div.selectAll('.lineLabel').data(stocks)
-
-    # Line generator
-    line = d3.svg.line()
-      .x((q) -> 
-        timeScale new Date(q.time))      
-      
-      .y((q) -> 
-        gainScale q.gainRelative)
-
-      .interpolate('basis')
-
-    # Paths
-    paths.enter()
-      .append('path')
-      .attr('fill','')
-      .attr('stroke','') # use css
-      
-    paths
-      .attr('alt',(s) -> s.symbol)
-    .transition().duration(500).ease('linear')
-      .attr('d',(s) -> line(s.history))
-      .attr('stroke-width',(s) -> 
-        pie = 10
-        if i
-          w = pie * i.portfolio?[s.symbol] / i.value
-        else
-          w = pie / stocks.length
-        return Math.max(w,1))
-
-    paths.exit().remove()
-      
-    # Live ticking
-    ###
-    paths
-      .attr('transform',null)
-    .transition().duration(1000).ease('linear')
-      .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
-    ###
-
-    # Labels
     labels.enter()
       .append('div')
       .classed('lineLabel',true)
+    labels.exit().remove()
+
+    if quotes.length == 0 then return
+
+    # Scales
+    x = d3.scale.linear()
+      .domain(d3.extent quotes, (q) -> q.time)
+      .range(['0','1000'])
+
+    y = d3.scale.linear()
+      .domain(d3.extent quotes, (q) -> q.gainRelative)
+      .range(['500','10'])
+
+    z = d3.scale.linear()
+      .domain([0,1])
+      .range([1,10])
+
+    x_axis
+      .attr('stroke','white')
+      .attr('y1', y 0)
+      .attr('y2', y 0)
+      .attr('x1', x.range()[0])
+      .attr('x2', x.range()[1])
+
+    # Lines
+    makeLine = d3.svg.line()
+      .x((q) -> x q.time)  
+      .y((q) -> y q.gainRelative)
+      .interpolate('basis')
+      
+    lines.transition().duration(500).ease('linear')
+      .attr('d',(s) -> makeLine s.history)
+      .attr('stroke-width', (s) ->  z i?.pie[s.symbol] or 0)
+      
+    # Labels
 
     labels
       .html((s) -> 
         """<span class='symbol'>#{s.symbol}</span>
           <span class='gain'>#{templateHelpers.toPercent s.gainRelative}</span>""")
       .style('left','90%')
-      .style('top',(s) -> gainScale(s.gainRelative) + 'px')
+      .style('top',(s) -> y(s.gainRelative) + 'px')
 
-    labels.exit().remove()
+    
 
 
 
@@ -214,7 +168,13 @@ Template.slopes.rendered = ->
   # other crap
   
 
-
+  # Live ticking
+  ###
+  paths
+    .attr('transform',null)
+  .transition().duration(1000).ease('linear')
+    .attr('transform',->"translate(#{timeScale secondsBefore(start,1)})")
+  ###
 
   
 

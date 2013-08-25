@@ -29,6 +29,18 @@ Quotes.history = (symbol,start,end,interval) ->
   return quotes
 
 
+quoteDetails = (q) ->
+  if q and q.price? and q.last_price?
+    'price': q.price
+    'last_price': q.last_price
+    'time': q.time
+    'gain': q.price - q.last_price
+    'gainRelative': (q.price - q.last_price) / (q.last_price)
+    'up': q.price >= q.last_price
+  else
+    {}
+
+
 Meteor.startup ->
 
   if Meteor.isServer
@@ -58,6 +70,7 @@ Meteor.startup ->
         i.value = 0
         i.last_value = 0
         i.portfolio = {}
+        i.pie = {}
 
         for symbol, shares of i.symbolsOwnedAt(time)
           #print "#{i.name} owns #{symbol}"
@@ -66,13 +79,7 @@ Meteor.startup ->
           # If stock can't be found, might be getting added now
           if s
             q = Quotes.latest(symbol, time)
-
-            s.price = q?.price
-            s.last_price = q?.last_price
-            s.time = q?.time
-            s.gain = s.price - s.last_price
-            s.gainRelative = s.gain / s.last_price
-            s.up = s.price >= s.last_price
+            _.extend(s, quoteDetails q)
 
             s.owners ?= []
             s.owners.push(i)
@@ -84,12 +91,15 @@ Meteor.startup ->
         i.gain = i.value - i.last_value
         i.gainRelative = i.gain / i.last_value
         i.up = i.value >= i.last_value
+        for symbol, value of i.portfolio
+          i.pie[symbol] = value / i.value
+
 
       # Price history for each stock
       for s in stocks
         end = s.time # last update of the stock
         start = hoursBefore(end,6.5) # start of trading day
-        s.history = Quotes.history(s.symbol,start,end,15*60)
+        s.history = _.map Quotes.history(s.symbol,start,end,15*60), quoteDetails
 
       # Send to client
       for i in investors
