@@ -38,7 +38,7 @@ Template.lines.rendered = ->
     # Get data, or wait until it's available
     stocks = currentStocks()
     i = Investors.findOne Session.get('viewingUserId')
-    quotes = _.flatten (s.history for s in stocks)
+    quotes = _.flatten (s.history() for s in stocks)
     
 
     # Cleanup and buildup
@@ -84,7 +84,7 @@ Template.lines.rendered = ->
       .interpolate('basis')
       
     lines.transition().duration(500).ease('linear')
-      .attr('d',(s) -> makeLine s.history)
+      .attr('d',(s) -> makeLine s.history())
       .attr('stroke-width', (s) ->  z i?.pie[s.symbol] or 0)
       
     # Labels

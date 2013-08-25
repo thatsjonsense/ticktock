@@ -16,6 +16,16 @@ class @Stock
 
   @lookup: (symbol) -> Stocks.findOne({symbol: symbol})
 
+  history: ->
+    History.findOne(@_id).history
+
+
+  @lastTradingDay: (time = do defaultTime) ->
+
+    if time.isWeekday()
+      return @tradingDay(time)
+    else
+      return @lastTradingDay daysBefore(time,1)
 
   # Todo: timezones. guh.
   @tradingDay: (time = do defaultTime) ->

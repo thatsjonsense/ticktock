@@ -48,15 +48,15 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
 ###
 
 
-@publishTimer = (name,update,setup,interval=1000,live=true) ->
+@publishTimer = (name,update,interval=1000,live=true) ->
 
   publisher = (opt...) ->
     debug "Publishing #{name} with options #{opt}"
-    @setup = if setup then _.bind(setup,@) else ->
+    #@setup = if setup then _.bind(setup,@) else ->
     @update = _.bind(update,@)
 
 
-    @setup(opt...)
+    #@setup(opt...)
 
     doUpdate = =>
       sync_id = _.uniqueId()

@@ -1,4 +1,5 @@
 @Quotes = new Meteor.Collection('quotes')
+@History = new Meteor.Collection('history')
 
 if Meteor.isServer
   Quotes._ensureIndex {time: -1}
@@ -11,14 +12,17 @@ Quotes.latest = (symbol, time = do defaultTime) ->
   ,
     sort: {time: -1}
     limit: 1
+  return quoteDetails(q)
 
 Quotes.history = (symbol,start,end,interval) ->
   times = intervalTimes(start,end,interval)
 
-  _.map times, (t) -> 
+  quotes = _.map times, (t) -> 
     q = Quotes.latest(symbol,t)
-    q.time = t
+    q?.time = t
     return q
+
+  return _.compact quotes
 
 intervalTimes = (start,end,interval) ->
   t = start
@@ -38,12 +42,29 @@ quoteDetails = (q) ->
     'gainRelative': (q.price - q.last_price) / (q.last_price)
     'up': q.price >= q.last_price
   else
-    {}
+    null
 
 
 Meteor.startup ->
 
   if Meteor.isServer
+
+
+
+    updateHistory = (start,end,interval_minutes = 15) ->
+
+      investors = Investors.find().fetch()
+      stocks = Stocks.find().fetch()
+
+      for s in stocks
+        quotes = Quotes.history(s.symbol,start,end,interval_minutes*60)
+        quotes = _.map quotes, quoteDetails
+
+        #debug "Changed stock #{s.symbol}'s history to #{quotes.length} quotes"
+        @added('history',s._id,{'history': quotes})
+
+    publishTimer('history',updateHistory,null,5000,false)
+
 
     updatePrices = (delay) ->
       time = secondsAgo(delay)
@@ -81,11 +102,6 @@ Meteor.startup ->
           q = Quotes.latest(symbol, time)
           _.extend(s, quoteDetails q)
 
-          # Get the full price history
-          end = s.time
-          start = hoursBefore(end,6.5)
-          s.history = _.map Quotes.history(s.symbol,start,end,15*60), quoteDetails
-
           s.owners ?= []
           s.owners.push(i)
             
@@ -98,13 +114,6 @@ Meteor.startup ->
         i.up = i.value >= i.last_value
         for symbol, value of i.portfolio
           i.pie[symbol] = value / i.value
-
-
-      # Price history for each stock
-      for s in stocks
-        end = s.time # last update of the stock
-        start = hoursBefore(end,6.5) # start of trading day
-        s.history = _.map Quotes.history(s.symbol,start,end,15*60), quoteDetails
 
       # Send to client
       for i in investors
@@ -124,6 +133,8 @@ Meteor.startup ->
   if Meteor.isClient
     Deps.autorun ->
       safeSubscribe('prices',Session.get('timeLagStable'))
+      day = Stock.lastTradingDay()
+      safeSubscribe('history',Stock.tradingOpen(day),Stock.tradingClose(day),1)
 
 
 
