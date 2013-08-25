@@ -20,12 +20,13 @@
 
 <template name="social">
   <div class='social'>
-  <a href="/lines">All Stocks</a>
+  <a href="/lines" class='all'>&larr; All Stocks</a>
   {{#each investors}}
     <a href="/lines/{{_id}}">
-      <div class='user'>
+      <div class='user' current='{{current}}'>
         <img class='head' src='{{picture}}' />
         <div class='name'>{{name}}</div>
+        <div class='gain'>{{toDollars gain}}</div>
       </div>
     </a>
   {{/each}}
@@ -39,7 +40,7 @@
       <line class='xAxis'></line>
     </svg>
   </div>
-  
+
   <div class='movers'>
   </div>
 </template>

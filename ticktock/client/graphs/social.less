@@ -10,30 +10,58 @@
   border-radius: @radius;
 }
 
+.right {
+  background-color: #eee;
+}
+
 .social {
+
+  height: 100%;
+  font-family: 'Montserrat';
+  margin: 10px;
+
+  .user[current=true], .user:hover {
+    .name {color: black;}
+    .gain {color: black;}
+  }
+
+  .all {
+    margin: 10px;
+    text-transform: uppercase;
+  }
 
   .user {
     margin: 10px;
+    height: @face_size;
+    position: relative;
+    color: #aaa;
 
     .name {
-      margin-left: 10px;
-      display: inline-block;
-      font-size: @face_size/2;
-      color: white;
+      font-size: 15px;
+      text-transform: uppercase;
+
+      position: absolute;
+      left: @face_size + 10px;
+      top: 10px;
+    }
+
+    .gain {
+      font-size: 24pt;
+
+      position: absolute;
+      left: @face_size + 10px;
+      top: 40px;
     }
 
     .head {
       height: @face_size;
       width: @face_size;
       .rounded-corners(40px);
-      border: 2px solid white;
+      
+      position: absolute;
+      left: 0px;
     }
 
-  }
-
-
-  a:hover .head {
-    border: 2px dotted white;
   }
 
 
