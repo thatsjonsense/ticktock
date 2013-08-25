@@ -1,0 +1,55 @@
+<template name="overview">
+  <div id="overview">
+    
+    <div class="visualization">
+      {{> visualization_lines}}
+    </div>
+
+    <div class="portfolio">
+      {{> portfolio_tiles}}
+      {{> portfolio_buy}}
+    </div>
+
+    <div class="competition">
+      {{> competition_leaderboard}}
+    </div>
+  </div>
+</template>
+
+
+<template name="visualization_lines">
+  <div class='lines'>
+    <svg class='lineChart'>
+      <line class='xAxis'></line>
+    </svg>
+  </div>
+</template>
+
+<template name="portfolio_tiles">
+  <div class='tiles'>
+  </div>
+</template>
+
+<template name="portfolio_tiles_stock">
+  <div class='symbol'></div>
+  <div class='gain'></div>
+</template>
+
+<template name="portfolio_buy">
++ Add Stock
+</template>
+
+<template name="competition_leaderboard">
+  <div class='leaderboard'>
+  {{#each investors}}
+    <a href="/portfolio/{{_id}}">
+      <div class='user' current='{{current}}'>
+        <img class='head' src='{{picture}}' />
+        <div class='name'>{{name}}</div>
+        <div class='gain'>{{toDollars gain}}</div>
+      </div>
+    </a>
+  {{/each}}
+  <a href="/" class='all'>&larr; All Stocks</a>
+  </div>
+</template>

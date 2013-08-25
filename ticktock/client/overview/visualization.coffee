@@ -64,54 +64,21 @@ historyLines = (canvas,stocks,investor) ->
     .attr('data-type',(d) -> if d.symbol? then 'stock' else 'investor')
 
 
-priceMovers = (canvas, stocks) ->
-  root = d3.select(canvas)
-  data = stocks.slice(0)
-
-  tiles = root.selectAll('.moverTile').data(data, (s) -> s._id)
-  tiles.enter()
-    .append('div')
-    .attr('class','moverTile')
-    .html((s) -> Template.moverTile s)
-  tiles.exit()
-    .remove()
-
-  tiles.order()
-
-  tiles.select('.symbol')
-    .text((s) -> s.symbol)
-
-  tiles.select('.gain')
-    .text((s) -> templateHelpers.toPercent s.gainRelative)
-
-  tiles.on 'mouseenter', (d) ->
-    line = $("[data-symbol=#{d.symbol}]")
-    line.attr('data-active',true)
-
-  tiles.on 'mouseleave', (d) ->
-    line = $("[data-symbol=#{d.symbol}]")
-    line.attr('data-active',false)
-
-
-
-Template.lines.rendered = ->
+Template.visualization_lines.rendered = ->
   $('body').css('height','100%')  
 
   lines = @find '.lines'
-  movers = @find '.movers'
 
   Deps.autorun ->
     stocks = _.sortBy currentStocks(), (s) -> -s.gainRelative
-    print stocks
     investor = Investors.findOne Session.get('viewingUserId')
 
     historyLines lines, stocks, investor
-    priceMovers movers, stocks
 
     if investor?.up
-      $('.left').attr('data-overall','up')
+      $('.visualization').attr('data-overall','up')
     else
-      $('.left').attr('data-overall','down')
+      $('.visualization').attr('data-overall','down')
 
   
 

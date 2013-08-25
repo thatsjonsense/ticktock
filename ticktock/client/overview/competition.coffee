@@ -1,4 +1,4 @@
-Template.social.investors = ->
+Template.competition_leaderboard.investors = ->
   investors = Investors.find().fetch()
   for i in investors
     if i._id == Session.get('viewingUserId')
