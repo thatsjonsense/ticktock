@@ -42,14 +42,14 @@ Template.lines.rendered = ->
     
 
     # Cleanup and buildup
-    lines = svg.selectAll('path').data(stocks)
+    lines = svg.selectAll('path').data(stocks, (s) -> s.symbol)
     lines.enter()
         .append('path')
         .attr('fill','')
         .attr('stroke','') # use css    
     lines.exit().remove()
 
-    labels = div.selectAll('.lineLabel').data(stocks)
+    labels = div.selectAll('.lineLabel').data(stocks, (s) -> s.symbol)
     labels.enter()
       .append('div')
       .classed('lineLabel',true)
@@ -68,7 +68,7 @@ Template.lines.rendered = ->
 
     z = d3.scale.linear()
       .domain([0,1])
-      .range([1,10])
+      .range([2,10])
 
     x_axis
       .attr('stroke','white')
