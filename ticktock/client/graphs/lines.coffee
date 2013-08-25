@@ -19,15 +19,12 @@ colorBackground = ->
 
 
 Template.lines.rendered = ->
-
   colorBackground()
-  $('body').css('height','100%')
+  $('body').css('height','100%')  
 
   # setup
   svg = d3.select(@find '.lines')
     .append('svg')
-    .attr('width','100%')
-    .attr('height','100%')
 
   div = d3.select(@find '.lines')
 
@@ -45,16 +42,13 @@ Template.lines.rendered = ->
     else
       lineData = stocks
 
-
     # Cleanup and buildup
     lines = svg.selectAll('path').data(lineData, (d) -> d._id)
     lines.enter()
         .append('path')
         .attr('fill','')
-        .attr('stroke','') # use css    
+        .attr('stroke','') # use css
     lines.exit().remove()
-
-
 
     labels = div.selectAll('.lineLabel').data(lineData, (s) -> s.symbol)
     labels.enter()
@@ -65,13 +59,16 @@ Template.lines.rendered = ->
     if quotes.length == 0 then return
 
     # Scales
+    w = $('.lines').width()
+    h = $('.lines').height()
+
     x = d3.scale.linear()
       .domain(d3.extent quotes, (q) -> q.time)
-      .range(['0','1000'])
+      .range(['0',w])
 
     y = d3.scale.linear()
       .domain(d3.extent quotes, (q) -> q.gainRelative)
-      .range(['500','10'])
+      .range([h,'0'])
 
     z = d3.scale.linear()
       .domain([0,1])
