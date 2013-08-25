@@ -20,7 +20,6 @@
 
 <template name="social">
   <div class='social'>
-  <a href="/lines" class='all'>&larr; All Stocks</a>
   {{#each investors}}
     <a href="/lines/{{_id}}">
       <div class='user' current='{{current}}'>
@@ -30,6 +29,7 @@
       </div>
     </a>
   {{/each}}
+  <a href="/lines" class='all'>&larr; All Stocks</a>
   </div>
 </template>
 
@@ -45,5 +45,7 @@
   </div>
 </template>
 
-<template name="slopes">
+<template name="moverTile">
+  <div class='symbol'></div>
+  <div class='gain'></div>
 </template>
