@@ -13,21 +13,21 @@ Quotes.latest = (symbol, time = do defaultTime) ->
     limit: 1
 
 Quotes.history = (symbol,start,end,interval) ->
+  times = intervalTimes(start,end,interval)
+
+  _.map times, (t) -> 
+    q = Quotes.latest(symbol,t)
+    q.time = t
+    return q
+
+intervalTimes = (start,end,interval) ->
   t = start
-  quotes = []
-
+  times = []
   while t < end
-    quotes.push Quotes.latest(symbol,t)
-    t = secondsAfter(t,interval)
-
-  # make sure we get the last quote
-  quotes.push Quotes.latest(symbol,end)
-
-  quotes = _.uniq(quotes,null,(q) -> q?._id)
-  quotes = _.reject(quotes,(q) -> q.time < start)
-
-  return quotes
-
+    times.push t
+    t = secondsAfter t, interval
+  times.push end
+  times = _.uniq times
 
 quoteDetails = (q) ->
   if q and q.price? and q.last_price?
@@ -75,18 +75,23 @@ Meteor.startup ->
         for symbol, shares of i.symbolsOwnedAt(time)
           #print "#{i.name} owns #{symbol}"
           s = _.findWhere stocks, {symbol: symbol}
+          if not s then continue
 
-          # If stock can't be found, might be getting added now
-          if s
-            q = Quotes.latest(symbol, time)
-            _.extend(s, quoteDetails q)
+          # Get price data, etc. from latest quote
+          q = Quotes.latest(symbol, time)
+          _.extend(s, quoteDetails q)
 
-            s.owners ?= []
-            s.owners.push(i)
-              
-            i.portfolio[symbol] = shares * s.price
-            i.value += shares * s.price
-            i.last_value += shares * s.last_price
+          # Get the full price history
+          end = s.time
+          start = hoursBefore(end,6.5)
+          s.history = _.map Quotes.history(s.symbol,start,end,15*60), quoteDetails
+
+          s.owners ?= []
+          s.owners.push(i)
+            
+          i.portfolio[symbol] = shares * s.price
+          i.value += shares * s.price
+          i.last_value += shares * s.last_price
         
         i.gain = i.value - i.last_value
         i.gainRelative = i.gain / i.last_value
