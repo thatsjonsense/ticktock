@@ -40,16 +40,23 @@ Template.lines.rendered = ->
     i = Investors.findOne Session.get('viewingUserId')
     quotes = _.flatten (s.history() for s in stocks)
     
+    if i?
+      lineData = _.union stocks, [i]
+    else
+      lineData = stocks
+
 
     # Cleanup and buildup
-    lines = svg.selectAll('path').data(stocks, (s) -> s.symbol)
+    lines = svg.selectAll('path').data(lineData, (d) -> d._id)
     lines.enter()
         .append('path')
         .attr('fill','')
         .attr('stroke','') # use css    
     lines.exit().remove()
 
-    labels = div.selectAll('.lineLabel').data(stocks, (s) -> s.symbol)
+
+
+    labels = div.selectAll('.lineLabel').data(lineData, (s) -> s.symbol)
     labels.enter()
       .append('div')
       .classed('lineLabel',true)
@@ -68,7 +75,7 @@ Template.lines.rendered = ->
 
     z = d3.scale.linear()
       .domain([0,1])
-      .range([2,10])
+      .range([1,10])
 
     x_axis
       .attr('stroke','white')
@@ -85,13 +92,22 @@ Template.lines.rendered = ->
       
     lines#.transition().duration(100).ease('linear')
       .attr('d',(s) -> makeLine s.history())
-      .attr('stroke-width', (s) ->  z i?.pie[s.symbol] or 0)
+      .attr('stroke-width', (s) ->  
+        if s.symbol and i
+          z i.pie[s.symbol]
+        else if s.symbol
+          z 0
+        else
+          z 1
+      )
+      .classed('stock', (d) -> d.symbol?)
+      .classed('investor', (d) -> d.investor?)
       
     # Labels
 
     labels
       .html((s) -> 
-        """<span class='symbol'>#{s.symbol}</span>
+        """<span class='symbol'>#{s.symbol ? s.name}</span>
           <span class='gain'>#{templateHelpers.toPercent s.gainRelative}</span>""")
       .style('left','90%')
       .style('top',(s) -> y(s.gainRelative) + 'px')
