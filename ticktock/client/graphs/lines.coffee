@@ -23,18 +23,19 @@ historyLines = (canvas,stocks,investor) ->
   # Scales
   w = $(canvas).width()
   h = $(canvas).height()
+  pad = 10
 
   x = d3.scale.linear()
     .domain(d3.extent quotes, (q) -> q.time)
-    .range(['0',w])
+    .range([pad,w-pad])
 
   y = d3.scale.linear()
     .domain(d3.extent quotes, (q) -> q.gainRelative)
-    .range([h,'0'])
+    .range([h-pad,pad])
 
   z = d3.scale.linear()
     .domain([0,1])
-    .range([1,10])
+    .range([2,10])
 
   x_axis
     .attr('stroke','white')
@@ -75,6 +76,7 @@ priceMovers = (canvas, stocks) ->
   tiles.exit()
     .remove()
 
+  tiles.order()
 
   tiles.select('.symbol')
     .text((s) -> s.symbol)
@@ -99,7 +101,8 @@ Template.lines.rendered = ->
   movers = @find '.movers'
 
   Deps.autorun ->
-    stocks = currentStocks()
+    stocks = _.sortBy currentStocks(), (s) -> -s.gainRelative
+    print stocks
     investor = Investors.findOne Session.get('viewingUserId')
 
     historyLines lines, stocks, investor
