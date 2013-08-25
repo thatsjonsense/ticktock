@@ -48,7 +48,7 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
 ###
 
 
-@publishTimer = (name,update,interval=1000,live=true) ->
+@publishTimer = (name,update,interval=1000) ->
 
   publisher = (opt...) ->
     debug "Publishing #{name} with options #{opt}"
@@ -67,7 +67,7 @@ Consider combining this with the Meteor.publish function. Would let you add a lo
       #debug 'Ending sync',sync_id,end_time.toISOString()
       #debug 'Time for sync',sync_id,'was',end_time.getTime() - start_time.getTime()
 
-    if live
+    if interval
       @timer = Meteor.setIntervalInstant(doUpdate,interval)
     else
       doUpdate()

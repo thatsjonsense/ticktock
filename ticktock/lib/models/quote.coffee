@@ -63,7 +63,7 @@ Meteor.startup ->
         #debug "Changed stock #{s.symbol}'s history to #{quotes.length} quotes"
         @added('history',s._id,{'history': quotes})
 
-    publishTimer('history',updateHistory,null,5000,false)
+    publishTimer('history',updateHistory,0)
 
 
     updatePrices = (delay) ->
