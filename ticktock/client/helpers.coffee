@@ -21,7 +21,7 @@
 isNum = (num) -> num? and not isNaN(num)
 
 @templateHelpers =
-  toPercent: (num) -> if isNum(num) then formatPercent(num) else 'n/a'
+  toPercent: (num) -> if isNum(num) then (if num > 0 then '+' else '') + formatPercent(num) else 'n/a'
   toDollars: (num) -> if isNum(num) then formatDollars(num) else 'n/a' 
   toDelta: (num) -> if isNum(num) then (if num > 0 then '+' else '') + formatCommas(num.toFixed(2)) else 'n/a'
   toMinAgo: (time) -> formatMinAgo(time)

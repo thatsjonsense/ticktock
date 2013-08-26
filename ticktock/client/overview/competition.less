@@ -1,6 +1,7 @@
 
 @face_size: 80px;
-
+@green: #0f9d58;
+@red: #db4437;
 
 .rounded-corners (@radius: 5px) {
   -webkit-border-radius: @radius;
@@ -16,7 +17,6 @@
 
 #overview .competition .leaderboard {
 
-  height: 100%;
   font-family: 'Montserrat';
   margin: 20px;
 
@@ -51,6 +51,9 @@
       position: absolute;
       left: @face_size + 10px;
       top: 40px;
+
+      &.up {color: @green;}
+      &.down {color: @red;}
     }
 
     .head {

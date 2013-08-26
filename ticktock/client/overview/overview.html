@@ -37,7 +37,7 @@
 </template>
 
 <template name="portfolio_buy">
-+ Add Stock
+
 </template>
 
 <template name="competition_leaderboard">
@@ -48,7 +48,7 @@
       <div class='user' current='{{current}}'>
         <img class='head' src='{{picture}}' />
         <div class='name'>{{name}}</div>
-        <div class='gain'>{{toDollars gain}}</div>
+        <div class='gain {{#if up}}up{{else}}down{{/if}}'>{{toPercent gainRelative}}</div>
       </div>
     </a>
   {{/each}}
