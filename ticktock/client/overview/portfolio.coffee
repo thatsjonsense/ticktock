@@ -17,6 +17,8 @@ priceMovers = (canvas, stocks) ->
 
   tiles.select('.gain')
     .text((s) -> templateHelpers.toPercent s.gainRelative)
+    .classed('up', (s) -> s.up)
+    .classed('down', (s) -> not s.up)
 
   tiles.on 'mouseenter', (d) ->
     line = $("[data-symbol=#{d.symbol}]")

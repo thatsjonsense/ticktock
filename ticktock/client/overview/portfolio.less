@@ -1,3 +1,5 @@
+@green: #0f9d58;
+@red: #db4437;
 
 #overview .portfolio > div {
   margin: 20px;
@@ -5,9 +7,13 @@
 
 #overview .portfolio {
   
-  background-color: #333;
+  //background-color: #333;
+  //color: #999;
+  
+  background-color: #e5e5e5;
+
+
   overflow: scroll;
-  color: #999;
   font-family: 'Montserrat';
     
 
@@ -16,12 +22,19 @@
   .tiles {
     
 
+
+
     .tile {
       margin-bottom: 25px;
     }
 
     .tile:hover {
-      color: white;
+      //color: white;
+    }
+
+    .tile:hover .symbol:after {
+      content: "\2666";
+      margin-left: 5px;
     }
 
     .tile .symbol {
@@ -32,12 +45,14 @@
     .tile .gain {
       margin-top: 5px;
       font-size: 24px;
+
+      &.up {color: @green;}
+      &.down {color: @red;}
     }
 
   }
 
   .add {
-    color: white;
     text-transform: uppercase;
   }
 
