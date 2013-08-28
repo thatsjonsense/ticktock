@@ -11,10 +11,20 @@
     </div>
 
     <div class="competition">
+      {{> time_slider}}
       {{> competition_leaderboard}}
     </div>
   </div>
 </template>
+
+
+<template name="time_slider">
+  <div class='time_slider'>
+    <h1>Time Travel</h1>
+    <div id="timeSlider"></div>
+  </div>
+</template>
+
 
 
 <template name="visualization_lines">
