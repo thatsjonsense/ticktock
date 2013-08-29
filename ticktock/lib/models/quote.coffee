@@ -87,8 +87,12 @@ Meteor.startup ->
     publishTimer('history',updateHistory,0)
 
 
+
     updatePrices = (delay) ->
       time = secondsAgo(delay)
+      updatePricesTime(time)
+
+    updatePricesTime = (time) ->
 
       # Initial setup
       @investors_observer ?= Investors.find().observeChanges
@@ -143,7 +147,8 @@ Meteor.startup ->
       for s in stocks
         @changed('stocks',s._id,s)
 
-    publishTimer('prices',updatePrices)
+    publishTimer('pricesLive',updatePrices)
+    publishTimer('pricesTime',updatePricesTime)
 
 
     # Publish past quotes for debugging
@@ -152,10 +157,12 @@ Meteor.startup ->
 
 
   if Meteor.isClient
+    ###
     Deps.autorun ->
       safeSubscribe('prices',Session.get('timeLagStable'))
       day = Stock.lastTradingDay()
       safeSubscribe('history',Stock.tradingOpen(day),Stock.tradingClose(day),5)
+    ###
 
 
 

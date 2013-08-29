@@ -48,12 +48,12 @@ historyLines = (canvas,stocks,investor) ->
   makeLine = d3.svg.line()
     .x((q) -> x q.time)  
     .y((q) -> y q.gainRelative)
-    .interpolate('basis')
+    .interpolate('basis-open')
     
   lines#.transition().duration(100).ease('linear')
-    .attr('d',(s) -> makeLine s.history())
+    .attr('d',(s) -> makeLine s.history(), (h) -> h.time)
     .attr('stroke-width', (s) ->  
-      if s.symbol and investor?
+      if s.symbol and investor?.pie?[s.symbol]
         z investor.pie[s.symbol]
       else if s.symbol
         z 0

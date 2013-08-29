@@ -1,9 +1,25 @@
 LATEST = now()
 EARLIEST = daysAgo(2)
 
-Session.setDefault('clock_end', minutesAgo(5))
-Session.setDefault('clock_start', hoursAgo(6.5))
+today = Stock.lastTradingDay()
 
+Session.setDefault('clock_end', Stock.tradingClose today)
+Session.setDefault('clock_start', Stock.tradingOpen today)
+
+
+# Stabilizer
+
+clockStable = ->
+  Session.set('clock_start_stable', Session.get('clock_start'))
+  Session.set('clock_end_stable', Session.get('clock_end'))
+
+Meteor.setIntervalInstant _.throttle(clockStable,1000), 100
+
+# Subscriptions
+
+Deps.autorun ->
+  safeSubscribe('pricesTime',Session.get('clock_end_stable'))
+  safeSubscribe('history',Session.get('clock_start_stable'),Session.get('clock_end_stable'))
 
 Template.time_slider.rendered = ->
   
@@ -26,37 +42,23 @@ Template.time_slider.rendered = ->
 
 
 
+Template.time_slider.events
+  'click .today': ->
+    today = Stock.lastTradingDay()
+    Session.set('clock_start', Stock.tradingOpen today)
+    Session.set('clock_end', Stock.tradingClose today)
+
+  'click .yesterday': ->
+    today = Stock.lastTradingDay()
+    yesterday = Stock.lastTradingDay daysBefore(today, 1)
+    Session.set('clock_start', Stock.tradingOpen yesterday)
+    Session.set('clock_end', Stock.tradingClose yesterday)
 
 Template.time_slider.start = ->
   Session.get('clock_start')
 
 Template.time_slider.end = ->
   Session.get('clock_end')
-
-
-###
-  updateClock = (event, ui) ->
-
-
-    $('.time_slider .clock').html ->
-     Template.time_clock
-      start: time_scale.invert ui.values[0]
-      end: time_scale.invert ui.values[1]
-
-
-
-
-  slider.on "slide", updateClock
-###
-
-
-
-
-
-
-
-
-
 
 
 
