@@ -18,8 +18,19 @@ Meteor.setIntervalInstant _.throttle(clockStable,1000), 100
 # Subscriptions
 
 Deps.autorun ->
+  Session.set('history_ready',false)
+  
+
   safeSubscribe('pricesTime',Session.get('clock_end_stable'))
-  safeSubscribe('history',Session.get('clock_start_stable'),Session.get('clock_end_stable'))
+  
+
+  
+  safeSubscribe('history',Session.get('clock_start_stable'),Session.get('clock_end_stable'), {
+    onReady: ->
+      Session.set('history_ready',true)
+
+
+  })
 
 Template.time_slider.rendered = ->
   
@@ -53,6 +64,12 @@ Template.time_slider.events
     yesterday = Stock.lastTradingDay daysBefore(today, 1)
     Session.set('clock_start', Stock.tradingOpen yesterday)
     Session.set('clock_end', Stock.tradingClose yesterday)
+
+  'click .both': ->
+    today = Stock.lastTradingDay()
+    yesterday = Stock.lastTradingDay daysBefore(today, 1)
+    Session.set('clock_start', Stock.tradingOpen yesterday)
+    Session.set('clock_end', Stock.tradingClose today)
 
 Template.time_slider.start = ->
   Session.get('clock_start')

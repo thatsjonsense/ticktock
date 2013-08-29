@@ -9,7 +9,9 @@ historyLines = (canvas,stocks,investor) ->
   svg = root.select('svg')
   x_axis = svg.select('.xAxis')
 
-  lines = svg.selectAll('path').data(data, (d) -> d._id)
+  lines = svg.selectAll('path').data(data, (d) -> 
+    d.symbol ? 'investor'
+  )
   lines.enter()
     .append('path')
     .attr('fill','')
@@ -17,8 +19,9 @@ historyLines = (canvas,stocks,investor) ->
   lines.exit()
     .remove()
 
+  loading = not Session.get('history_ready')
   quotes = _.flatten (s.history() for s in stocks)
-  if quotes.length == 0 then return
+  if loading or quotes.length == 0 then return
 
   # Scales
   w = $(canvas).width()
@@ -38,11 +41,13 @@ historyLines = (canvas,stocks,investor) ->
     .range([2,10])
 
   x_axis
-    .attr('stroke','white')
-    .attr('y1', y 0)
-    .attr('y2', y 0)
     .attr('x1', x.range()[0])
     .attr('x2', x.range()[1])
+    .attr('stroke','white')
+  .transition().duration(500)
+    .attr('y1', y 0)
+    .attr('y2', y 0)
+
 
   # Lines
   makeLine = d3.svg.line()
@@ -50,7 +55,7 @@ historyLines = (canvas,stocks,investor) ->
     .y((q) -> y q.gainRelative)
     .interpolate('basis-open')
     
-  lines#.transition().duration(100).ease('linear')
+  lines.transition().duration(500).ease('linear')
     .attr('d',(s) -> makeLine s.history(), (h) -> h.time)
     .attr('stroke-width', (s) ->  
       if s.symbol and investor?.pie?[s.symbol]
@@ -80,8 +85,8 @@ Template.visualization_lines.rendered = ->
     else
       $('.visualization, .portfolio').attr('data-overall','down')
 
-  
-
-
+Template.visualization_lines.loading = ->
+  print not Session.get('history_ready')
+  not Session.get('history_ready')
 
 

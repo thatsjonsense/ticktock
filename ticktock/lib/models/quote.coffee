@@ -84,6 +84,8 @@ Meteor.startup ->
           iq.gainRelative = iq.gain / iq.last_value
           @added('history', iq._id,iq)
 
+      @ready()
+
     publishTimer('history',updateHistory,0)
 
 
