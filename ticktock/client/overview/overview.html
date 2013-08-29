@@ -21,10 +21,16 @@
 <template name="time_slider">
   <div class='time_slider'>
     <h1>Time Travel</h1>
-    <div id="timeSlider"></div>
+    {{#constant}}<div id="timeSlider"></div>{{/constant}}
+    <div class="clock"><span class="start">{{toLocalTime start}}</span> to <span class="end">{{toLocalTime end}}</span></div>
   </div>
 </template>
 
+<!--
+<template name="time_clock">
+  <span class="start">{{toLocalTime start}}</span> to <span class="end">{{toLocalTime end}}</span>
+</template>
+-->
 
 
 <template name="visualization_lines">

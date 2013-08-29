@@ -76,9 +76,9 @@ Template.visualization_lines.rendered = ->
     historyLines lines, stocks, investor
 
     if investor?.up
-      $('.visualization').attr('data-overall','up')
+      $('.visualization, .portfolio').attr('data-overall','up')
     else
-      $('.visualization').attr('data-overall','down')
+      $('.visualization, .portfolio').attr('data-overall','down')
 
   
 
