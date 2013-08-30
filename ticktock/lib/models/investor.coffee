@@ -27,4 +27,7 @@ class @Investor
   symbolsOwnedEver: -> (t.symbol for t in @trades)
 
   history: ->
-    History.find({investor: @_id}).fetch() or []
+    if h = History.findOne()
+      (iq for time, iq of h.investors[@_id])
+    else
+      []

@@ -51,15 +51,23 @@ Meteor.startup ->
     updateHistory = (start,end,interval_minutes=15) ->
       investors = Investors.find().fetch()
       stocks = Stocks.find().fetch()
-      ticks = intervalTimes(start,end,interval_minutes*60)
+      interval = interval_minutes*60
 
+      ticks = intervalTimes(start,end,interval)
+      
+      history = 
+        _id: "#{start}, #{end}, #{interval}"
+        start: start
+        end: end
+        interval: interval
+        stocks: {}
+        investors: {}
 
       for time in ticks
         for i in investors
 
           iq =
             investor: i._id
-            _id: i._id + time
             time: time
             value: 0
             last_value: 0
@@ -73,17 +81,22 @@ Meteor.startup ->
             if not sq then continue
 
             sq.time = time
-            sq._id = s._id + time
             #debug "Adding quote for stock #{s.symbol}"
-            @added('history',sq._id,sq)
+            
+            history.stocks[sq.symbol] ?= {}
+            history.stocks[sq.symbol][sq.time] = sq
+
 
             iq.value += shares * sq.price
             iq.last_value += shares * sq.last_price
 
           iq.gain = iq.value - iq.last_value
           iq.gainRelative = iq.gain / iq.last_value
-          @added('history', iq._id,iq)
 
+          history.investors[iq.investor] ?= {}
+          history.investors[iq.investor][iq.time] = iq 
+
+      @added('history', history._id, history)
       @ready()
 
     publishTimer('history',updateHistory,0)

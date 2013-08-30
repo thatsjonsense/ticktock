@@ -76,15 +76,20 @@ Template.visualization_lines.rendered = ->
   lines = @find '.lines'
 
   Deps.autorun ->
-    stocks = _.sortBy currentStocks(), (s) -> -s.gainRelative
-    investor = Investors.findOne Session.get('viewingUserId')
+    
+    history = History.findOne()
+    investor_id = Session.get('viewingUserId')
 
-    historyLines lines, stocks, investor
+    Deps.nonreactive ->
+      stocks = _.sortBy currentStocks(), (s) -> -s.gainRelative
+      investor = Investors.findOne investor_id
 
-    if investor?.up
-      $('.visualization, .portfolio').attr('data-overall','up')
-    else
-      $('.visualization, .portfolio').attr('data-overall','down')
+      historyLines lines, stocks, investor
+
+      if investor?.up
+        $('.visualization, .portfolio').attr('data-overall','up')
+      else
+        $('.visualization, .portfolio').attr('data-overall','down')
 
 Template.visualization_lines.loading = ->
   not Session.get('history_ready')
