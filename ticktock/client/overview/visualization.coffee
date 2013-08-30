@@ -56,7 +56,8 @@ historyLines = (canvas,stocks,investor) ->
     .interpolate('basis-open')
     
   lines.transition().duration(500).ease('linear')
-    .attr('d',(s) -> makeLine s.history(), (h) -> h.time)
+    .attr('d',(s) -> 
+      makeLine s.history())
     .attr('stroke-width', (s) ->  
       if s.symbol and investor?.pie?[s.symbol]
         z investor.pie[s.symbol]
@@ -86,7 +87,6 @@ Template.visualization_lines.rendered = ->
       $('.visualization, .portfolio').attr('data-overall','down')
 
 Template.visualization_lines.loading = ->
-  print not Session.get('history_ready')
   not Session.get('history_ready')
 
 

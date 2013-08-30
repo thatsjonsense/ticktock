@@ -24,8 +24,9 @@
     {{#constant}}<div id="timeSlider"></div>{{/constant}}
     <div class="clock"><span class="start">{{toLocalTime start}}</span> to <span class="end">{{toLocalTime end}}</span></div>
     <div class="presets">
-      <button class="today">Today</button>
       <button class="yesterday">Yesterday</button>
+      <button class="today">Today</button>
+      <button class="both">Both</button>
   </div>
 </template>
 
@@ -37,13 +38,11 @@
 
 
 <template name="visualization_lines">
-  {{#constant}}
   <div class='lines'>
     <svg class='lineChart'>
       <line class='xAxis'></line>
     </svg>
   </div>
-  {{/constant}}
   {{#if loading}}
   <div class="loading">Loading... </div>
   {{/if}}
