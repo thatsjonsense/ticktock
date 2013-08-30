@@ -55,6 +55,9 @@ Meteor.startup ->
 
       ticks = intervalTimes(start,end,interval)
       
+      ticks = _.filter ticks, (t) -> Stock.tradingActive t
+
+
       history = 
         _id: "#{start}, #{end}, #{interval}"
         start: start
