@@ -7,13 +7,15 @@ historyLines = (canvas,stocks,investor) ->
   # Setup and cleanup
   root = d3.select(canvas)
   svg = root.select('svg')
+  
   x_axis = svg.select('.xAxis')
 
-  lines = svg.selectAll('path').data(data, (d) -> 
+  lines = svg.selectAll('.stockline').data(data, (d) -> 
     d.symbol ? 'investor'
   )
   lines.enter()
     .append('path')
+    .attr('class','stockline')
     .attr('fill','')
     .attr('stroke','') # use css
   lines.exit()
@@ -24,29 +26,31 @@ historyLines = (canvas,stocks,investor) ->
   if loading or quotes.length == 0 then return
 
   # Scales
+  pad = 10
   w = $(canvas).width()
   h = $(canvas).height()
-  pad = 10
 
 
   start = Session.get('clock_start_stable')
   end = Session.get('clock_end_stable')
   days = Stock.tradingDays start, end
 
-  polyRange = (segments,width) ->
+
+  polyRange = (segments,width,spacing = 0) ->
     segment_width = width / segments
 
-    ranges = for i in [0..segments]
-      start = i * segment_width
-      end = (i + 1) * segment_width
+    ranges = for i in [0...segments]
+      start = i * (segment_width + spacing)
+      end = start + segment_width
       [start, end]
 
     range = _.flatten ranges
 
-
-  x = d3.scale.linear()
+  x = d3.time.scale()
     .domain(_.flatten days)
     .range(polyRange days.length, w)
+
+
 
   y = d3.scale.linear()
     .domain(d3.extent quotes, (q) -> q.gainRelative)
@@ -54,15 +58,28 @@ historyLines = (canvas,stocks,investor) ->
 
   z = d3.scale.linear()
     .domain([0,1])
-    .range([2,10])
+    .range([1,5])
 
-  x_axis
-    .attr('x1', x.range()[0])
-    .attr('x2', x.range()[1])
-    .attr('stroke','white')
-  .transition().duration(500)
-    .attr('y1', y 0)
-    .attr('y2', y 0)
+
+  MinorTicks = d3.svg.axis()
+    .scale(x)
+    .ticks(d3.time.hours,1)
+    .orient('bottom')
+    .tickSize(-h)
+
+  MajorTicks = d3.svg.axis()
+    .scale(x)
+    .ticks(d3.time.days,1)
+    .orient('bottom')
+    .tickSize(-h)
+
+  svg.select('.grid.minor')
+    .call(MinorTicks)
+    .attr('transform',"translate(0,#{h})")
+
+  svg.select('.grid.major')
+    .call(MajorTicks)
+    .attr('transform',"translate(0,#{h})")
 
 
   # Lines
@@ -72,8 +89,7 @@ historyLines = (canvas,stocks,investor) ->
     .interpolate('basis')
     
   lines.transition().duration(500).ease('linear')
-    .attr('d',(s) -> 
-      makeLine s.history())
+    .attr('d',(s) -> makeLine s.history())
     .attr('stroke-width', (s) ->  
       if s.symbol and investor?.pie?[s.symbol]
         z investor.pie[s.symbol]

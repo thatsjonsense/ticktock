@@ -40,7 +40,9 @@
 <template name="visualization_lines">
   <div class='lines'>
     <svg class='lineChart'>
-      <line class='xAxis'></line>
+      <g class='grid major'></g>
+      <g class='grid minor'></g>
+      <g class='xAxis'></g>
     </svg>
   </div>
   {{#if loading}}
