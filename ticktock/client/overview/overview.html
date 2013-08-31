@@ -6,6 +6,7 @@
     </div>
 
     <div class="portfolio">
+      {{> portfolio_info}}
       {{> portfolio_tiles}}
       {{> portfolio_buy}}
     </div>
@@ -51,6 +52,43 @@
   <div class="loading">Loading... </div>
   {{/if}}
 
+</template>
+
+<template name="portfolio_info">
+  <div class='info'>
+    <h1>Portfolio</h1>
+    {{#with investor}}
+      
+      
+      <div class='tile'>
+        {{#if up}}
+          Woohoo! {{name}} made
+        {{else}}
+          Ruh-roh! {{name}} lost
+        {{/if}}
+      
+        <div class='gain {{#if up}}up{{else}}down{{/if}}'>
+          {{toDollars gain}}
+        </div>
+
+      </div>
+
+
+      <div class='tile'>
+        That's a change of
+        <div class='gain {{#if up}}up{{else}}down{{/if}}'>{{toPercent gainRelative}}</div>
+      </div>
+
+      <div class='tile'>
+        {{name}}'s net worth is
+
+        <div class='gain {{#if up}}up{{else}}down{{/if}}'>
+          {{toDollars value}}
+        </div>
+
+      </div>
+    {{/with}}
+  </div>
 </template>
 
 <template name="portfolio_tiles">

@@ -34,3 +34,6 @@ Template.portfolio_tiles.rendered = ->
   Deps.autorun ->
     stocks = _.sortBy currentStocks(), (s) -> -s.gainRelative
     priceMovers div_tiles, stocks
+
+Template.portfolio_info.investor = ->
+  Investors.findOne Session.get('viewingUserId')
