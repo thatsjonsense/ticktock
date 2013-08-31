@@ -126,4 +126,5 @@ Template.visualization_lines.rendered = ->
 Template.visualization_lines.loading = ->
   not Session.get('history_ready')
 
-
+Template.visualization_headline.user = ->
+  currentInvestor()

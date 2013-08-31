@@ -12,6 +12,25 @@
 
 @formatPercent = (num) -> (num * 100).toFixed(2) + '%'
 
+
+
+
+
+
+
+
+
+formatDollars = (num) ->
+
+  if not num? then return 'n/a'
+  sign = if num then '+' else '-'
+  abs = Math.abs(num)
+  commas = formatCommas abs.toFixed(2)
+
+  "#{sign}$#{commas}"
+
+
+
 # Time
 
 @formatMinAgo = (time) -> $.timeago(time)
@@ -22,7 +41,7 @@ isNum = (num) -> num? and not isNaN(num)
 
 @templateHelpers =
   toPercent: (num) -> if isNum(num) then (if num > 0 then '+' else '') + formatPercent(num) else 'n/a'
-  toDollars: (num) -> if isNum(num) then formatDollars(num) else 'n/a' 
+  toDollars: (num) -> formatDollars num 
   toDelta: (num) -> if isNum(num) then (if num > 0 then '+' else '') + formatCommas(num.toFixed(2)) else 'n/a'
   toMinAgo: (time) -> formatMinAgo(time)
   toRelativeTime: (time) -> time.relative()

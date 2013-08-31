@@ -3,6 +3,7 @@
     
     <div class="visualization">
       {{> visualization_lines}}
+      {{> visualization_headline}}
     </div>
 
     <div class="portfolio">
@@ -54,6 +55,14 @@
 
 </template>
 
+<template name="visualization_headline">
+  {{#with user}}
+  <div class='headline {{#if up}}up{{else}}down{{/if}}'>
+    {{toDollars gain}}
+  </div>
+  {{/with}}
+</template>
+
 <template name="portfolio_info">
   <div class='info'>
     <h1>Portfolio</h1>
@@ -61,10 +70,11 @@
       
       
       <div class='tile'>
+        {{#comment}} 
         {{#if up}}
-          Woohoo! {{name}} made
+          Gain
         {{else}}
-          Ruh-roh! {{name}} lost
+          Loss
         {{/if}}
       
         <div class='gain {{#if up}}up{{else}}down{{/if}}'>
@@ -72,15 +82,15 @@
         </div>
 
       </div>
-
+      {{/comment}}
 
       <div class='tile'>
-        That's a change of
+        Change
         <div class='gain {{#if up}}up{{else}}down{{/if}}'>{{toPercent gainRelative}}</div>
       </div>
 
       <div class='tile'>
-        {{name}}'s net worth is
+        Total
 
         <div class='gain {{#if up}}up{{else}}down{{/if}}'>
           {{toDollars value}}
