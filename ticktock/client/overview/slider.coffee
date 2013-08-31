@@ -19,13 +19,8 @@ Meteor.setIntervalInstant _.throttle(clockStable,1000), 100
 
 Deps.autorun ->
   Session.set('history_ready',false)
-  
-
-  safeSubscribe('pricesTime',Session.get('clock_end_stable'))
-  
-
-  
-  safeSubscribe('history',Session.get('clock_start_stable'),Session.get('clock_end_stable'), {
+  safeSubscribe('pricesTime',Session.get('clock_end_stable'))  
+  safeSubscribe('history',Session.get('clock_start_stable'),Session.get('clock_end_stable'), 5, {
     onReady: ->
       Session.set('history_ready',true)
 

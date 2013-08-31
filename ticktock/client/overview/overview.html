@@ -38,6 +38,7 @@
 
 
 <template name="visualization_lines">
+  {{#constant}}
   <div class='lines'>
     <svg class='lineChart'>
       <g class='grid major'></g>
@@ -45,6 +46,7 @@
       <g class='xAxis'></g>
     </svg>
   </div>
+  {{/constant}}
   {{#if loading}}
   <div class="loading">Loading... </div>
   {{/if}}
