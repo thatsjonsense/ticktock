@@ -5,13 +5,15 @@ if Meteor.isServer
   Quotes._ensureIndex {time: -1}
 
 
-Quotes.latest = (symbol, time = do defaultTime) ->
+Quotes.latest = (symbol, time = do defaultTime, base_price) ->
   q = Quotes.findOne
     symbol: symbol
     time: {$lte: time}
   ,
     sort: {time: -1}
     limit: 1
+
+  q.last_price = base_price ? q.last_price
 
   if q and q.price? and q.last_price?
     'symbol': q.symbol
@@ -23,16 +25,6 @@ Quotes.latest = (symbol, time = do defaultTime) ->
     'up': q.price >= q.last_price
   else
     null
-
-Quotes.history = (symbol,start,end,interval) ->
-  times = intervalTimes(start,end,interval)
-
-  quotes = _.map times, (t) -> 
-    q = Quotes.latest(symbol,t)
-    q?.time = t
-    return q
-
-  return _.compact quotes
 
 intervalTimes = (start,end,interval) ->
   t = start
@@ -57,6 +49,7 @@ Meteor.startup ->
       
       ticks = _.filter ticks, (t) -> Stock.tradingActive t
 
+      base_prices = {}
 
       history = 
         _id: "#{start}, #{end}, #{interval}"
@@ -80,8 +73,13 @@ Meteor.startup ->
             s = _.findWhere stocks, {symbol: symbol}
             if not s then continue
 
-            sq = Quotes.latest symbol, time
-            if not sq then continue
+            if base_prices[s.symbol]?
+              sq = Quotes.latest symbol, time, base_prices[s.symbol]
+              if not sq then continue
+            else
+              sq = Quotes.latest symbol, time
+              if not sq then continue
+              base_prices[s.symbol] = sq.last_price
 
             sq.time = time
             #debug "Adding quote for stock #{s.symbol}"
