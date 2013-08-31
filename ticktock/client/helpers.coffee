@@ -23,7 +23,7 @@
 formatDollars = (num) ->
 
   if not num? then return 'n/a'
-  sign = if num then '+' else '-'
+  sign = if num > 0 then '+' else '-'
   abs = Math.abs(num)
   commas = formatCommas abs.toFixed(2)
 

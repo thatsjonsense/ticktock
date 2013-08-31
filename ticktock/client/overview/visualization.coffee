@@ -61,11 +61,13 @@ historyLines = (canvas,stocks,investor) ->
     .range([1,5])
 
 
-  MinorTicks = d3.svg.axis()
+  all_ticks = x.ticks(d3.time.hours,1)
+  active_ticks = _.filter all_ticks, (t) -> Stock.tradingActive(t)
+  XAxis = d3.svg.axis()
     .scale(x)
-    .ticks(d3.time.hours,1)
+    .tickValues(active_ticks)
     .orient('bottom')
-    .tickSize(-h)
+    .tickSize(-10)
 
   MajorTicks = d3.svg.axis()
     .scale(x)
@@ -74,8 +76,8 @@ historyLines = (canvas,stocks,investor) ->
     .tickSize(-h)
 
   svg.select('.grid.minor')
-    .call(MinorTicks)
-    .attr('transform',"translate(0,#{h})")
+    .call(XAxis)
+    .attr('transform',"translate(0,#{h-20})")
 
   svg.select('.grid.major')
     .call(MajorTicks)
