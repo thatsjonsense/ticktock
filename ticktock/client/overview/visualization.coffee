@@ -28,9 +28,25 @@ historyLines = (canvas,stocks,investor) ->
   h = $(canvas).height()
   pad = 10
 
+
+  start = Session.get('clock_start_stable')
+  end = Session.get('clock_end_stable')
+  days = Stock.tradingDays start, end
+
+  polyRange = (segments,width) ->
+    segment_width = width / segments
+
+    ranges = for i in [0..segments]
+      start = i * segment_width
+      end = (i + 1) * segment_width
+      [start, end]
+
+    range = _.flatten ranges
+
+
   x = d3.scale.linear()
-    .domain(d3.extent quotes, (q) -> q.time)
-    .range([pad,w-pad])
+    .domain(_.flatten days)
+    .range(polyRange days.length, w)
 
   y = d3.scale.linear()
     .domain(d3.extent quotes, (q) -> q.gainRelative)
@@ -53,7 +69,7 @@ historyLines = (canvas,stocks,investor) ->
   makeLine = d3.svg.line()
     .x((q) -> x q.time)  
     .y((q) -> y q.gainRelative)
-    .interpolate('basis-open')
+    .interpolate('basis')
     
   lines.transition().duration(500).ease('linear')
     .attr('d',(s) -> 

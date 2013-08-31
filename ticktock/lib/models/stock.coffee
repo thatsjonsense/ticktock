@@ -48,3 +48,15 @@ class @Stock
 
   @tradingActive: (time = do defaultTime) ->
     time.isBetween(@tradingOpen(time),@tradingClose(time)) and time.isWeekday()
+
+  @tradingDays: (start, end) ->
+
+    days = []
+    t = start
+    while t < end
+      open = @tradingOpen t
+      close = @tradingClose t
+      days.push([open,close])
+      t = daysAfter(t,1)
+
+    return days
