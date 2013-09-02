@@ -8,19 +8,9 @@
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   return parts.join('.')
 
-@formatDollars = (num) -> '$' + formatCommas(num.toFixed(2))
-
 @formatPercent = (num) -> (num * 100).toFixed(2) + '%'
 
-
-
-
-
-
-
-
-
-formatDollars = (num) ->
+@formatDollars = (num) ->
 
   if not num? then return 'n/a'
   sign = if num > 0 then '+' else '-'
