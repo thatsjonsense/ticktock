@@ -58,17 +58,22 @@
     }
   }
 
-  .grid {
+  .axis {
     stroke: white;
-
-    text {
-      stroke: white;
-    }
 
     .domain {display: none;}
 
-    &.minor {
+    &.y {
+      stroke-dasharray: 5,5;
     }
+
+  }
+
+  .grid {
+    stroke: white;
+
+    .domain {display: none;}
+
     &.major {
       stroke-opacity: 1;
     }

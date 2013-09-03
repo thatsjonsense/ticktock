@@ -8,8 +8,6 @@ historyLines = (canvas,stocks,investor) ->
   root = d3.select(canvas)
   svg = root.select('svg')
   
-  x_axis = svg.select('.xAxis')
-
   lines = svg.selectAll('.stockline').data(data, (d) -> 
     d.symbol ? 'investor'
   )
@@ -51,9 +49,12 @@ historyLines = (canvas,stocks,investor) ->
     .range(polyRange days.length, w)
 
 
+  y_domain = d3.extent quotes, (q) -> q.gainRelative
+  y_domain[0] = _.min [0,y_domain[0]]
+  y_domain[1] = _.max [0,y_domain[1]]
 
   y = d3.scale.linear()
-    .domain(d3.extent quotes, (q) -> q.gainRelative)
+    .domain(y_domain)
     .range([h-pad,pad])
 
   z = d3.scale.linear()
@@ -69,13 +70,22 @@ historyLines = (canvas,stocks,investor) ->
     .orient('bottom')
     .tickSize(-10)
 
+  LastClose = d3.svg.axis()
+    .scale(y)
+    .tickValues([0])
+    .orient('left')
+    .tickSize(-w)
+
+  svg.select('.axis.y').transition().duration(500)
+    .call(LastClose)
+
   MajorTicks = d3.svg.axis()
     .scale(x)
     .ticks(d3.time.days,1)
     .orient('bottom')
     .tickSize(-h)
 
-  svg.select('.grid.minor')
+  svg.select('.axis.x')
     .call(XAxis)
     .attr('transform',"translate(0,#{h-20})")
 
