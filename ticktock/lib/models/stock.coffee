@@ -3,7 +3,6 @@
 @Stocks = new Meteor.Collection('stocks',
   transform: (doc) ->
     s = new Stock(doc)
-    s.history ?= []
     return s
 )
 
@@ -15,13 +14,6 @@ class @Stock
      _.extend(@,doc)
 
   @lookup: (symbol) -> Stocks.findOne({symbol: symbol})
-
-  history: ->
-    if h = History.findOne()
-      (sq for time, sq of h.stocks[@symbol])
-    else
-      []
-
 
   @lastTradingDay: (time = do defaultTime) ->
 

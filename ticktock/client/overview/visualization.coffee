@@ -19,8 +19,10 @@ historyLines = (canvas,stocks,investor) ->
   lines.exit()
     .remove()
 
-  loading = not Session.get('history_ready')
+  history = Session.get('history')
+  loading = not history?
   quotes = _.flatten (s.history() for s in stocks)
+
   if loading or quotes.length == 0 then return
 
   # Scales
@@ -29,8 +31,8 @@ historyLines = (canvas,stocks,investor) ->
   h = $(canvas).height()
 
 
-  start = Session.get('clock_start_stable')
-  end = Session.get('clock_end_stable')
+  start = Session.get('sub_start')
+  end = Session.get('sub_end')
   days = Stock.tradingDays start, end
 
 
@@ -101,7 +103,10 @@ historyLines = (canvas,stocks,investor) ->
     .interpolate('basis')
     
   lines.transition().duration(500).ease('linear')
-    .attr('d',(s) -> makeLine s.history())
+    .attr('d',(s) -> 
+      h = s.history()
+      makeLine h
+    )
     .attr('stroke-width', (s) ->  
       if s.symbol and investor?.pie?[s.symbol]
         z investor.pie[s.symbol]
@@ -121,7 +126,7 @@ Template.visualization_lines.rendered = ->
 
   Deps.autorun ->
     
-    history = History.findOne()
+    history = Session.get('history')
     investor_id = Session.get('viewingUserId')
 
     Deps.nonreactive ->
@@ -136,7 +141,7 @@ Template.visualization_lines.rendered = ->
         $('.visualization, .portfolio').attr('data-overall','down')
 
 Template.visualization_lines.loading = ->
-  not Session.get('history_ready')
+  not Session.get('history')?
 
 Template.visualization_headline.user = ->
   currentInvestor()
