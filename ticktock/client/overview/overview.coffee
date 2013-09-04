@@ -41,10 +41,16 @@ Session.setDefault('clock_now', Stock.tradingOpen today)
 
 subHistory = ->
   Session.set 'history', null
-  onReady = ->
-    Session.set 'history', History.findOne()
+  start = Session.get('sub_start')
+  end = Session.get('sub_end')
 
-  safeSubscribe 'history', Session.get('sub_start'), Session.get('sub_end'), 5, onReady
+  onReady = ->
+    h = History.findOne
+      start: start
+      end: end
+    Session.set 'history', h
+
+  safeSubscribe 'history',start,end,5,onReady
 
 subPrices = ->
   safeSubscribe 'pricesTime', Session.get('sub_end')

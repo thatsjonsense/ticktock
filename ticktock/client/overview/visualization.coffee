@@ -29,11 +29,9 @@ historyLines = (canvas,stocks,investor) ->
   w = $(canvas).width()
   h = $(canvas).height()
 
-
   start = Session.get('sub_start')
   end = Session.get('sub_end')
   days = Stock.tradingDays start, end
-
 
   polyRange = (segments,width,spacing = 0) ->
     segment_width = width / segments
@@ -48,7 +46,6 @@ historyLines = (canvas,stocks,investor) ->
   x = d3.time.scale()
     .domain(_.flatten days)
     .range(polyRange days.length, w)
-
 
   y_domain = d3.extent quotes, (q) -> q.gainRelative
   y_domain[0] = _.min [0,y_domain[0]]
