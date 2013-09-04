@@ -26,7 +26,6 @@ historyLines = (canvas,stocks,investor) ->
   if loading or quotes.length == 0 then return
 
   # Scales
-  pad = 10
   w = $(canvas).width()
   h = $(canvas).height()
 
@@ -57,7 +56,7 @@ historyLines = (canvas,stocks,investor) ->
 
   y = d3.scale.linear()
     .domain(y_domain)
-    .range([h-pad,pad])
+    .range([h-30,10])
 
   z = d3.scale.linear()
     .domain([0,1])
