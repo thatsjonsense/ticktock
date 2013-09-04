@@ -2,7 +2,7 @@
 historyLines = (canvas,stocks,investor) ->
 
   data = stocks.slice(0)
-  data.push(investor) if investor?
+  data.push(investor) if investor? and stocks.length > 0
 
   # Setup and cleanup
   root = d3.select(canvas)
