@@ -18,13 +18,32 @@ Template.time_slider.rendered = ->
     #values: [start, end]
     value: now
 
-  slider.on "slide", (event, ui) ->
+  onSlide = (event, ui) ->
     #Session.set('clock_start', scale.invert ui.values[0])
     #Session.set('clock_end', scale.invert ui.values[1])
     Session.set('clock_now', scale.invert ui.value)
 
+  #slider.on "slide", _.throttle(onSlide,1000,{leading: false})
+  slider.on "slide", onSlide
+
 
 Template.time_slider.events
+  'click .play': ->
+
+    tick = =>
+      time = Session.get('clock_now')
+      time = minutesAfter(time,15)
+      
+      if time >= Session.get('clock_end')
+        Meteor.clearInterval @handle
+        return
+
+      Session.set('clock_now',time)
+
+    Session.set('clock_now',Session.get('clock_start'))
+    @handle = Meteor.setInterval tick, 1000   
+
+
   'click .today': ->
     today = Stock.lastTradingDay()
     Session.set('clock_start', Stock.tradingOpen today)
