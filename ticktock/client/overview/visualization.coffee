@@ -1,5 +1,5 @@
 
-historyLines = (canvas,stocks,investor) ->
+historyLines = (canvas,stocks,investor,upto) ->
 
   data = stocks.slice(0)
   data.push(investor) if investor? and stocks.length > 0
@@ -101,6 +101,8 @@ historyLines = (canvas,stocks,investor) ->
   lines.transition().duration(500).ease('linear')
     .attr('d',(s) -> 
       h = s.history()
+      if upto?
+        h = _.filter h, (q) -> q.time < upto
       makeLine h
     )
     .attr('stroke-width', (s) ->  
@@ -124,12 +126,13 @@ Template.visualization_lines.rendered = ->
     
     history = Session.get('history')
     investor_id = Session.get('viewingUserId')
+    now = Session.get('clock_now')
 
     Deps.nonreactive ->
       stocks = _.sortBy currentStocks(), (s) -> -s.gainRelative
       investor = Investors.findOne investor_id
 
-      historyLines lines, stocks, investor
+      historyLines lines, stocks, investor, now
 
       if investor?.up
         $('.visualization, .portfolio').attr('data-overall','up')

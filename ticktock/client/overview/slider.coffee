@@ -1,5 +1,5 @@
-LATEST = now()
-EARLIEST = daysAgo(7)
+LATEST = Stock.tradingClose TODAY
+EARLIEST = Stock.tradingOpen TODAY
 
 Template.time_slider.rendered = ->
   
@@ -9,17 +9,19 @@ Template.time_slider.rendered = ->
 
   start = scale Session.get('clock_start')
   end = scale Session.get('clock_end')
+  now = scale Session.get('clock_now')
 
   slider = $("#timeSlider").slider
-    range: true
+    #range: true
     min: 0
     max: 100
-    values: [start, end]
+    #values: [start, end]
+    value: now
 
   slider.on "slide", (event, ui) ->
-    Session.set('clock_start', scale.invert ui.values[0])
-    Session.set('clock_end', scale.invert ui.values[1])
-
+    #Session.set('clock_start', scale.invert ui.values[0])
+    #Session.set('clock_end', scale.invert ui.values[1])
+    Session.set('clock_now', scale.invert ui.value)
 
 
 Template.time_slider.events

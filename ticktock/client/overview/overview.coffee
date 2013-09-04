@@ -30,11 +30,11 @@ Investor::history = ->
 # Timing
 ###############
 
-today = Stock.lastTradingDay()
+@TODAY = Stock.lastTradingDay()
 
-Session.setDefault('clock_end', Stock.tradingClose today)
-Session.setDefault('clock_start', Stock.tradingOpen today)
-Session.setDefault('clock_now', Stock.tradingOpen today)
+Session.setDefault('clock_end', Stock.tradingClose TODAY)
+Session.setDefault('clock_start', Stock.tradingOpen TODAY)
+Session.setDefault('clock_now', Stock.tradingOpen TODAY)
 
 # Subscriptions
 #################
