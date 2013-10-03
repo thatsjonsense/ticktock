@@ -27,37 +27,23 @@ updateQuotes = ->
 ###
 
 
+updateQuotes = ->
 
-useRandom = false
-useHistorical = true
-useLive = false
+  print (s.symbol for s in activeStocks())
+  for stock in activeStocks()
 
-
-
-updateQuotesNoise = ->
-
-  # Check for  historical data, so random quotes are realistic
-  if useHistorical
-    for stock in activeStocks()
-      if Quotes.find({symbol: stock.symbol, source: 'historical'}).count() == 0
-        debug "Grabbing historical data for #{stock.symbol}"
-        GoogleFinance.getQuotesPast(stock,2)
-  
-  if useRandom
-    for stock in activeStocks()
-      RandomWalk.getQuote(stock)
-
-updateQuotesReal = ->
-  if useLive
-    for stock in activeStocks()
-      YahooFinance.getQuote(stock)
-
+    # Check if we have fresh data
+    if stock.lastUpdated? and stock.lastUpdated > minutesAgo(5)
+      # do nothing
+    else
+      #Get fresh data
+      debug "Grabbing historical data for #{stock.symbol}"
+      Stocks.update stock._id, {$set: {lastUpdated: now()}}
+      GoogleFinance.getQuotesPast(stock,2)
 
 
 Meteor.startup ->
 
-  Meteor.setIntervalInstant(updateQuotesReal,60*1000)
-
-  Meteor.setIntervalInstant(updateQuotesNoise,1*1000)
+  Meteor.setIntervalInstant(updateQuotes,30*1000)
 
 #todo: better Yahoo rate limiting. Supposed to be <-.2 calls per second.

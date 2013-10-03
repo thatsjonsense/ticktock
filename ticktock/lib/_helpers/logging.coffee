@@ -1,6 +1,6 @@
 
 if Meteor.isServer
-  SHOW_DEBUG = Meteor.settings.debug ? true
+  SHOW_DEBUG = true
 
 if Meteor.isClient
   SHOW_DEBUG = false
