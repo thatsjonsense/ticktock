@@ -22,21 +22,20 @@ class @Stock
     else
       return @lastTradingDay daysBefore(@tradingClose(time),1)
 
-  # Todo: timezones. guh.
   @tradingDay: (time = do defaultTime) ->
-    trading_day = Date.create(time)
-    trading_day.setHours(0,0,0,0)
+    trading_day = Date.utc.create(time)
+    trading_day.setUTCHours(0,0,0,0)
     return trading_day
 
-  # These are based on UTC time. Eventually, need to make it work on any timezone.
+  # The assumption here is that UTC = NYC + 4. May not always be true :( Need a real timezone library.
   @tradingOpen: (time = do defaultTime) ->
-    trading_open = Date.create(@tradingDay(time))
-    trading_open.setHours(9  +4,30,0,0)
+    trading_open = Date.utc.create(@tradingDay(time))
+    trading_open.setUTCHours(9  +4,30,0,0)
     return trading_open
 
   @tradingClose: (time = do defaultTime) ->
-    trading_close = Date.create(@tradingDay(time))
-    trading_close.setHours(16  +4,0,0,0)  
+    trading_close = Date.utc.create(@tradingDay(time))
+    trading_close.setUTCHours(16  +4,0,0,0)  
     return trading_close
 
   @tradingActive: (time = do defaultTime) ->
