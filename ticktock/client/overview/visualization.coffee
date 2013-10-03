@@ -48,8 +48,9 @@ historyLines = (canvas,stocks,investor,upto) ->
     .range(polyRange days.length, w)
 
   y_domain = d3.extent quotes, (q) -> q.gainRelative
-  y_domain[0] = _.min [0,y_domain[0]]
-  y_domain[1] = _.max [0,y_domain[1]]
+  # always include the origin, and be symmetrical
+  y_domain[0] = _.min [0,y_domain[0],-y_domain[1]] 
+  y_domain[1] = _.max [0,y_domain[1],-y_domain[0]]
 
   y = d3.scale.linear()
     .domain(y_domain)
@@ -57,7 +58,7 @@ historyLines = (canvas,stocks,investor,upto) ->
 
   z = d3.scale.linear()
     .domain([0,1])
-    .range([1,5])
+    .range([2,5])
 
 
   all_ticks = x.ticks(d3.time.hours,1)
