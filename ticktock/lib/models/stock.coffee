@@ -17,10 +17,10 @@ class @Stock
 
   @lastTradingDay: (time = do defaultTime) ->
 
-    if time.isWeekday()
+    if time.isWeekday() and time > @tradingOpen(time)
       return @tradingDay(time)
     else
-      return @lastTradingDay daysBefore(time,1)
+      return @lastTradingDay daysBefore(@tradingClose(time),1)
 
   # Todo: timezones. guh.
   @tradingDay: (time = do defaultTime) ->
@@ -28,14 +28,15 @@ class @Stock
     trading_day.setHours(0,0,0,0)
     return trading_day
 
+  # These are based on UTC time. Eventually, need to make it work on any timezone.
   @tradingOpen: (time = do defaultTime) ->
     trading_open = Date.create(@tradingDay(time))
-    trading_open.setHours(9-3,30,0,0)
+    trading_open.setHours(9  +4,30,0,0)
     return trading_open
 
   @tradingClose: (time = do defaultTime) ->
     trading_close = Date.create(@tradingDay(time))
-    trading_close.setHours(12+4-3,0,0,0)  
+    trading_close.setHours(16  +4,0,0,0)  
     return trading_close
 
   @tradingActive: (time = do defaultTime) ->
