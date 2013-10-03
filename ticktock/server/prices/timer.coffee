@@ -29,7 +29,6 @@ updateQuotes = ->
 
 updateQuotes = ->
 
-  print (s.symbol for s in activeStocks())
   for stock in activeStocks()
 
     # Check if we have fresh data

@@ -23,8 +23,8 @@ Template.time_slider.rendered = ->
     #Session.set('clock_end', scale.invert ui.values[1])
     Session.set('clock_now', scale.invert ui.value)
 
-  #slider.on "slide", _.throttle(onSlide,1000,{leading: false})
-  slider.on "slide", onSlide
+  slider.on "slide", _.throttle(onSlide,1000,{leading: false})
+  #slider.on "slide", onSlide
 
 
 Template.time_slider.events
@@ -32,7 +32,7 @@ Template.time_slider.events
 
     tick = =>
       time = Session.get('clock_now')
-      time = minutesAfter(time,15)
+      time = minutesAfter(time,5)
       
       if time >= Session.get('clock_end')
         Meteor.clearInterval @handle

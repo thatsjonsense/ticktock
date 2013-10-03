@@ -34,7 +34,7 @@ Investor::history = ->
 
 Session.setDefault('clock_end', Stock.tradingClose TODAY)
 Session.setDefault('clock_start', Stock.tradingOpen TODAY)
-Session.setDefault('clock_now', Stock.tradingOpen TODAY)
+Session.setDefault('clock_now', Stock.tradingClose TODAY)
 
 # Subscriptions
 #################
