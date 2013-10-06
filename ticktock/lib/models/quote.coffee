@@ -108,7 +108,7 @@ Meteor.startup ->
       time = secondsAgo(delay)
       updatePricesTime(time)
 
-    updatePricesTime = (time) ->
+    updatePricesTime = (end,start) ->
 
       # Initial setup
       @investors_observer ?= Investors.find().observeChanges
@@ -134,14 +134,19 @@ Meteor.startup ->
         i.portfolio = {}
         i.pie = {}
 
-        for symbol, shares of i.symbolsOwnedAt(time)
+        for symbol, shares of i.symbolsOwnedAt(end)
           #print "#{i.name} owns #{symbol}"
           s = _.findWhere stocks, {symbol: symbol}
           if not s then continue
 
           # Get price data, etc. from latest quote
-          q = Quotes.latest(symbol, time)
-          _.extend(s, q)
+          if start
+            start_q = Quotes.latest(symbol, Stock.tradingClose start) # we may not have data from opening of a day
+            end_q = Quotes.latest(symbol, end, start_q?.last_price)
+            _.extend(s, end_q)
+          else
+            q = Quotes.latest(symbol,end)
+            _.extend(s, q)
 
           s.owners ?= []
           s.owners.push(i)

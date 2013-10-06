@@ -53,7 +53,7 @@ subHistory = ->
   safeSubscribe 'history',start,end,5,onReady
 
 subPrices = ->
-  safeSubscribe 'pricesTime', Session.get('sub_end')
+  safeSubscribe 'pricesTime', Session.get('sub_end'), Session.get('sub_start')
 
 subscriptionTimer = ->
   Session.set('sub_start', Session.get('clock_start'))
