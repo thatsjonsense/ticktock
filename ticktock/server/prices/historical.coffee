@@ -2,40 +2,45 @@
 
 class @GoogleFinance
 
-  @getQuotesPast = (stock,days = 1,interval = 60) ->
+  @getQuotesPast = (stock,days = 1,interval = 60, async = true) ->
     days = parseInt(days) + 1
 
     googleUrl = "http://www.google.com/finance/getprices?i=#{interval}&p=#{days}d&f=d,o,h,l,c,v&df=cpct&q=#{stock.symbol}"
 
-    response = Meteor.http.get(googleUrl)
-    lines = response.content.split('\n').slice(7,-1) # remove header and last line
 
-    current_day = null
-    last_close = null
-    last_quote = null
-    for line in lines
-      cols = line.split(',')
+    callback = (error, response) ->
+      lines = response.content.split('\n').slice(7,-1) # remove header and last line
 
-      if cols[0][0] == 'a'
-        last_close = last_quote?.price
-        timestamp = cols[0].slice(1)
-        current_day = dateFromUnix(timestamp)
-        n = 0
-      else
-        n = cols[0]
+      current_day = null
+      last_close = null
+      last_quote = null
+      for line in lines
+        cols = line.split(',')
 
-      quote =
-        symbol: stock.symbol
-        time: secondsAfter(current_day, interval * n) 
-        price: parseFloat(cols[1]) # closing price
-        last_price: last_close
-        source: 'historical'
+        if cols[0][0] == 'a'
+          last_close = last_quote?.price
+          timestamp = cols[0].slice(1)
+          current_day = dateFromUnix(timestamp)
+          n = 0
+        else
+          n = cols[0]
 
-      last_quote = quote
-      if quote.time.isBefore(minutesAgo(15)) # don't jump ahead of live data
-        Quotes.findOrInsert(quote)
+        quote =
+          symbol: stock.symbol
+          time: secondsAfter(current_day, interval * n) 
+          price: parseFloat(cols[1]) # closing price
+          last_price: last_close
+          source: 'historical'
 
+        last_quote = quote
+        if quote.time.isBefore(minutesAgo(15)) # don't jump ahead of live data
+          Quotes.findOrInsert(quote)
 
+    if async
+      response = Meteor.http.get googleUrl, {}, callback
+    else
+      response = Meteor.http.get googleUrl
+      callback(response)
 
 
 Meteor.Router.add

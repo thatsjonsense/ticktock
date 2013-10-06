@@ -43,6 +43,6 @@ updateQuotes = ->
 
 Meteor.startup ->
 
-  Meteor.setIntervalInstant(updateQuotes,30*1000)
+  Meteor.setInterval(updateQuotes,30*1000)
 
 #todo: better Yahoo rate limiting. Supposed to be <-.2 calls per second.
