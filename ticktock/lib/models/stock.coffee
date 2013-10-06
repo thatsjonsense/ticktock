@@ -23,18 +23,16 @@ class @Stock
       return @lastTradingDay daysBefore(@tradingClose(time),1)
 
   @tradingDay: (time = do defaultTime) ->
-    trading_day = Date.utc.create(time)
-    trading_day.setUTCHours(0,0,0,0)
-    return trading_day
+    return @tradingClose time
 
   # The assumption here is that UTC = NYC + 4. May not always be true :( Need a real timezone library.
   @tradingOpen: (time = do defaultTime) ->
-    trading_open = Date.utc.create(@tradingDay(time))
+    trading_open = Date.utc.create(time)
     trading_open.setUTCHours(9  +4,30,0,0)
     return trading_open
 
   @tradingClose: (time = do defaultTime) ->
-    trading_close = Date.utc.create(@tradingDay(time))
+    trading_close = Date.utc.create(time)
     trading_close.setUTCHours(16  +4,0,0,0)  
     return trading_close
 
